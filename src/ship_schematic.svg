@@ -58,10 +58,10 @@
 	<text x="1038" y="252" text-anchor="middle" font-size="20" font-weight="700" fill="#172026">Crew</text>
 	<text x="1038" y="278" text-anchor="middle" font-size="20" font-weight="700" fill="#172026">Area</text>
 
-	<!-- Helipad with ICAO circle -->
-	<rect data-zone-id="helipad" x="1020" y="370" width="112" height="92" rx="46" fill="#adb5bd" stroke="#4c5963" stroke-width="3"/>
-	<circle cx="1076" cy="416" r="26" fill="none" stroke="#4c5963" stroke-width="3"/>
-	<text x="1076" y="425" text-anchor="middle" font-size="26" font-weight="700" fill="#172026">H</text>
+	<!-- Helipad with ICAO circle (sized to sit inside the bow curve) -->
+	<rect data-zone-id="helipad" x="995" y="378" width="85" height="78" rx="39" fill="#adb5bd" stroke="#4c5963" stroke-width="3"/>
+	<circle cx="1037" cy="417" r="22" fill="none" stroke="#4c5963" stroke-width="3"/>
+	<text x="1037" y="426" text-anchor="middle" font-size="24" font-weight="700" fill="#172026">H</text>
 
 	<!-- Doorway bridges: short hall stubs connecting zones to the corridor and to each other -->
 	<g class="zone-bridge" fill="#d9dee2" stroke="#53606a" stroke-width="2">
@@ -82,7 +82,7 @@
 		<!-- Crew Area <-> Corridor (small overlap doorway) -->
 		<rect x="980" y="246" width="20" height="28" rx="3"/>
 		<!-- Crew Area <-> Helipad -->
-		<rect x="1058" y="354" width="30" height="16" rx="4"/>
+		<rect x="1027" y="354" width="26" height="24" rx="4"/>
 		<!-- Dining <-> Lounge (lateral) -->
 		<rect x="763" y="130" width="22" height="40" rx="4"/>
 	</g>
