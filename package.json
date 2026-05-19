@@ -1,0 +1,18 @@
+{
+	"name": "hantavirus-outbreak-game",
+	"version": "0.0.1",
+	"private": true,
+	"description": "Browser-based Andes virus cruise ship outbreak simulator.",
+	"scripts": {
+		"build": "./build_github_pages.sh",
+		"check": "./check_codebase.sh",
+		"serve": "./run_web_server.sh",
+		"smoke": "node tests/playwright/smoke_app.mjs",
+		"typecheck": "npx tsc --noEmit -p src/tsconfig.json"
+	},
+	"devDependencies": {
+		"esbuild": "^0.24.0",
+		"playwright": "^1.60.0",
+		"typescript": "^5.6.0"
+	}
+}

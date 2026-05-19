@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 520" role="img" aria-labelledby="title desc">
+	<title id="title">Cruise ship deck plan with passenger health states.</title>
+	<desc id="desc">Original cruise ship schematic with cabins, corridor spine, dining, lounge theater, pool deck, infirmary, isolation, crew area, and helipad.</desc>
+	<rect width="1200" height="520" fill="#f5f7f8"/>
+	<path d="M54 260 C98 94 220 38 394 34 L996 34 C1088 34 1148 126 1148 260 C1148 394 1088 486 996 486 L394 486 C220 482 98 426 54 260 Z" fill="#ffffff" stroke="#25313a" stroke-width="6"/>
+	<path d="M92 260 C130 128 238 72 398 70 L982 70 C1052 70 1112 148 1112 260 C1112 372 1052 450 982 450 L398 450 C238 448 130 392 92 260 Z" fill="#edf2f4" stroke="#8a98a3" stroke-width="2"/>
+	<rect data-zone-id="corridor_spine" x="190" y="226" width="805" height="68" rx="12" fill="#d9dee2" stroke="#53606a" stroke-width="3"/>
+	<text x="592" y="267" text-anchor="middle" font-family="Arial, sans-serif" font-size="27" font-weight="700" fill="#172026">Corridor Spine</text>
+	<rect data-zone-id="cabins_port" x="245" y="82" width="310" height="96" rx="8" fill="#8ecae6" stroke="#2f6f88" stroke-width="3"/>
+	<text x="400" y="120" text-anchor="middle" font-family="Arial, sans-serif" font-size="23" font-weight="700" fill="#172026">Cabins (Port)</text>
+	<path d="M270 142 H530 M322 82 V178 M374 82 V178 M426 82 V178 M478 82 V178" stroke="#2f6f88" stroke-width="2"/>
+	<rect data-zone-id="cabins_starboard" x="245" y="342" width="310" height="96" rx="8" fill="#8ecae6" stroke="#2f6f88" stroke-width="3"/>
+	<text x="400" y="398" text-anchor="middle" font-family="Arial, sans-serif" font-size="23" font-weight="700" fill="#172026">Cabins (Starboard)</text>
+	<path d="M270 376 H530 M322 342 V438 M374 342 V438 M426 342 V438 M478 342 V438" stroke="#2f6f88" stroke-width="2"/>
+	<rect data-zone-id="dining" x="585" y="88" width="178" height="116" rx="8" fill="#f4d35e" stroke="#8f6f10" stroke-width="3"/>
+	<text x="674" y="154" text-anchor="middle" font-family="Arial, sans-serif" font-size="27" font-weight="700" fill="#172026">Dining</text>
+	<circle cx="628" cy="120" r="13" fill="#fff3bf" stroke="#8f6f10" stroke-width="2"/>
+	<circle cx="716" cy="178" r="13" fill="#fff3bf" stroke="#8f6f10" stroke-width="2"/>
+	<rect data-zone-id="lounge_theater" x="785" y="82" width="176" height="126" rx="8" fill="#f4d35e" stroke="#8f6f10" stroke-width="3"/>
+	<text x="873" y="134" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#172026">Lounge /</text>
+	<text x="873" y="165" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#172026">Theater</text>
+	<path d="M810 184 H938" stroke="#8f6f10" stroke-width="3"/>
+	<rect data-zone-id="pool_deck" x="610" y="332" width="230" height="110" rx="12" fill="#f4d35e" stroke="#8f6f10" stroke-width="3"/>
+	<text x="725" y="398" text-anchor="middle" font-family="Arial, sans-serif" font-size="27" font-weight="700" fill="#172026">Pool Deck</text>
+	<ellipse cx="658" cy="366" rx="28" ry="18" fill="#fff3bf" stroke="#8f6f10" stroke-width="2"/>
+	<rect data-zone-id="infirmary" x="100" y="132" width="110" height="86" rx="8" fill="#f28b82" stroke="#9d2f28" stroke-width="3"/>
+	<text x="155" y="166" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#172026">Infirmary</text>
+	<path d="M155 182 V203 M144 193 H166" stroke="#9d2f28" stroke-width="5"/>
+	<rect data-zone-id="isolation" x="100" y="302" width="110" height="86" rx="8" fill="#f28b82" stroke="#9d2f28" stroke-width="3"/>
+	<text x="155" y="337" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#172026">Isolation</text>
+	<path d="M124 360 H186 M124 374 H186" stroke="#9d2f28" stroke-width="4"/>
+	<rect data-zone-id="crew_area" x="980" y="166" width="116" height="188" rx="8" fill="#a3b18a" stroke="#4f613a" stroke-width="3"/>
+	<text x="1038" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="700" fill="#172026">Crew</text>
+	<text x="1038" y="280" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="700" fill="#172026">Area</text>
+	<rect data-zone-id="helipad" x="1020" y="370" width="112" height="92" rx="46" fill="#adb5bd" stroke="#4c5963" stroke-width="3"/>
+	<text x="1076" y="424" text-anchor="middle" font-family="Arial, sans-serif" font-size="26" font-weight="700" fill="#172026">H</text>
+</svg>
