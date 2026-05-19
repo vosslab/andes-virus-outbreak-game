@@ -13,6 +13,15 @@ import type {
 import type { ShipZone } from "./types/ship";
 
 const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
+const PASSENGER_MOVE_MS = 600;
+const PASSENGER_STAGGER_MS = 40;
+const PASSENGER_STAGGER_BUCKETS = 8;
+const PASSENGER_ZONE_INSET = 0.44;
+const PASSENGER_ZONE_SPAN = 0.12;
+const PASSENGER_MIN_RADIUS = 2.6;
+const PASSENGER_RADIUS_CELL_RATIO = 0.32;
+
+const passengerNodes = new Map<number, SVGCircleElement>();
 
 export type CurvePoint = {
 	readonly tick: number;
@@ -27,6 +36,14 @@ export type RenderModel = {
 	readonly passengers: readonly Passenger[];
 	readonly history: readonly CurvePoint[];
 	readonly running: boolean;
+};
+
+type PassengerPlacement = {
+	readonly point: {
+		readonly x: number;
+		readonly y: number;
+	};
+	readonly radius: number;
 };
 
 export type AppElements = {
@@ -136,43 +153,176 @@ function renderPassengerOverlay(
 	overlay: SVGSVGElement,
 	passengers: readonly Passenger[],
 ): void {
-	overlay.replaceChildren();
+	const seenPassengerIds = new Set<number>();
+	const placements = createPassengerPlacements(passengers);
 
 	for (const passenger of passengers) {
-		const point = getPassengerPoint(passenger);
-		const circle = createSvgElement("circle", "passenger-dot");
-		circle.setAttribute("cx", point.x.toFixed(1));
-		circle.setAttribute("cy", point.y.toFixed(1));
-		circle.setAttribute("r", getPassengerRadius(passenger.health));
+		seenPassengerIds.add(passenger.id);
+		const placement = placements.get(passenger.id);
+		if (placement === undefined) {
+			throw new Error(`Missing passenger placement: ${passenger.id}`);
+		}
+		const circle = getOrCreatePassengerNode(overlay, passenger, placement);
+		circle.setAttribute("cx", placement.point.x.toFixed(1));
+		circle.setAttribute("cy", placement.point.y.toFixed(1));
+		circle.setAttribute("r", placement.radius.toFixed(1));
 		circle.setAttribute("data-health", passenger.health);
-		circle.setAttribute("aria-label", `${passenger.label}: ${passenger.health}`);
-		overlay.appendChild(circle);
+		circle.setAttribute(
+			"aria-label",
+			`${passenger.label}: ${passenger.health} in ${getZoneById(passenger.zoneId).label}`,
+		);
+	}
+
+	for (const [passengerId, node] of passengerNodes) {
+		if (!seenPassengerIds.has(passengerId)) {
+			node.remove();
+			passengerNodes.delete(passengerId);
+		}
 	}
 }
 
-function getPassengerPoint(
+function createPassengerPlacements(
+	passengers: readonly Passenger[],
+): Map<number, PassengerPlacement> {
+	const placements = new Map<number, PassengerPlacement>();
+
+	for (const zone of SHIP_ZONES) {
+		const zonePassengers = getPassengersInZone(passengers, zone);
+		addZonePassengerPlacements(placements, zone, zonePassengers);
+	}
+
+	return placements;
+}
+
+function getPassengersInZone(
+	passengers: readonly Passenger[],
+	zone: ShipZone,
+): readonly Passenger[] {
+	const zonePassengers = passengers
+		.filter(function filterPassenger(passenger) {
+			return passenger.zoneId === zone.id;
+		})
+		.sort(comparePassengersById);
+	return zonePassengers;
+}
+
+function comparePassengersById(left: Passenger, right: Passenger): number {
+	const diff = left.id - right.id;
+	return diff;
+}
+
+function addZonePassengerPlacements(
+	placements: Map<number, PassengerPlacement>,
+	zone: ShipZone,
+	passengers: readonly Passenger[],
+): void {
+	if (passengers.length === 0) {
+		return;
+	}
+
+	const grid = getZoneGrid(zone, passengers.length);
+	const cellWidth = zone.bounds.width / grid.columns;
+	const cellHeight = zone.bounds.height / grid.rows;
+
+	for (let index = 0; index < passengers.length; index += 1) {
+		const passenger = passengers[index];
+		if (passenger === undefined) {
+			throw new Error("Missing passenger while building zone placement");
+		}
+		const column = index % grid.columns;
+		const row = Math.floor(index / grid.columns);
+		const jitter = getPassengerJitter(passenger.id);
+		const xCellOffset = PASSENGER_ZONE_INSET + PASSENGER_ZONE_SPAN * jitter.x;
+		const yCellOffset = PASSENGER_ZONE_INSET + PASSENGER_ZONE_SPAN * jitter.y;
+		const point = {
+			x: zone.bounds.x + cellWidth * (column + xCellOffset),
+			y: zone.bounds.y + cellHeight * (row + yCellOffset),
+		};
+		const radius = getPassengerRadius(passenger.health, cellWidth, cellHeight);
+		placements.set(passenger.id, { point, radius });
+	}
+}
+
+function getZoneGrid(
+	zone: ShipZone,
+	passengerCount: number,
+): { readonly columns: number; readonly rows: number } {
+	const aspectRatio = zone.bounds.width / zone.bounds.height;
+	const estimatedColumns = Math.ceil(Math.sqrt(passengerCount * aspectRatio));
+	const columns = Math.max(1, estimatedColumns);
+	const rows = Math.max(1, Math.ceil(passengerCount / columns));
+	const grid = { columns, rows };
+	return grid;
+}
+
+function getOrCreatePassengerNode(
+	overlay: SVGSVGElement,
 	passenger: Passenger,
-): { readonly x: number; readonly y: number } {
-	const zone = getZoneById(passenger.zoneId);
-	const columns = Math.max(2, Math.floor(zone.bounds.width / 18));
-	const rows = Math.max(2, Math.floor(zone.bounds.height / 18));
-	const column = passenger.id % columns;
-	const row = Math.floor(passenger.id / columns) % rows;
-	const xStep = zone.bounds.width / (columns + 1);
-	const yStep = zone.bounds.height / (rows + 1);
-	const point = {
-		x: zone.bounds.x + xStep * (column + 1),
-		y: zone.bounds.y + yStep * (row + 1),
-	};
-	return point;
-}
+	placement: PassengerPlacement,
+): SVGCircleElement {
+	const existingNode = passengerNodes.get(passenger.id);
 
-function getPassengerRadius(health: HealthState): string {
-	if (health === "infectious" || health === "isolated") {
-		return "6.2";
+	if (existingNode !== undefined) {
+		return existingNode;
 	}
 
-	return "5.2";
+	const circle = createSvgElement("circle", "passenger-dot");
+	const stagger = (passenger.id % PASSENGER_STAGGER_BUCKETS) * PASSENGER_STAGGER_MS;
+	circle.dataset.passengerId = String(passenger.id);
+	circle.style.setProperty("--passenger-move-ms", `${PASSENGER_MOVE_MS}ms`);
+	circle.style.setProperty("--passenger-stagger", `${stagger}ms`);
+	// Seed cx/cy/r before appending so the CSS transition does not animate the
+	// circle from the SVG default (0,0,0) to its real spot on first paint --
+	// that streak across the hull is what produced the giant red column.
+	circle.setAttribute("cx", placement.point.x.toFixed(1));
+	circle.setAttribute("cy", placement.point.y.toFixed(1));
+	circle.setAttribute("r", placement.radius.toFixed(1));
+	circle.setAttribute("data-health", passenger.health);
+	overlay.appendChild(circle);
+	passengerNodes.set(passenger.id, circle);
+	return circle;
+}
+
+function getPassengerJitter(
+	passengerId: number,
+): { readonly x: number; readonly y: number } {
+	const xHash = hashPassengerValue(passengerId, 0x45d9f3b);
+	const yHash = hashPassengerValue(passengerId, 0x119de1f3);
+	const jitter = {
+		x: xHash / 0xffffffff,
+		y: yHash / 0xffffffff,
+	};
+	return jitter;
+}
+
+function hashPassengerValue(passengerId: number, salt: number): number {
+	let value = passengerId + 1;
+	value = Math.imul(value ^ salt, 0x7feb352d);
+	value = Math.imul(value ^ (value >>> 15), 0x846ca68b);
+	const hash = (value ^ (value >>> 16)) >>> 0;
+	return hash;
+}
+
+function getPassengerRadius(
+	health: HealthState,
+	cellWidth: number,
+	cellHeight: number,
+): number {
+	const maxRadius = Math.max(
+		PASSENGER_MIN_RADIUS,
+		Math.min(cellWidth, cellHeight) * PASSENGER_RADIUS_CELL_RATIO,
+	);
+	const defaultRadius = getDefaultPassengerRadius(health);
+	const radius = Math.min(defaultRadius, maxRadius);
+	return radius;
+}
+
+function getDefaultPassengerRadius(health: HealthState): number {
+	if (health === "infectious" || health === "isolated") {
+		return 6.2;
+	}
+
+	return 5.2;
 }
 
 function renderLegend(legendList: HTMLElement, counts: HealthCounts): void {
