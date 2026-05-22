@@ -1,10 +1,186 @@
 #!/usr/bin/env bash
-# check_codebase.sh - quick developer verification for the browser scaffold.
+# check_codebase.sh - run the codebase check gate (no build).
+#
+# Runs (in order):
+#   1. TypeScript typecheck via tsconfig.json (src/).
+#   2. Wider typecheck via tsconfig.lint.json if present (tests/, tools/).
+#   3. ESLint (zero warnings).
+#   4. Prettier --check.
+#   5. Node unit tests under tests/ (node --test tests/test_*.mjs).
+#
+# Each step invokes its tool directly (npx tsc, npx eslint, npx prettier,
+# node --test). No dependency on package.json scripts; the package.json
+# "check" alias points at this script and stays canonical, but every
+# individual step is owned by the shell script.
+#
+# Build is not part of this gate. Run ./build_github_pages.sh (or
+# npm run build) for that. Playwright is not part of this gate either;
+# run npm run test:playwright manually after bash run_web_server.sh.
+#
+# Flags:
+#   -h, --help          Print usage and exit 0.
+#
+# A per-run summary is printed on exit (after preflight succeeds) listing
+# PASS / FAIL / SKIP for each step. Exit code is 0 only when no step
+# failed; preflight failures exit non-zero without a summary.
 
 set -euo pipefail
 
+# Usage
+usage() {
+	cat <<'USAGE'
+Usage: check_codebase.sh [-h|--help]
+
+  -h, --help          Print this help and exit 0.
+
+Each step runs its tool directly; package.json is not consulted.
+USAGE
+}
+
+# Parse flags
+while [ "$#" -gt 0 ]; do
+	case "$1" in
+		-h|--help)
+			usage
+			exit 0
+			;;
+		*)
+			echo "ERROR: unknown flag: $1" >&2
+			usage >&2
+			exit 2
+			;;
+	esac
+done
+
+# Preflight (no summary on failure)
 cd "$(git rev-parse --show-toplevel)"
 
-npx tsc --noEmit -p src/tsconfig.json
+if ! command -v node >/dev/null 2>&1; then
+	echo "ERROR: node not found on PATH." >&2
+	exit 1
+fi
 
-echo "TypeScript check passed."
+if ! command -v npm >/dev/null 2>&1; then
+	echo "ERROR: npm not found on PATH." >&2
+	exit 1
+fi
+
+echo "node $(node --version), npm $(npm --version)"
+
+if [ ! -f package.json ]; then
+	echo "ERROR: package.json missing." >&2
+	exit 1
+fi
+
+if [ ! -d node_modules ]; then
+	echo "ERROR: node_modules missing. Run 'npm install' first." >&2
+	exit 1
+fi
+
+if [ ! -f package-lock.json ]; then
+	echo "WARN: package-lock.json missing; npm install will not produce a reproducible install." >&2
+fi
+
+# Step tracking (bash 3.2 compatible)
+STEP_NAMES=()
+STEP_STATUS=()
+STEP_NOTES=()
+SUMMARY_ENABLED=0
+
+# step_record <name> <status> [note]
+step_record() {
+	STEP_NAMES+=("$1")
+	STEP_STATUS+=("$2")
+	if [ "$#" -ge 3 ]; then
+		STEP_NOTES+=("$3")
+	else
+		STEP_NOTES+=("")
+	fi
+}
+
+# step_skip <name> <reason>
+step_skip() {
+	local name="$1"
+	local reason="$2"
+	echo "==> SKIP $name ($reason)"
+	step_record "$name" "SKIP" "$reason"
+}
+
+# step_run <name> <command...>
+# Runs the given command. Records PASS or FAIL+summary+exit 1.
+step_run() {
+	local name="$1"
+	shift
+	echo "==> $name"
+	local rc=0
+	set +e
+	"$@"
+	rc=$?
+	set -e
+	if [ "$rc" -eq 0 ]; then
+		step_record "$name" "PASS"
+	else
+		step_record "$name" "FAIL"
+		print_summary
+		trap - EXIT
+		exit 1
+	fi
+}
+
+# Summary
+print_summary() {
+	if [ "$SUMMARY_ENABLED" != "1" ]; then
+		return 0
+	fi
+	local total=${#STEP_NAMES[@]}
+	local failed=0
+	local i=0
+	echo "Summary:"
+	while [ "$i" -lt "$total" ]; do
+		local name="${STEP_NAMES[$i]}"
+		local status="${STEP_STATUS[$i]}"
+		local note="${STEP_NOTES[$i]}"
+		if [ "$status" = "FAIL" ]; then
+			failed=$((failed + 1))
+		fi
+		if [ "$status" = "SKIP" ] && [ -n "$note" ]; then
+			echo "  [$status] $name ($note)"
+		else
+			echo "  [$status] $name"
+		fi
+		i=$((i + 1))
+	done
+	if [ "$failed" -eq 0 ]; then
+		echo "PASS: $total checks passed."
+	else
+		echo "FAIL: $failed of $total checks failed."
+	fi
+}
+
+trap print_summary EXIT
+
+# Steps
+SUMMARY_ENABLED=1
+
+# 1. typecheck (always)
+step_run typecheck npx tsc --noEmit -p tsconfig.json
+
+# 2. typecheck:lint only if tsconfig.lint.json exists
+if [ -f tsconfig.lint.json ]; then
+	step_run typecheck:lint npx tsc --noEmit -p tsconfig.lint.json
+else
+	step_skip typecheck:lint "tsconfig.lint.json not present"
+fi
+
+# 3. lint
+step_run lint npx eslint --max-warnings 0 'src/**/*.ts' 'tests/**/*.ts' '*.ts'
+
+# 4. format:check
+step_run format:check npx prettier --check '**/*.{ts,tsx,mts,cts,js,mjs,cjs}'
+
+# 5. test:node
+step_run test:node node --test 'tests/test_*.mjs'
+
+# All steps complete; summary prints via EXIT trap. Exit 0 (no failures
+# reach here -- failure paths exit 1 directly).
+exit 0
