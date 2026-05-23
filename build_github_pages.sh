@@ -3,6 +3,8 @@
 #
 # Contract:
 #   - Wipes dist/ from scratch.
+#   - Regenerates src/ship_schematic.svg and src/ship_layout.generated.ts from
+#     data/ship.yaml via pipeline/generate_ship_svg.py.
 #   - Type-checks via 'tsc --noEmit -p tsconfig.json'.
 #   - Resolves the entry: src/main.ts preferred, src/init.ts legacy fallback.
 #     Aborts with an actionable error if neither exists.
@@ -12,9 +14,10 @@
 #     tag (warns if missing -- the page will load but main.js is dead).
 #   - Bundles the entry into dist/main.js with esbuild (ESM, es2020,
 #     browser, minified, with sourcemap).
-#   - Copies src/index.html and src/style.css into dist/.
+#   - Copies src/index.html, src/style.css, and src/ship_schematic.svg into dist/.
 #   - Writes dist/.nojekyll so GitHub Pages serves files starting with _.
-#   - Asserts dist/index.html and dist/main.js exist before exiting.
+#   - Asserts dist/index.html, dist/main.js, and dist/ship_schematic.svg exist
+#     before exiting.
 #
 # Hard rule: never produces single-file output. ESM only.
 
@@ -56,6 +59,11 @@ fi
 rm -rf dist
 mkdir -p dist
 
+# Regenerate ship schematic and layout from YAML.
+# Note: invoke python3 directly. Sourcing source_me.sh under `set -u`
+# blows up on unbound PS1 inside ~/.bashrc completion scripts.
+python3 pipeline/generate_ship_svg.py
+
 npx tsc --noEmit -p tsconfig.json
 
 npx esbuild "$ENTRY" \
@@ -69,9 +77,11 @@ npx esbuild "$ENTRY" \
 
 cp src/index.html dist/index.html
 cp src/style.css dist/style.css
+cp src/ship_schematic.svg dist/ship_schematic.svg
 touch dist/.nojekyll
 
 test -f dist/index.html
 test -f dist/main.js
+test -f dist/ship_schematic.svg
 
 echo "Built dist/ (GitHub Pages-ready)."

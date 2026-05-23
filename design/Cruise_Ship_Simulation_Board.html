@@ -1,0 +1,738 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>M.S. Verity — Simulation Board</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0b1722;
+      --sea: #0d2235;
+      --sea-deep: #081522;
+      --hull-fill: #f2e6c8;
+      --hull-stroke: #1a2a36;
+      --ink: #1a2a36;
+      --ink-soft: #4a5a66;
+      --paper: #f6efd9;
+      --paper-edge: #d9cfae;
+      --brass: #c89849;
+      --brass-soft: #8c6b30;
+      --rail: #1f3340;
+      --rail-edge: #2c4453;
+      --panel: #11202c;
+      --panel-edge: #1d3142;
+      --panel-text: #d8e2ea;
+      --panel-mute: #7a8a98;
+      --accent: #e8c074;
+      --danger: #d63a3a;
+      --good: #2db48a;
+      --warn: #e9b145;
+      --info: #3a82d6;
+      --purple: #7d3aa9;
+      --grid-line: rgba(20,30,40,0.08);
+      --grid-line-strong: rgba(20,30,40,0.18);
+      --shadow: 0 18px 40px -20px rgba(0,0,0,0.5), 0 2px 0 rgba(255,255,255,0.04) inset;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: var(--bg); color: var(--panel-text); font-family: 'Space Grotesk', system-ui, sans-serif; }
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(1200px 600px at 30% 0%, #14283a 0%, transparent 60%),
+        radial-gradient(900px 500px at 90% 100%, #112638 0%, transparent 55%),
+        var(--bg);
+    }
+    #root { min-height: 100vh; }
+
+    /* ---------- App layout ---------- */
+    .app {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 400px;
+      gap: 18px;
+      padding: 18px;
+      min-height: 100vh;
+    }
+    @media (max-width: 1280px) {
+      .app { grid-template-columns: 1fr; }
+    }
+
+    /* ---------- Top bar ---------- */
+    .topbar {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 18px;
+      background: linear-gradient(180deg, #14283a 0%, #0e1f2e 100%);
+      border: 1px solid var(--panel-edge);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+    }
+    .topbar .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .topbar .ship {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 700;
+      font-size: 22px;
+      letter-spacing: -0.01em;
+      color: #f3e6c8;
+    }
+    .topbar .ship .pre {
+      color: var(--brass);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      font-weight: 600;
+      margin-right: 8px;
+    }
+    .topbar .sub {
+      color: var(--panel-mute);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .topbar .spacer { flex: 1; }
+    .topbar .stat {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      padding: 0 14px;
+      border-left: 1px solid var(--panel-edge);
+      min-width: 90px;
+    }
+    .topbar .stat .v {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      font-size: 18px;
+      color: #f3e6c8;
+    }
+    .topbar .stat .l {
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--panel-mute);
+    }
+
+    /* ---------- Board panel ---------- */
+    .board-wrap {
+      background:
+        radial-gradient(900px 500px at 50% 50%, #0e2334 0%, #061320 80%),
+        var(--sea);
+      border: 1px solid var(--panel-edge);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      padding: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+    .board-wrap::before {
+      /* sea texture */
+      content: "";
+      position: absolute; inset: 0;
+      background-image:
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 32px),
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 32px);
+      pointer-events: none;
+      mix-blend-mode: screen;
+      opacity: 0.6;
+    }
+    .board-wrap::after {
+      /* vignette */
+      content: "";
+      position: absolute; inset: 0;
+      background: radial-gradient(120% 100% at 50% 50%, transparent 50%, rgba(0,0,0,0.5) 100%);
+      pointer-events: none;
+    }
+    .board-frame {
+      position: relative;
+      z-index: 2;
+      border-radius: 8px;
+    }
+
+    /* ---------- SVG board ---------- */
+    .board-svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-width: 100%;
+      border-radius: 8px;
+      font-family: 'Space Grotesk', sans-serif;
+      user-select: none;
+    }
+    .board-svg text { user-select: none; }
+    .axis-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 600;
+      fill: var(--brass);
+      letter-spacing: 0.08em;
+    }
+    .axis-bg { fill: #0a1b28; }
+    .axis-tick { stroke: rgba(200,152,73,0.25); stroke-width: 1; }
+    .hull-fill { fill: var(--hull-fill); }
+    .hull-stroke { fill: none; stroke: var(--hull-stroke); stroke-width: 3; }
+    .hull-pinstripe { fill: none; stroke: var(--brass); stroke-width: 1.2; opacity: 0.55; }
+    .tile-grid-line { stroke: var(--grid-line); stroke-width: 1; }
+    .tile-grid-strong { stroke: var(--grid-line-strong); stroke-width: 1; }
+
+    .room-rect { stroke-width: 1.6; }
+    .room-rect.dim { opacity: 0.55; }
+    .room-rect.hover { filter: brightness(1.06) saturate(1.05); }
+    .room-rect.selected { stroke-width: 2.6; }
+    .room-label {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600;
+      pointer-events: none;
+      paint-order: stroke;
+      stroke: rgba(255,255,255,0.85);
+      stroke-width: 2.6;
+      stroke-linejoin: round;
+    }
+    .room-coord {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      font-size: 8px;
+      letter-spacing: 0.04em;
+      fill: rgba(20,30,40,0.5);
+      pointer-events: none;
+    }
+    .door { stroke: var(--brass-soft); stroke-width: 2.4; stroke-linecap: round; fill: none; }
+    .door-bg { stroke: var(--hull-fill); stroke-width: 5; stroke-linecap: round; fill: none; }
+    .door-arc { stroke: var(--brass-soft); stroke-width: 1; fill: none; opacity: 0.55; stroke-dasharray: 2 2; }
+
+    .agent-shadow { fill: rgba(0,0,0,0.18); }
+    .agent-body { stroke: rgba(255,255,255,0.9); stroke-width: 1.5; }
+    .agent-body.selected { stroke: var(--ink); stroke-width: 2.2; }
+    .agent-init {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 10px;
+      text-anchor: middle;
+      dominant-baseline: central;
+      fill: #fff;
+      pointer-events: none;
+      paint-order: stroke;
+      stroke: rgba(0,0,0,0.35);
+      stroke-width: 1.2;
+    }
+    .agent-pulse {
+      fill: none;
+      stroke-width: 2;
+    }
+
+    .hover-cursor {
+      fill: none;
+      stroke: var(--ink);
+      stroke-width: 2;
+      pointer-events: none;
+    }
+    .hover-cursor-bg {
+      fill: none;
+      stroke: rgba(255,255,255,0.7);
+      stroke-width: 4;
+      pointer-events: none;
+    }
+
+    .compass {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+    }
+
+    /* feature glyphs */
+    .pool-water { fill: #cfeae8; stroke: #2b6f68; stroke-width: 1.5; }
+    .pool-ripple { fill: none; stroke: #2b6f68; opacity: 0.4; stroke-width: 1; }
+    .helideck-h {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 22px;
+      fill: rgba(20,30,40,0.7);
+      text-anchor: middle;
+      dominant-baseline: central;
+    }
+    .glyph {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      text-anchor: middle;
+      dominant-baseline: central;
+      pointer-events: none;
+    }
+    .lifeboat {
+      stroke: #8c6b30;
+      stroke-width: 1;
+    }
+
+    /* ---------- Sidebar ---------- */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      min-width: 0;
+    }
+    .panel {
+      background: linear-gradient(180deg, #14242f 0%, #0e1c27 100%);
+      border: 1px solid var(--panel-edge);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      padding: 14px 16px;
+    }
+    .panel h3 {
+      margin: 0 0 10px 0;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--brass);
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .panel h3::before {
+      content: "";
+      width: 8px; height: 8px;
+      background: var(--brass);
+      border-radius: 1px;
+      box-shadow: 0 0 0 2px rgba(200,152,73,0.2);
+    }
+    .panel h3 .count {
+      margin-left: auto;
+      color: var(--panel-mute);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+    }
+
+    /* Hover / selection readout */
+    .readout {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 4px 12px;
+      font-size: 13px;
+    }
+    .readout .k {
+      color: var(--panel-mute);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding-top: 2px;
+    }
+    .readout .v {
+      color: #e8eef3;
+      font-weight: 500;
+    }
+    .readout .v.mono {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+    .readout .swatch {
+      display: inline-block;
+      width: 12px; height: 12px;
+      border-radius: 3px;
+      margin-right: 6px;
+      vertical-align: -1px;
+      border: 1px solid rgba(0,0,0,0.25);
+    }
+
+    /* Agent roster */
+    .roster {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      max-height: 320px;
+      overflow-y: auto;
+      margin: 0 -4px;
+      padding: 0 4px;
+    }
+    .roster::-webkit-scrollbar { width: 8px; }
+    .roster::-webkit-scrollbar-thumb { background: #1d3142; border-radius: 4px; }
+    .agent-row {
+      display: grid;
+      grid-template-columns: 26px 1fr auto;
+      gap: 10px;
+      align-items: center;
+      padding: 7px 9px;
+      border-radius: 7px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: background 0.12s, border-color 0.12s;
+    }
+    .agent-row:hover { background: #182834; }
+    .agent-row.selected { background: #1c3142; border-color: var(--brass-soft); }
+    .agent-row .chip {
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 10px;
+      color: #fff;
+      border: 1.5px solid rgba(255,255,255,0.85);
+    }
+    .agent-row .meta { min-width: 0; }
+    .agent-row .name {
+      font-size: 13px;
+      font-weight: 500;
+      color: #e8eef3;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .agent-row .sub {
+      font-size: 11px;
+      color: var(--panel-mute);
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 0.04em;
+    }
+    .agent-row .where {
+      font-size: 10px;
+      color: var(--brass);
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 0.06em;
+      text-align: right;
+    }
+
+    /* Legend */
+    .legend {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px 10px;
+    }
+    .legend .item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 12px;
+      color: #d8e2ea;
+      padding: 3px 0;
+      cursor: pointer;
+    }
+    .legend .item .sw {
+      width: 14px; height: 14px;
+      border-radius: 3px;
+      border: 1px solid rgba(0,0,0,0.3);
+    }
+    .legend .item.dim { opacity: 0.4; }
+
+    /* State legend */
+    .states {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 4px 10px;
+    }
+    .states .item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 12px;
+      color: #d8e2ea;
+    }
+    .states .dot {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,0.9);
+    }
+
+    /* YAML editor */
+    .spec-head {
+      display: flex; align-items: center; gap: 8px;
+      margin: 0 0 8px 0;
+    }
+    .spec-head button {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 5px 9px;
+      background: #1a2c3a;
+      color: #e8eef3;
+      border: 1px solid var(--panel-edge);
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .spec-head button:hover { background: #233a4c; border-color: var(--brass-soft); }
+    .spec-head button.primary {
+      background: var(--brass);
+      color: #1a2a36;
+      border-color: var(--brass);
+    }
+    .spec-head button.primary:hover { background: #e0b35a; }
+    .spec-error {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #ff8a8a;
+      background: rgba(214,58,58,0.1);
+      border: 1px solid rgba(214,58,58,0.3);
+      padding: 6px 8px;
+      border-radius: 5px;
+      margin-bottom: 8px;
+      white-space: pre-wrap;
+    }
+    .spec-editor {
+      width: 100%;
+      height: 360px;
+      background: #0a1620;
+      color: #d8e2ea;
+      border: 1px solid var(--panel-edge);
+      border-radius: 6px;
+      padding: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      line-height: 1.5;
+      resize: vertical;
+      tab-size: 2;
+    }
+    .spec-editor:focus { outline: none; border-color: var(--brass-soft); }
+
+    .spec-tabs {
+      display: flex;
+      gap: 2px;
+      margin-bottom: 8px;
+      padding: 3px;
+      background: #0a1620;
+      border-radius: 7px;
+      border: 1px solid var(--panel-edge);
+    }
+    .spec-tabs button {
+      flex: 1;
+      padding: 6px 10px;
+      background: transparent;
+      color: var(--panel-mute);
+      border: none;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .spec-tabs button.active {
+      background: #1a2c3a;
+      color: #f3e6c8;
+    }
+
+    /* hint */
+    .hint {
+      font-size: 11px;
+      color: var(--panel-mute);
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 0.04em;
+      margin-top: 8px;
+      line-height: 1.5;
+    }
+    .hint kbd {
+      background: #1a2c3a;
+      border: 1px solid var(--panel-edge);
+      border-bottom-width: 2px;
+      border-radius: 3px;
+      padding: 1px 5px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: #f3e6c8;
+    }
+  </style>
+</head>
+<body>
+  <!-- The ship spec. Edit this YAML and the board re-renders. -->
+  <script type="text/yaml" id="ship-spec">
+grid:
+  cols: 36
+  rows: 20
+  tile: 28
+  bow: left
+
+# Room type styles. Color + ink + optional glyph for the icon corner.
+types:
+  command:   { fill: "#1f3a4d", ink: "#f3e6c8", label: "Command",     glyph: "⚓" }
+  cabin:     { fill: "#cfe2ec", ink: "#1a3a4d", label: "Cabins",      glyph: "" }
+  suite:     { fill: "#a8c8d9", ink: "#1a3a4d", label: "Suites",      glyph: "★" }
+  corridor:  { fill: "#ece1c2", ink: "#5a4a30", label: "Corridor",    glyph: "" }
+  atrium:    { fill: "#f3d889", ink: "#5a4010", label: "Atrium",      glyph: "✦" }
+  food:      { fill: "#f4ba6c", ink: "#5a3010", label: "Dining",      glyph: "" }
+  leisure:   { fill: "#e89a6a", ink: "#5a2010", label: "Leisure",     glyph: "" }
+  wellness:  { fill: "#9bd2b1", ink: "#1a4d2e", label: "Wellness",    glyph: "" }
+  medical:   { fill: "#f08a8a", ink: "#5a1010", label: "Medical",     glyph: "✚" }
+  retail:    { fill: "#d4a8d8", ink: "#3a1040", label: "Retail",      glyph: "" }
+  crew:      { fill: "#b5b39a", ink: "#2a2810", label: "Crew",        glyph: "" }
+  crew_op:   { fill: "#9aa085", ink: "#1a1810", label: "Crew Ops",    glyph: "" }
+  emergency: { fill: "#f0a23a", ink: "#3a1c00", label: "Emergency",   glyph: "" }
+  transit:   { fill: "#7c8c99", ink: "#f3e6c8", label: "Transit",     glyph: "" }
+  public:    { fill: "#d6c89e", ink: "#3a2e10", label: "Public Deck", glyph: "" }
+
+# Rooms — x,y are the top-left tile; w,h are tile width/height.
+rooms:
+  # — Bow (forward) —
+  - { id: obs_p,      name: "Fwd Promenade (P)",   type: public,    x: 1,  y: 2,  w: 3, h: 5 }
+  - { id: bridge,     name: "Bridge",              type: command,   x: 0,  y: 7,  w: 4, h: 6 }
+  - { id: obs_s,      name: "Fwd Promenade (S)",   type: public,    x: 1,  y: 13, w: 3, h: 5 }
+
+  # — Sun Deck (port lifeboat row) —
+  - { id: lifeboats_p, name: "Lifeboat Stations (P)", type: emergency, x: 4, y: 0, w: 27, h: 2 }
+
+  # — Cabins Port (rows 2-4) —
+  - { id: cab_p1, name: "Cabins 101-118 (P)", type: cabin, x: 4,  y: 2, w: 6, h: 3 }
+  - { id: cab_p2, name: "Cabins 119-136 (P)", type: cabin, x: 10, y: 2, w: 6, h: 3 }
+  - { id: cab_p3, name: "Cabins 137-151 (P)", type: cabin, x: 16, y: 2, w: 5, h: 3 }
+  - { id: cab_p4, name: "Cabins 152-166 (P)", type: cabin, x: 21, y: 2, w: 5, h: 3 }
+  - { id: suite_p, name: "Owner's Suites (P)", type: suite, x: 26, y: 2, w: 5, h: 3 }
+
+  # — Port Corridor (row 5) —
+  - { id: corr_p, name: "Port Corridor", type: corridor, x: 4, y: 5, w: 27, h: 1 }
+
+  # — Top Inner (rows 6-8) —
+  - { id: spa,     name: "Spa & Hammam",  type: wellness, x: 4,  y: 6, w: 4, h: 3 }
+  - { id: library, name: "Library",       type: leisure,  x: 8,  y: 6, w: 4, h: 3 }
+  - { id: dining,  name: "Main Dining",   type: food,     x: 12, y: 6, w: 6, h: 3 }
+  - { id: galley,  name: "Galley",        type: crew_op,  x: 18, y: 6, w: 3, h: 3 }
+  - { id: casino,  name: "Casino",        type: leisure,  x: 21, y: 6, w: 5, h: 3 }
+  - { id: theater, name: "Theater",       type: leisure,  x: 26, y: 6, w: 5, h: 3 }
+
+  # — Grand Atrium (rows 9-10) —
+  - { id: atrium,  name: "Grand Atrium",  type: atrium,   x: 4, y: 9, w: 27, h: 2 }
+
+  # — Bottom Inner (rows 11-13) —
+  - { id: infirmary, name: "Infirmary",     type: medical,  x: 4,  y: 11, w: 4, h: 3 }
+  - { id: isolation, name: "Isolation",     type: medical,  x: 8,  y: 11, w: 3, h: 3 }
+  - { id: gym,       name: "Gym",           type: wellness, x: 11, y: 11, w: 4, h: 3 }
+  - { id: pool,      name: "Pool Deck",     type: leisure,  x: 15, y: 11, w: 6, h: 3 }
+  - { id: arcade,    name: "Arcade",        type: leisure,  x: 21, y: 11, w: 5, h: 3 }
+  - { id: kids,      name: "Kids Club",     type: leisure,  x: 26, y: 11, w: 5, h: 3 }
+
+  # — Starboard Corridor (row 14) —
+  - { id: corr_s, name: "Starboard Corridor", type: corridor, x: 4, y: 14, w: 27, h: 1 }
+
+  # — Cabins Starboard (rows 15-17) —
+  - { id: cab_s1, name: "Cabins 201-218 (S)", type: cabin, x: 4,  y: 15, w: 6, h: 3 }
+  - { id: cab_s2, name: "Cabins 219-236 (S)", type: cabin, x: 10, y: 15, w: 6, h: 3 }
+  - { id: cab_s3, name: "Cabins 237-251 (S)", type: cabin, x: 16, y: 15, w: 5, h: 3 }
+  - { id: cab_s4, name: "Cabins 252-266 (S)", type: cabin, x: 21, y: 15, w: 5, h: 3 }
+  - { id: suite_s, name: "Owner's Suites (S)", type: suite, x: 26, y: 15, w: 5, h: 3 }
+
+  # — Sun Deck (starboard lifeboat row) —
+  - { id: lifeboats_s, name: "Lifeboat Stations (S)", type: emergency, x: 4, y: 18, w: 27, h: 2 }
+
+  # — Stern (aft, right) —
+  - { id: sun_deck,    name: "Sun Deck Aft",  type: leisure,  x: 31, y: 0,  w: 5, h: 2 }
+  - { id: crew_q,      name: "Crew Quarters", type: crew,     x: 31, y: 2,  w: 5, h: 4 }
+  - { id: crew_mess,   name: "Crew Mess",     type: crew_op,  x: 31, y: 6,  w: 5, h: 3 }
+  - { id: comms,       name: "Comms Room",    type: command,  x: 31, y: 9,  w: 5, h: 2 }
+  - { id: engineering, name: "Engineering",   type: crew_op,  x: 31, y: 11, w: 5, h: 4 }
+  - { id: tender_bay,  name: "Tender Bay",    type: transit,  x: 31, y: 15, w: 5, h: 3 }
+  - { id: helideck,    name: "Helideck",      type: transit,  x: 31, y: 18, w: 5, h: 2 }
+
+# Doors — passages between rooms.
+# dir: h = horizontal wall (between row y-1 and row y at column x)
+# dir: v = vertical wall   (between col x-1 and col x at row y)
+doors:
+  # Port cabins → port corridor
+  - { x: 7,  y: 5, dir: h }
+  - { x: 13, y: 5, dir: h }
+  - { x: 18, y: 5, dir: h }
+  - { x: 23, y: 5, dir: h }
+  - { x: 28, y: 5, dir: h }
+  # Top inner → port corridor (north)
+  - { x: 6,  y: 6, dir: h }
+  - { x: 10, y: 6, dir: h }
+  - { x: 15, y: 6, dir: h }
+  - { x: 19, y: 6, dir: h }
+  - { x: 23, y: 6, dir: h }
+  - { x: 28, y: 6, dir: h }
+  # Top inner → atrium (south)
+  - { x: 6,  y: 9, dir: h }
+  - { x: 10, y: 9, dir: h }
+  - { x: 15, y: 9, dir: h }
+  - { x: 19, y: 9, dir: h }
+  - { x: 23, y: 9, dir: h }
+  - { x: 28, y: 9, dir: h }
+  # Bottom inner → atrium (north)
+  - { x: 6,  y: 11, dir: h }
+  - { x: 9,  y: 11, dir: h }
+  - { x: 12, y: 11, dir: h }
+  - { x: 17, y: 11, dir: h }
+  - { x: 23, y: 11, dir: h }
+  - { x: 28, y: 11, dir: h }
+  # Bottom inner → starboard corridor (south)
+  - { x: 6,  y: 14, dir: h }
+  - { x: 9,  y: 14, dir: h }
+  - { x: 13, y: 14, dir: h }
+  - { x: 17, y: 14, dir: h }
+  - { x: 23, y: 14, dir: h }
+  - { x: 28, y: 14, dir: h }
+  # Stbd cabins → stbd corridor
+  - { x: 7,  y: 15, dir: h }
+  - { x: 13, y: 15, dir: h }
+  - { x: 18, y: 15, dir: h }
+  - { x: 23, y: 15, dir: h }
+  - { x: 28, y: 15, dir: h }
+  # Lifeboats (sun-deck access from cabin floor)
+  - { x: 7,  y: 2, dir: h }
+  - { x: 18, y: 2, dir: h }
+  - { x: 28, y: 2, dir: h }
+  - { x: 7,  y: 18, dir: h }
+  - { x: 18, y: 18, dir: h }
+  - { x: 28, y: 18, dir: h }
+  # Bow / forward promenade
+  - { x: 4, y: 4, dir: v }   # obs_p → cab_p1
+  - { x: 4, y: 9, dir: v }   # bridge → atrium
+  - { x: 4, y: 10, dir: v }  # bridge → atrium
+  - { x: 4, y: 16, dir: v }  # obs_s → cab_s1
+  # Stern connections
+  - { x: 31, y: 3, dir: v }  # suite_p → crew_q
+  - { x: 31, y: 7, dir: v }  # theater → crew_mess
+  - { x: 31, y: 9, dir: v }  # atrium → comms
+  - { x: 31, y: 12, dir: v } # kids → engineering
+  - { x: 31, y: 16, dir: v } # suite_s → tender_bay
+
+# Health states for agents
+states:
+  healthy:     { color: "#2db48a", label: "Healthy" }
+  exposed:     { color: "#e9b145", label: "Exposed" }
+  symptomatic: { color: "#e07856", label: "Symptomatic" }
+  infected:    { color: "#d63a3a", label: "Infected" }
+  isolated:    { color: "#7d3aa9", label: "Isolated" }
+  recovered:   { color: "#3a82d6", label: "Recovered" }
+  crew:        { color: "#5a6c7d", label: "Crew" }
+
+# Initial agent placement on tile coords.
+agents:
+  - { id: A01, name: "Liu Wei",        role: passenger, state: healthy,     x: 7,  y: 3  }
+  - { id: A02, name: "Marisol Vega",   role: passenger, state: exposed,     x: 14, y: 7  }
+  - { id: A03, name: "Dre Okafor",     role: passenger, state: symptomatic, x: 19, y: 10 }
+  - { id: A04, name: "Yuki Tanaka",    role: passenger, state: infected,    x: 5,  y: 12 }
+  - { id: A05, name: "Petra Stern",    role: passenger, state: isolated,    x: 9,  y: 12 }
+  - { id: A06, name: "Omar Haddad",    role: crew,      state: crew,        x: 19, y: 7  }
+  - { id: A07, name: "Inez Cruz",      role: officer,   state: crew,        x: 2,  y: 10 }
+  - { id: A08, name: "Roman Kade",     role: passenger, state: recovered,   x: 28, y: 12 }
+  - { id: A09, name: "Sora Matsui",    role: passenger, state: healthy,     x: 16, y: 16 }
+  - { id: A10, name: "Felipe Romero",  role: crew,      state: crew,        x: 33, y: 7  }
+  - { id: A11, name: "Aisha N'Diaye",  role: passenger, state: exposed,     x: 18, y: 12 }
+  - { id: A12, name: "Carl Brandt",    role: passenger, state: healthy,     x: 24, y: 3  }
+  - { id: A13, name: "Sven Lindqvist", role: crew,      state: crew,        x: 33, y: 12 }
+  - { id: A14, name: "Mei-ling Zhao",  role: passenger, state: symptomatic, x: 12, y: 9  }
+  - { id: A15, name: "Hana Park",      role: passenger, state: healthy,     x: 17, y: 12 }
+  - { id: A16, name: "Tomás Reyes",    name_short: "TR", role: passenger, state: exposed, x: 24, y: 16 }
+  </script>
+
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+
+  <script type="text/babel" src="tweaks-panel.jsx"></script>
+  <script type="text/babel" src="board.jsx"></script>
+  <script type="text/babel" src="app.jsx"></script>
+</body>
+</html>

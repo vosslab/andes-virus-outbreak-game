@@ -160,7 +160,7 @@ In these systems, agents behave as though influenced by virtual forces represent
 
 The mathematical formulation resembles physical dynamics:
 
-m(dv/dt) = F_desired + ΣF_social + ΣF_obstacle
+m(dv/dt) = F_desired + &Sigma;F_social + &Sigma;F_obstacle
 
 Although highly abstract, social force models successfully reproduce many observed crowd phenomena, including lane formation and congestion waves.
 

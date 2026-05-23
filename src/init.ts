@@ -25,11 +25,7 @@ import {
 
 import type { AppControlState, AppMode } from "./ui_state";
 import type { AppElements, CurvePoint, RenderModel } from "./rendering";
-import type {
-	ScenarioConfig,
-	ScenarioId,
-	SimulationState,
-} from "./types/simulation";
+import type { ScenarioConfig, ScenarioId, SimulationState } from "./types/simulation";
 
 const TICKS_PER_RUN_STEP = 1;
 const RUN_INTERVAL_MS = 420;
@@ -69,11 +65,7 @@ function createButton(label: string, className: string): HTMLButtonElement {
 	return button;
 }
 
-function createRangeInput(
-	minimum: string,
-	maximum: string,
-	step: string,
-): HTMLInputElement {
+function createRangeInput(minimum: string, maximum: string, step: string): HTMLInputElement {
 	const input = document.createElement("input");
 	input.type = "range";
 	input.min = minimum;
@@ -173,16 +165,8 @@ function buildShell(root: HTMLElement): AppElements {
 		incubationInput,
 		"incubation-value",
 	);
-	const riskRange = createLabeledRange(
-		"Close-contact risk",
-		riskInput,
-		"risk-value",
-	);
-	const isolationRange = createLabeledRange(
-		"Isolation speed",
-		isolationInput,
-		"isolation-value",
-	);
+	const riskRange = createLabeledRange("Close-contact risk", riskInput, "risk-value");
+	const isolationRange = createLabeledRange("Isolation speed", isolationInput, "isolation-value");
 	const movementRange = createLabeledRange(
 		"Movement and gathering",
 		movementInput,
@@ -308,10 +292,7 @@ function appendHistory(
 	simulation: SimulationState,
 ): readonly CurvePoint[] {
 	const summary = summarizeSimulation(simulation);
-	const nextHistory = [
-		...history,
-		{ tick: simulation.tick, counts: summary.counts },
-	];
+	const nextHistory = [...history, { tick: simulation.tick, counts: summary.counts }];
 	return nextHistory.slice(-HISTORY_LIMIT);
 }
 
@@ -400,11 +381,7 @@ function wireEvents(
 		const state = getState();
 		const controls = {
 			...state.controls,
-			movementGatheringLevel: clamp(
-				Number(elements.movementInput.value),
-				0.15,
-				0.95,
-			),
+			movementGatheringLevel: clamp(Number(elements.movementInput.value), 0.15, 0.95),
 		};
 		setState(rebuildFromControls(stopRunning(state), controls));
 	});
@@ -465,10 +442,7 @@ function advanceState(state: AppState, tickCount: number): AppState {
 	return nextState;
 }
 
-function rebuildFromControls(
-	state: AppState,
-	controls: AppControlState,
-): AppState {
+function rebuildFromControls(state: AppState, controls: AppControlState): AppState {
 	const scenario = buildScenarioFromControls(controls);
 	const simulation = createInitialSimulation(scenario, DEFAULT_SEED);
 	const history = createHistory(simulation);

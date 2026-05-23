@@ -1,0 +1,1250 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Designer's Markup — Ship Handoff Reply</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0b1722;
+      --paper: #f4ecd6;
+      --paper-2: #ebe2c5;
+      --paper-edge: #d2c599;
+      --ink: #15212b;
+      --ink-soft: #3b4b58;
+      --ink-mute: #6c7a86;
+      --brass: #b48838;
+      --brass-deep: #7a5b1d;
+      --rule: rgba(20,30,40,0.18);
+      --rule-soft: rgba(20,30,40,0.10);
+      --markup-red: #c0392b;
+      --markup-red-soft: rgba(192,57,43,0.12);
+      --stamp-blue: #1c5d8a;
+      --good:  #2c7a55;
+      --amber: #b5781f;
+      --hold:  #6c7a86;
+
+      /* room palette mirrors the ship board */
+      --rt-command:   #1f3a4d;
+      --rt-cabin:     #cfe2ec;
+      --rt-suite:     #a8c8d9;
+      --rt-corridor:  #ece1c2;
+      --rt-atrium:    #f3d889;
+      --rt-food:      #f4ba6c;
+      --rt-leisure:   #e89a6a;
+      --rt-wellness:  #9bd2b1;
+      --rt-medical:   #f08a8a;
+      --rt-retail:    #d4a8d8;
+      --rt-crew:      #b5b39a;
+      --rt-crewop:    #9aa085;
+      --rt-emergency: #f0a23a;
+      --rt-transit:   #7c8c99;
+      --rt-public:    #d6c89e;
+      --rt-iso-new:   #b6a0d0;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); font-family: 'Space Grotesk', system-ui, sans-serif; }
+    body {
+      min-height: 100vh;
+      padding: 36px 24px 80px;
+      background:
+        radial-gradient(1200px 600px at 30% 0%, #14283a 0%, transparent 60%),
+        radial-gradient(900px 500px at 90% 100%, #112638 0%, transparent 55%),
+        var(--bg);
+    }
+
+    /* ===== Sheet ===== */
+    .sheet {
+      max-width: 1040px;
+      margin: 0 auto;
+      background: var(--paper);
+      color: var(--ink);
+      border-radius: 4px;
+      box-shadow:
+        0 30px 80px -30px rgba(0,0,0,0.7),
+        0 2px 0 rgba(255,255,255,0.04) inset,
+        0 0 0 1px var(--paper-edge);
+      position: relative;
+      overflow: hidden;
+    }
+    .sheet::before {
+      content: "";
+      position: absolute; inset: 0;
+      background-image:
+        radial-gradient(rgba(122,91,29,0.05) 1px, transparent 1px),
+        radial-gradient(rgba(122,91,29,0.04) 1px, transparent 1px);
+      background-size: 3px 3px, 7px 7px;
+      background-position: 0 0, 1px 1px;
+      pointer-events: none;
+      mix-blend-mode: multiply;
+    }
+    .sheet::after {
+      content: "";
+      position: absolute; inset: 0;
+      background: radial-gradient(120% 100% at 50% 0%, transparent 55%, rgba(122,91,29,0.10) 100%);
+      pointer-events: none;
+    }
+    .sheet > * { position: relative; z-index: 2; }
+
+    /* punch holes */
+    .punch-holes {
+      position: absolute;
+      left: 16px;
+      top: 36px;
+      display: flex;
+      flex-direction: column;
+      gap: 60px;
+      z-index: 3;
+      pointer-events: none;
+    }
+    .punch-holes .hole {
+      width: 9px; height: 9px;
+      background: var(--bg);
+      border-radius: 50%;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.6);
+    }
+
+    /* ===== Letterhead ===== */
+    .letterhead {
+      display: flex;
+      align-items: flex-start;
+      gap: 18px;
+      padding: 22px 36px 18px;
+      border-bottom: 2px solid var(--ink);
+      background: linear-gradient(180deg, rgba(20,30,40,0.04) 0%, transparent 100%);
+    }
+    .seal {
+      width: 78px; height: 78px;
+      flex-shrink: 0;
+      border: 2px solid var(--ink);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--paper-2);
+    }
+    .seal svg { width: 100%; height: 100%; }
+    .letterhead .meta { flex: 1; min-width: 0; }
+    .doc-kind {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.28em;
+      color: var(--brass-deep);
+      text-transform: uppercase;
+    }
+    .doc-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 700;
+      font-size: 36px;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      margin: 4px 0 6px 0;
+      color: var(--ink);
+    }
+    .doc-sub {
+      font-family: 'IBM Plex Serif', serif;
+      font-style: italic;
+      color: var(--ink-soft);
+      font-size: 14px;
+    }
+    .doc-sub code { font-style: normal; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; }
+    .doc-stamp {
+      flex-shrink: 0;
+      transform: rotate(-6deg);
+      align-self: center;
+    }
+
+    /* ===== Stamps ===== */
+    .stamp {
+      display: inline-block;
+      border: 3px solid var(--markup-red);
+      color: var(--markup-red);
+      padding: 6px 14px 4px;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      border-radius: 2px;
+      background: rgba(255,255,255,0.2);
+      box-shadow: inset 0 0 0 2px rgba(192,57,43,0.2);
+    }
+    .stamp.blue { color: var(--stamp-blue); border-color: var(--stamp-blue); box-shadow: inset 0 0 0 2px rgba(28,93,138,0.2); }
+    .stamp .sub, .stamp .date {
+      display: block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      opacity: 0.85;
+      margin-top: 2px;
+    }
+
+    /* ===== From/To header ===== */
+    .header-grid {
+      padding: 18px 36px 16px;
+      display: grid;
+      grid-template-columns: 60px 1fr 60px 1fr;
+      gap: 6px 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .header-grid .k {
+      color: var(--brass-deep);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-weight: 700;
+      align-self: center;
+    }
+    .header-grid .v {
+      color: var(--ink);
+      font-weight: 500;
+      align-self: center;
+    }
+    .header-grid .v.mute { color: var(--ink-soft); }
+    .header-grid code { font-size: 12px; }
+
+    /* ===== Section header ===== */
+    .section {
+      padding: 22px 36px 4px;
+    }
+    .section-head {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      border-bottom: 1px solid var(--ink);
+      padding-bottom: 6px;
+      margin-bottom: 14px;
+    }
+    .section-head .num {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      color: var(--brass-deep);
+    }
+    .section-head h2 {
+      margin: 0;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 600;
+      font-size: 18px;
+      flex: 1;
+    }
+    .section-head .tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+    }
+
+    /* ===== Headline ===== */
+    .headline {
+      margin: 8px 36px 0;
+      padding: 18px 26px;
+      background: #fbf3da;
+      border: 2px solid var(--ink);
+      border-radius: 6px;
+      position: relative;
+      overflow: hidden;
+    }
+    .headline::before {
+      content: "";
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 8px;
+      background: repeating-linear-gradient(45deg, var(--ink) 0 6px, #fbf3da 6px 12px);
+    }
+    .headline .label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--brass-deep);
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .headline .body {
+      display: grid;
+      grid-template-columns: auto auto auto auto 1fr;
+      gap: 10px 20px;
+      align-items: end;
+    }
+    .headline .tally {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .headline .tally .n {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 700;
+      font-size: 54px;
+      line-height: 0.9;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+    }
+    .headline .tally.adjust .n { color: var(--amber); }
+    .headline .tally.park .n   { color: var(--hold); }
+    .headline .tally.asis .n   { color: var(--good); }
+    .headline .tally .l {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      font-weight: 700;
+    }
+    .headline .text {
+      font-family: 'IBM Plex Serif', serif;
+      font-size: 15.5px;
+      line-height: 1.4;
+      color: var(--ink);
+      align-self: end;
+      padding-bottom: 4px;
+    }
+    .headline .text em { color: var(--markup-red); font-style: italic; }
+    .headline .text code { font-style: normal; font-family: 'JetBrains Mono', monospace; font-size: 13px; background: rgba(192,57,43,0.1); padding: 0 4px; border-radius: 2px; }
+
+    /* ===== Blueprint mini-map ===== */
+    .blueprint-wrap {
+      margin: 22px 36px 0;
+      padding: 14px;
+      background: #fbf3da;
+      border: 1.5px solid var(--ink);
+      border-radius: 6px;
+      position: relative;
+    }
+    .blueprint-wrap .corners::before,
+    .blueprint-wrap .corners::after,
+    .blueprint-wrap::before,
+    .blueprint-wrap::after {
+      content: "";
+      position: absolute;
+      width: 14px; height: 14px;
+      border: 1.5px solid var(--ink);
+    }
+    .blueprint-wrap::before { top: -6px; left: -6px; border-right: none; border-bottom: none; }
+    .blueprint-wrap::after  { top: -6px; right: -6px; border-left: none; border-bottom: none; }
+    .blueprint-wrap .corners::before { bottom: -6px; left: -6px; border-right: none; border-top: none; }
+    .blueprint-wrap .corners::after  { bottom: -6px; right: -6px; border-left: none; border-top: none; }
+    .blueprint-title {
+      position: absolute;
+      top: -11px; left: 50%;
+      transform: translateX(-50%);
+      background: var(--paper);
+      padding: 0 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--brass-deep);
+    }
+    .blueprint-svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .bp-legend {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--rule);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+    }
+    .bp-legend .swatch {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .bp-legend .swatch::before {
+      content: "";
+      width: 11px; height: 11px;
+      border: 1.5px solid var(--ink);
+      border-radius: 1px;
+    }
+    .bp-legend .swatch.add::before { background: var(--markup-red); border-color: var(--markup-red); }
+    .bp-legend .swatch.move::before { background: var(--stamp-blue); border-color: var(--stamp-blue); }
+    .bp-legend .swatch.muster::before { background: #fbf3da; border-radius: 50%; box-shadow: 0 0 0 2px var(--markup-red); border:none; }
+
+    /* ===== Verdict cards ===== */
+    .verdicts {
+      padding: 0 36px;
+    }
+    .v-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .v-card {
+      background: rgba(255,255,255,0.45);
+      border: 1px solid var(--ink);
+      border-radius: 4px;
+      padding: 14px 16px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .v-card.adjust { border-left: 4px solid var(--amber); }
+    .v-card.park   { border-left: 4px solid var(--hold); }
+    .v-card.asis   { border-left: 4px solid var(--good); }
+    .v-head {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+    }
+    .v-head .qid {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.14em;
+      color: var(--brass-deep);
+    }
+    .v-head .qt {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+      flex: 1;
+    }
+    .verdict-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 9px 3px 7px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      border-radius: 2px;
+      border: 1.5px solid currentColor;
+      background: rgba(255,255,255,0.6);
+      flex-shrink: 0;
+    }
+    .verdict-pill::before {
+      content: "";
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+    .v-asis   { color: var(--good); }
+    .v-adjust { color: var(--amber); }
+    .v-park   { color: var(--hold); }
+
+    .v-decision {
+      font-family: 'IBM Plex Serif', serif;
+      font-size: 14px;
+      line-height: 1.45;
+      color: var(--ink);
+    }
+    .v-decision em { color: var(--markup-red); }
+    .v-decision code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      background: rgba(20,30,40,0.06);
+      padding: 0 4px;
+      border-radius: 2px;
+    }
+    .v-spec {
+      margin-top: 2px;
+      background: #0e1a23;
+      color: #ece1c2;
+      border-radius: 3px;
+      padding: 10px 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      line-height: 1.55;
+      white-space: pre;
+      overflow-x: auto;
+    }
+    .v-spec .k { color: #f3d889; }
+    .v-spec .c { color: #7c8c99; font-style: italic; }
+    .v-spec .s { color: #cfe2ec; }
+    .v-spec .n { color: #f08a8a; }
+
+    .v-because {
+      font-family: 'IBM Plex Serif', serif;
+      font-style: italic;
+      font-size: 13px;
+      line-height: 1.45;
+      color: var(--ink-soft);
+      border-top: 1px dashed var(--rule);
+      padding-top: 8px;
+    }
+    .v-because::before {
+      content: "Why · ";
+      font-family: 'JetBrains Mono', monospace;
+      font-style: normal;
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      color: var(--brass-deep);
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    /* ===== Beyond Q1-Q8 section ===== */
+    .extras {
+      padding: 0 36px;
+      margin-top: 18px;
+    }
+    .extra-card {
+      background: #fbf3da;
+      border-left: 4px solid var(--markup-red);
+      padding: 14px 18px;
+      border-radius: 0 4px 4px 0;
+      margin-bottom: 10px;
+    }
+    .extra-card .h {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+    .extra-card .h .tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--markup-red);
+      font-weight: 700;
+    }
+    .extra-card .h .title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 600;
+      font-size: 14.5px;
+      color: var(--ink);
+    }
+    .extra-card .body {
+      font-family: 'IBM Plex Serif', serif;
+      font-size: 13.5px;
+      line-height: 1.5;
+      color: var(--ink-soft);
+    }
+    .extra-card .body code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      background: rgba(20,30,40,0.06);
+      padding: 0 4px;
+      border-radius: 2px;
+      color: var(--ink);
+    }
+
+    /* ===== Handwritten margin notes ===== */
+    .handnote {
+      font-family: 'Caveat', cursive;
+      color: var(--markup-red);
+      font-size: 20px;
+      line-height: 1.05;
+      transform: rotate(-2deg);
+      display: inline-block;
+    }
+
+    /* ===== Sign-off ===== */
+    .signoff {
+      margin: 32px 36px 0;
+      padding: 24px 0 28px;
+      border-top: 3px double var(--ink);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 28px;
+      align-items: end;
+    }
+    .signoff .decision {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 700;
+      font-size: 26px;
+      letter-spacing: -0.01em;
+      line-height: 1.15;
+      color: var(--ink);
+    }
+    .signoff .decision .kicker {
+      display: block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--brass-deep);
+      margin-bottom: 6px;
+    }
+    .signoff .decision .terms {
+      display: block;
+      margin-top: 10px;
+      font-family: 'IBM Plex Serif', serif;
+      font-style: italic;
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--ink-soft);
+      line-height: 1.5;
+    }
+    .signoff .stamp-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+    }
+    .signoff .stamp-wrap .signature {
+      font-family: 'Caveat', cursive;
+      font-size: 36px;
+      color: var(--stamp-blue);
+      transform: rotate(-3deg);
+      margin-bottom: -6px;
+      line-height: 1;
+      letter-spacing: 1px;
+    }
+    .signoff .stamp-wrap .scrawl-rule {
+      width: 200px;
+      border-top: 1px solid var(--ink);
+      margin-top: 4px;
+      padding-top: 4px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      text-align: right;
+    }
+
+    .footer {
+      margin-top: 24px;
+      padding: 14px 36px 22px;
+      border-top: 1px solid var(--rule);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-mute);
+    }
+    .footer .filed { display: flex; gap: 14px; }
+    .footer .filed span strong { color: var(--ink-soft); font-weight: 600; }
+  </style>
+</head>
+<body>
+  <article class="sheet">
+    <div class="punch-holes" aria-hidden="true">
+      <div class="hole"></div>
+      <div class="hole"></div>
+      <div class="hole"></div>
+    </div>
+
+    <!-- ===== Letterhead ===== -->
+    <header class="letterhead">
+      <div class="seal" aria-hidden="true">
+        <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="40" cy="40" r="34" fill="none" stroke="#15212b" stroke-width="1.5" />
+          <circle cx="40" cy="40" r="28" fill="none" stroke="#15212b" stroke-width="0.6" />
+          <!-- compass star (designer's mark) -->
+          <g stroke="#15212b" stroke-width="1.5" fill="none">
+            <path d="M 40 18 L 44 38 L 62 40 L 44 42 L 40 62 L 36 42 L 18 40 L 36 38 Z" fill="#15212b" fill-opacity="0.85" />
+            <circle cx="40" cy="40" r="3" fill="#f4ecd6" stroke="#15212b" />
+          </g>
+          <defs>
+            <path id="topArc2" d="M 12 40 A 28 28 0 0 1 68 40" />
+            <path id="botArc2" d="M 12 42 A 28 28 0 0 0 68 42" />
+          </defs>
+          <text font-family="JetBrains Mono, monospace" font-size="6.5" font-weight="700" fill="#15212b" letter-spacing="1.4">
+            <textPath href="#topArc2" startOffset="50%" text-anchor="middle">M.S. VERITY · DESIGN</textPath>
+          </text>
+          <text font-family="JetBrains Mono, monospace" font-size="5" font-weight="600" fill="#7a5b1d" letter-spacing="1.6">
+            <textPath href="#botArc2" startOffset="50%" text-anchor="middle">SPEC OF RECORD · v2.1</textPath>
+          </text>
+        </svg>
+      </div>
+      <div class="meta">
+        <div class="doc-kind">Internal · Designer's Markup · 02 of 03</div>
+        <h1 class="doc-title">Re: Ship Handoff · Q1–Q8</h1>
+        <div class="doc-sub">Replying to <code>designer_handoff_20260523.md</code> — verdicts on each open call, plus three small things you didn't ask for.</div>
+      </div>
+      <div class="doc-stamp">
+        <span class="stamp">Marked Up
+          <span class="date">2026-05-23 · 16:40</span>
+        </span>
+      </div>
+    </header>
+
+    <!-- ===== From / To ===== -->
+    <section class="header-grid">
+      <div class="k">To</div><div class="v">Engineering · sim track</div>
+      <div class="k">Repo</div><div class="v"><code>hantavirus-outbreak-game</code></div>
+      <div class="k">From</div><div class="v">Designer · ship layout</div>
+      <div class="k">Spec</div><div class="v"><code>data/ship.yaml</code> · 36×20 · 28px</div>
+      <div class="k">Re</div><div class="v">8 questions · 8 calls · ship unblocked</div>
+      <div class="k">Cc</div><div class="v mute">Manager (FYI on R2 prereq)</div>
+    </section>
+
+    <!-- ===== Headline ===== -->
+    <section class="section">
+      <div class="section-head">
+        <span class="num">§01</span>
+        <h2>The call, in tallies</h2>
+        <span class="tag">Q1 → Q8 · verdicts</span>
+      </div>
+    </section>
+    <div class="headline">
+      <div class="label">Disposition of the 8 questions</div>
+      <div class="body">
+        <div class="tally adjust"><span class="n">7</span><span class="l">Adjust</span></div>
+        <div class="tally park"><span class="n">1</span><span class="l">Park</span></div>
+        <div class="tally asis"><span class="n">0</span><span class="l">Ship as-is</span></div>
+        <div class="tally"><span class="n" style="font-size:30px;color:var(--markup-red)">+3</span><span class="l" style="color:var(--markup-red)">Off-list</span></div>
+        <div class="text">
+          The hull and the 36×20 grid are <em>spec of record</em> — nothing structural is changing.
+          Most of what you flagged is a small geometry or palette change in <code>data/ship.yaml</code>,
+          plus three off-list adds I want in this iteration before <code>large_crowd</code> goes live.
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Marked-up blueprint ===== -->
+    <section class="section">
+      <div class="section-head">
+        <span class="num">§02</span>
+        <h2>The marked-up blueprint</h2>
+        <span class="tag">red ink · proposed deltas</span>
+      </div>
+    </section>
+    <div class="blueprint-wrap">
+      <div class="blueprint-title">M.S. Verity · Tile Coord Grid · proposed deltas</div>
+      <div class="corners"></div>
+      <!-- The blueprint SVG: rooms drawn at relative scale + red markup annotations -->
+      <svg class="blueprint-svg" viewBox="0 0 960 460" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="hullGrain" patternUnits="userSpaceOnUse" width="6" height="6">
+            <rect width="6" height="6" fill="#f4ecd6" />
+            <circle cx="1" cy="1" r="0.5" fill="rgba(122,91,29,0.08)" />
+          </pattern>
+          <filter id="softShadow2">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="1.5" />
+            <feOffset dx="0" dy="1.5" />
+            <feComponentTransfer><feFuncA type="linear" slope="0.25" /></feComponentTransfer>
+            <feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge>
+          </filter>
+        </defs>
+
+        <!-- Background tile grid (subtle) -->
+        <g stroke="rgba(20,30,40,0.06)" stroke-width="0.5" fill="none">
+          <!-- 36 cols, 20 rows: each cell 24x20 px in this miniature -->
+          <g>
+            <!-- vertical lines -->
+            <line x1="40" y1="20" x2="40" y2="420" />
+            <line x1="160" y1="20" x2="160" y2="420" stroke="rgba(20,30,40,0.12)" />
+            <line x1="280" y1="20" x2="280" y2="420" stroke="rgba(20,30,40,0.12)" />
+            <line x1="400" y1="20" x2="400" y2="420" stroke="rgba(20,30,40,0.12)" />
+            <line x1="520" y1="20" x2="520" y2="420" stroke="rgba(20,30,40,0.12)" />
+            <line x1="640" y1="20" x2="640" y2="420" stroke="rgba(20,30,40,0.12)" />
+            <line x1="760" y1="20" x2="760" y2="420" stroke="rgba(20,30,40,0.12)" />
+            <line x1="880" y1="20" x2="880" y2="420" stroke="rgba(20,30,40,0.12)" />
+          </g>
+        </g>
+
+        <!-- Axis labels: columns A,F,K,P,U,Z,AE -->
+        <g font-size="9" font-weight="700" fill="#7a5b1d" letter-spacing="1" font-family="JetBrains Mono, monospace" text-anchor="middle">
+          <text x="100" y="14">A–E</text>
+          <text x="220" y="14">F–J</text>
+          <text x="340" y="14">K–O</text>
+          <text x="460" y="14">P–T</text>
+          <text x="580" y="14">U–Y</text>
+          <text x="700" y="14">Z–AD</text>
+          <text x="820" y="14">AE–AI</text>
+        </g>
+        <g font-size="9" font-weight="700" fill="#7a5b1d" font-family="JetBrains Mono, monospace" text-anchor="end">
+          <text x="32" y="60">01–04</text>
+          <text x="32" y="160">05–09</text>
+          <text x="32" y="220">10–11</text>
+          <text x="32" y="300">12–14</text>
+          <text x="32" y="400">15–20</text>
+        </g>
+
+        <!-- Hull (smoothed) -->
+        <path d="M 130 20 L 880 20 Q 920 20 920 50 L 920 390 Q 920 420 880 420 L 130 420 Q 40 420 40 240 Q 20 220 40 200 Q 40 20 130 20 Z"
+              fill="url(#hullGrain)" stroke="#15212b" stroke-width="2.5" filter="url(#softShadow2)" />
+        <!-- pinstripe -->
+        <path d="M 138 30 L 875 30 Q 910 30 910 55 L 910 385 Q 910 410 875 410 L 138 410 Q 48 410 48 240 Q 32 222 48 202 Q 48 30 138 30 Z"
+              fill="none" stroke="#b48838" stroke-width="0.8" opacity="0.55" />
+
+        <!-- ROOMS (drawn at coords that approximate the 36x20 layout, scaled into 24x20 cells) -->
+        <!-- key macros: x = 40 + tx*24,  y = 20 + ty*20 -->
+        <!-- Lifeboats port row (y0..y1) tx 4..30 -->
+        <g stroke="rgba(20,30,40,0.4)" stroke-width="0.8">
+          <rect x="136" y="20" width="624" height="40" fill="#f0a23a" />
+          <text x="448" y="44" font-size="10" font-weight="600" font-family="Space Grotesk" fill="#3a1c00" text-anchor="middle">Lifeboat Stations (Port)</text>
+        </g>
+        <!-- Forward promenade (P) -->
+        <rect x="64" y="60" width="72" height="100" fill="#d6c89e" stroke="rgba(20,30,40,0.4)" />
+        <text x="100" y="113" font-size="9" font-family="Space Grotesk" fill="#3a2e10" text-anchor="middle">Fwd Promenade P</text>
+        <!-- Bridge -->
+        <rect x="40" y="160" width="96" height="120" fill="#1f3a4d" stroke="rgba(20,30,40,0.6)" />
+        <text x="88" y="223" font-size="10" font-weight="600" font-family="Space Grotesk" fill="#f3e6c8" text-anchor="middle">Bridge ⚓</text>
+        <!-- Fwd promenade S -->
+        <rect x="64" y="280" width="72" height="100" fill="#d6c89e" stroke="rgba(20,30,40,0.4)" />
+        <text x="100" y="333" font-size="9" font-family="Space Grotesk" fill="#3a2e10" text-anchor="middle">Fwd Promenade S</text>
+
+        <!-- Cabins port row (y2..y4): 4 blocks + suite -->
+        <g stroke="rgba(20,30,40,0.4)" stroke-width="0.8">
+          <rect x="136" y="60" width="144" height="60" fill="#cfe2ec" />
+          <rect x="280" y="60" width="144" height="60" fill="#cfe2ec" />
+          <rect x="424" y="60" width="120" height="60" fill="#cfe2ec" />
+          <rect x="544" y="60" width="120" height="60" fill="#cfe2ec" />
+          <rect x="664" y="60" width="120" height="60" fill="#a8c8d9" />
+        </g>
+        <g font-size="9" font-family="Space Grotesk" fill="#1a3a4d" text-anchor="middle">
+          <text x="208" y="93">Cabins P1</text>
+          <text x="352" y="93">Cabins P2</text>
+          <text x="484" y="93">Cabins P3</text>
+          <text x="604" y="93">Cabins P4</text>
+          <text x="724" y="93">Owner ★</text>
+        </g>
+
+        <!-- Port corridor -->
+        <rect x="136" y="120" width="648" height="20" fill="#ece1c2" stroke="rgba(20,30,40,0.4)" />
+        <text x="460" y="134" font-size="9" font-family="Space Grotesk" fill="#5a4a30" text-anchor="middle">— — — — Port Corridor — — — —</text>
+
+        <!-- Top inner row (y6..y8): spa library dining galley casino theater -->
+        <g stroke="rgba(20,30,40,0.4)" stroke-width="0.8">
+          <rect x="136" y="140" width="96" height="60" fill="#9bd2b1" />
+          <rect x="232" y="140" width="96" height="60" fill="#e89a6a" />
+          <rect x="328" y="140" width="144" height="60" fill="#f4ba6c" />
+          <rect x="472" y="140" width="72" height="60" fill="#9aa085" />
+          <rect x="544" y="140" width="120" height="60" fill="#e89a6a" />
+          <rect x="664" y="140" width="120" height="60" fill="#e89a6a" />
+        </g>
+        <g font-size="9" font-family="Space Grotesk" text-anchor="middle">
+          <text x="184" y="173" fill="#1a4d2e">Spa</text>
+          <text x="280" y="173" fill="#5a2010">Library</text>
+          <text x="400" y="173" fill="#5a3010">Main Dining</text>
+          <text x="508" y="173" fill="#fff">Galley</text>
+          <text x="604" y="173" fill="#5a2010">Casino</text>
+          <text x="724" y="173" fill="#5a2010">Theater</text>
+        </g>
+
+        <!-- Atrium -->
+        <rect x="136" y="200" width="648" height="40" fill="#f3d889" stroke="rgba(20,30,40,0.5)" />
+        <text x="460" y="225" font-size="11" font-weight="600" font-family="Bricolage Grotesque" fill="#5a4010" text-anchor="middle">✦ Grand Atrium ✦ ✦ ✦</text>
+
+        <!-- Bottom inner (y11..y13): infirmary, isolation, gym, pool, arcade, kids -->
+        <g stroke="rgba(20,30,40,0.4)" stroke-width="0.8">
+          <rect x="136" y="240" width="96" height="60" fill="#f08a8a" />
+          <!-- isolation: new color overlay -->
+          <rect x="232" y="240" width="72" height="60" fill="#b6a0d0" />
+          <rect x="304" y="240" width="96" height="60" fill="#9bd2b1" />
+          <rect x="400" y="240" width="144" height="60" fill="#e89a6a" />
+          <rect x="544" y="240" width="120" height="60" fill="#e89a6a" />
+          <rect x="664" y="240" width="120" height="60" fill="#e89a6a" />
+        </g>
+        <g font-size="9" font-family="Space Grotesk" text-anchor="middle">
+          <text x="184" y="273" fill="#5a1010">Infirmary ✚</text>
+          <text x="268" y="273" fill="#3a1040">Isolation</text>
+          <text x="352" y="273" fill="#1a4d2e">Gym</text>
+          <text x="472" y="273" fill="#5a2010">Pool ◌</text>
+          <text x="604" y="273" fill="#5a2010">Arcade</text>
+          <text x="724" y="273" fill="#5a2010">Kids Club</text>
+        </g>
+
+        <!-- Starboard corridor -->
+        <rect x="136" y="300" width="648" height="20" fill="#ece1c2" stroke="rgba(20,30,40,0.4)" />
+        <text x="460" y="314" font-size="9" font-family="Space Grotesk" fill="#5a4a30" text-anchor="middle">— — — — Starboard Corridor — — — —</text>
+
+        <!-- Cabins starboard -->
+        <g stroke="rgba(20,30,40,0.4)" stroke-width="0.8">
+          <rect x="136" y="320" width="144" height="60" fill="#cfe2ec" />
+          <rect x="280" y="320" width="144" height="60" fill="#cfe2ec" />
+          <rect x="424" y="320" width="120" height="60" fill="#cfe2ec" />
+          <rect x="544" y="320" width="120" height="60" fill="#cfe2ec" />
+          <rect x="664" y="320" width="120" height="60" fill="#a8c8d9" />
+        </g>
+        <g font-size="9" font-family="Space Grotesk" fill="#1a3a4d" text-anchor="middle">
+          <text x="208" y="353">Cabins S1</text>
+          <text x="352" y="353">Cabins S2</text>
+          <text x="484" y="353">Cabins S3</text>
+          <text x="604" y="353">Cabins S4</text>
+          <text x="724" y="353">Owner ★</text>
+        </g>
+
+        <!-- Lifeboats starboard -->
+        <rect x="136" y="380" width="624" height="40" fill="#f0a23a" stroke="rgba(20,30,40,0.4)" />
+        <text x="448" y="404" font-size="10" font-weight="600" font-family="Space Grotesk" fill="#3a1c00" text-anchor="middle">Lifeboat Stations (Starboard)</text>
+
+        <!-- Stern column -->
+        <g stroke="rgba(20,30,40,0.4)" stroke-width="0.8">
+          <rect x="784" y="20" width="136" height="40" fill="#e89a6a" />
+          <rect x="784" y="60" width="136" height="80" fill="#b5b39a" />
+          <rect x="784" y="140" width="136" height="60" fill="#9aa085" />
+          <rect x="784" y="200" width="136" height="40" fill="#1f3a4d" />
+          <rect x="784" y="240" width="136" height="80" fill="#9aa085" />
+          <rect x="784" y="320" width="136" height="60" fill="#7c8c99" />
+          <rect x="784" y="380" width="136" height="40" fill="#7c8c99" />
+        </g>
+        <g font-size="9" font-family="Space Grotesk" text-anchor="middle">
+          <text x="852" y="44" fill="#5a2010">Sun Deck Aft</text>
+          <text x="852" y="103" fill="#2a2810">Crew Quarters</text>
+          <text x="852" y="173" fill="#1a1810">Crew Mess</text>
+          <text x="852" y="225" fill="#f3e6c8">Comms</text>
+          <text x="852" y="283" fill="#1a1810">Engineering ⚙</text>
+          <text x="852" y="353" fill="#f3e6c8">Tender Bay</text>
+          <text x="852" y="404" fill="#f3e6c8" font-weight="700">Helideck — H</text>
+        </g>
+
+        <!-- ===== RED MARKUP OVERLAY ===== -->
+        <g stroke="#c0392b" stroke-width="2" fill="none" font-family="Caveat, cursive" font-size="16" font-weight="600">
+          <!-- Q1a: door at obs_s / cab_s1 (x=4, y=16 vertical) -- the missing mirror.
+               obs_s right edge ~ x=136 ; door at top of cab_s1 mid-port ~ (136, 350) -->
+          <circle cx="136" cy="346" r="9" fill="#c0392b" fill-opacity="0.15" stroke-width="2.5" />
+          <line x1="136" y1="346" x2="180" y2="392" stroke-width="1.5" />
+          <text x="184" y="396" fill="#c0392b">+ door · obs_s ↔ cab_s1</text>
+
+          <!-- Q1b: door at sun_deck → crew_q -->
+          <circle cx="852" cy="60" r="9" fill="#c0392b" fill-opacity="0.15" stroke-width="2.5" />
+          <line x1="852" y1="60" x2="780" y2="44" stroke-width="1.5" />
+          <text x="618" y="48" fill="#c0392b">+ door · sun_deck ↔ crew_q</text>
+
+          <!-- Q1c: door at helideck → tender_bay -->
+          <circle cx="852" cy="380" r="9" fill="#c0392b" fill-opacity="0.15" stroke-width="2.5" />
+          <line x1="852" y1="380" x2="780" y2="402" stroke-width="1.5" />
+          <text x="610" y="412" fill="#c0392b">+ door · helideck ↔ tender_bay</text>
+
+          <!-- Q2: secondary cabin doors (port row) -->
+          <line x1="178" y1="120" x2="178" y2="115" stroke-width="2.5" />
+          <line x1="178" y1="120" x2="178" y2="125" stroke-width="2.5" />
+          <text x="180" y="106" fill="#c0392b" transform="rotate(-2 180 106)">+2nd door / cabin run</text>
+          <line x1="250" y1="120" x2="250" y2="115" stroke-width="2.5" />
+          <line x1="250" y1="120" x2="250" y2="125" stroke-width="2.5" />
+          <line x1="322" y1="120" x2="322" y2="115" stroke-width="2.5" />
+          <line x1="322" y1="120" x2="322" y2="125" stroke-width="2.5" />
+          <line x1="395" y1="120" x2="395" y2="115" stroke-width="2.5" />
+          <line x1="395" y1="120" x2="395" y2="125" stroke-width="2.5" />
+
+          <!-- Q3: atrium service stairwell (crew bypass) -->
+          <rect x="468" y="208" width="16" height="24" stroke-width="2" stroke-dasharray="3 2" />
+          <text x="478" y="200" fill="#c0392b">+ stairwell · crew bypass</text>
+          <line x1="478" y1="198" x2="478" y2="208" stroke-width="1" />
+
+          <!-- Q6: muster stars on lifeboat rows -->
+          <g fill="#c0392b">
+            <circle cx="220" cy="40" r="5" />
+            <circle cx="448" cy="40" r="5" />
+            <circle cx="680" cy="40" r="5" />
+            <circle cx="220" cy="400" r="5" />
+            <circle cx="448" cy="400" r="5" />
+            <circle cx="680" cy="400" r="5" />
+          </g>
+          <text x="448" y="68" fill="#c0392b" text-anchor="middle">muster points · drill scenario</text>
+
+          <!-- Q7: isolation new color callout -->
+          <line x1="268" y1="240" x2="268" y2="232" stroke-width="2" />
+          <text x="148" y="226" fill="#c0392b" transform="rotate(-2 148 226)">isolation → purple (was red)</text>
+
+          <!-- Q6 evac arrow on helideck -->
+          <path d="M 800 396 L 836 396 L 832 392 M 836 396 L 832 400" stroke-width="2" />
+          <text x="746" y="430" fill="#c0392b" font-size="14">med-evac goal</text>
+        </g>
+
+        <!-- Compass -->
+        <g transform="translate(880, 380)" font-family="JetBrains Mono, monospace" font-weight="700">
+          <circle r="22" fill="rgba(20,30,40,0.55)" stroke="#b48838" stroke-width="1.2" />
+          <text x="0" y="-9" text-anchor="middle" font-size="9" fill="#b48838">N</text>
+          <text x="0" y="16" text-anchor="middle" font-size="9" fill="#b48838" opacity="0.6">S</text>
+          <text x="-17" y="3" text-anchor="middle" font-size="9" fill="#b48838" opacity="0.6">W</text>
+          <text x="17" y="3" text-anchor="middle" font-size="9" fill="#b48838" opacity="0.6">E</text>
+          <path d="M 0 -16 L 4 0 L 0 16 L -4 0 Z" fill="#b48838" opacity="0.85" />
+        </g>
+
+        <!-- Bow / Stern markers -->
+        <text x="48" y="448" font-family="JetBrains Mono, monospace" font-size="10" font-weight="700" fill="#b48838" letter-spacing="1.4">◀ BOW</text>
+        <text x="908" y="448" font-family="JetBrains Mono, monospace" font-size="10" font-weight="700" fill="#b48838" letter-spacing="1.4" text-anchor="end">STERN ▶</text>
+      </svg>
+
+      <div class="bp-legend">
+        <span class="swatch add">add door</span>
+        <span class="swatch move">add stairwell</span>
+        <span class="swatch muster">muster point</span>
+        <span style="opacity:0.7">all callouts → see Q-cards below</span>
+      </div>
+    </div>
+
+    <!-- ===== Q1-Q8 verdict cards ===== -->
+    <section class="section">
+      <div class="section-head">
+        <span class="num">§03</span>
+        <h2>Verdicts</h2>
+        <span class="tag">Q1–Q8 · with specs</span>
+      </div>
+    </section>
+
+    <div class="verdicts">
+      <div class="v-grid">
+
+        <!-- Q1 -->
+        <div class="v-card adjust">
+          <div class="v-head">
+            <span class="qid">Q1</span>
+            <span class="qt">Three unreachable rooms</span>
+            <span class="verdict-pill v-adjust">Adjust</span>
+          </div>
+          <div class="v-decision">
+            Add the three missing doors. None of these is intentionally isolated — the starboard
+            promenade is just a missing mirror, and a ship where passengers can't <em>ever</em> reach
+            the sun deck or the helideck flattens the playable space too much.
+          </div>
+<div class="v-spec"><span class="c"># data/ship.yaml — doors:</span>
+- { x: 4,  y: 16, dir: v }   <span class="c"># obs_s ↔ cab_s1</span>
+- { x: 31, y: 1,  dir: h }   <span class="c"># sun_deck ↔ crew_q</span>
+- { x: 31, y: 18, dir: h }   <span class="c"># tender_bay ↔ helideck</span></div>
+          <div class="v-because">Three lines of YAML; cost is trivial. Helideck specifically is needed for Q6's evac goal.</div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="v-card adjust">
+          <div class="v-head">
+            <span class="qid">Q2</span>
+            <span class="qt">Doorway density / chokepoints</span>
+            <span class="verdict-pill v-adjust">Adjust</span>
+          </div>
+          <div class="v-decision">
+            Two-tier answer. <em>Add</em> a secondary door to every cabin run (18 occupants : 1 door is
+            unrealistic and floods the corridor on muster). <em>Keep</em> atrium ↔ dining, atrium ↔ galley,
+            and lifeboat exits narrow on purpose — those are the pedagogical chokepoints.
+          </div>
+<div class="v-spec"><span class="c"># add a 2nd door at the far end of each cabin block:</span>
+- { x: 4,  y: 5,  dir: h }   <span class="c"># cab_p1 mid → corridor (in addition to x:7)</span>
+- { x: 16, y: 5,  dir: h }   <span class="c"># cab_p2 mid</span>
+- { x: 21, y: 5,  dir: h }   <span class="c"># cab_p3 mid</span>
+<span class="c"># …mirror on starboard at y:15</span></div>
+          <div class="v-because">Goal: cabin → corridor egress under ~6s at N=1000. Chokepoint <em>education</em> stays at the atrium tier.</div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="v-card adjust">
+          <div class="v-head">
+            <span class="qid">Q3</span>
+            <span class="qt">Atrium scale</span>
+            <span class="verdict-pill v-adjust">Adjust</span>
+          </div>
+          <div class="v-decision">
+            Keep the full-beam atrium — it's the visual hero of the ship and the dramatic
+            transmission cell the educational story turns on. Add a <em>service stairwell</em> at
+            <code>R10–11 · P–Q</code> that crew can route through, so officer/crew agents have a
+            bypass and the player can observe crew-as-vector independently.
+          </div>
+<div class="v-spec"><span class="c"># new room type:</span>
+service_stair: { fill: "#7c8c99", ink: "#f3e6c8", label: "Stairs" }
+<span class="c"># new room (between atrium and inner rooms, 1-tile):</span>
+- { id: stair_mid, type: service_stair, x: 15, y: 10, w: 1, h: 1,
+    crew_only: true }</div>
+          <div class="v-because">Splits the atrium into <em>public-spread</em> (full-beam) and <em>crew-bypass</em> (1 tile). Gameplay & realism both improve.</div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="v-card park">
+          <div class="v-head">
+            <span class="qid">Q4</span>
+            <span class="qt">Cabin density / sub-rooms</span>
+            <span class="verdict-pill v-park">Park</span>
+          </div>
+          <div class="v-decision">
+            Keep the one-block-per-run abstraction in v1. Sub-dividing means doubling the door
+            count and re-doing every cabin label — too much geometry churn ahead of
+            <code>large_crowd</code> launch. Revisit if cabin-internal contact tracing becomes a
+            stated educational goal.
+          </div>
+<div class="v-spec"><span class="c"># revisit AFTER large_crowd ships</span>
+<span class="c"># proposed v2: each cab_pN → 3 sub-cells, doors to corridor only</span>
+<span class="c"># cost: ~30 new doors, ~24 new rooms — schedule with a v2 design pass</span></div>
+          <div class="v-because">Abstraction is honest at the educational level we're targeting. Don't gold-plate before perf is fixed.</div>
+        </div>
+
+        <!-- Q5 -->
+        <div class="v-card adjust">
+          <div class="v-head">
+            <span class="qid">Q5</span>
+            <span class="qt">Glyphs in room labels</span>
+            <span class="verdict-pill v-adjust">Adjust</span>
+          </div>
+          <div class="v-decision">
+            Yes — wire the glyphs. Render at 50% opacity, top-right corner of each room. Improves
+            scannability in the live sim when text labels overlap with agent dots. Glyph set below;
+            HTML entities (numeric form) carry through to SVG cleanly.
+          </div>
+<div class="v-spec"><span class="c"># types in data/ship.yaml — glyph field:</span>
+command:   { glyph: "⚓" }   <span class="c"># U+2693</span>
+suite:     { glyph: "★" }   <span class="c"># U+2605</span>
+medical:   { glyph: "✚" }   <span class="c"># U+271A</span>
+atrium:    { glyph: "✦" }   <span class="c"># U+2726</span>
+food:      { glyph: "◍" }   <span class="c"># U+25CD  (was empty)</span>
+wellness:  { glyph: "❀" }   <span class="c"># U+2740  (was empty)</span>
+crew:      { glyph: "⚙" }   <span class="c"># U+2699  (was empty)</span>
+emergency: { glyph: "⛑" }   <span class="c"># U+26D1  (was empty)</span>
+transit:   { glyph: "↦" }   <span class="c"># U+21A6  (was empty)</span>
+leisure:   { glyph: "♦" }   <span class="c"># U+2666  (was empty)</span></div>
+          <div class="v-because">Color carries type; glyph carries <em>category at distance</em>. Two-channel encoding survives small render sizes.</div>
+        </div>
+
+        <!-- Q6 -->
+        <div class="v-card adjust">
+          <div class="v-head">
+            <span class="qid">Q6</span>
+            <span class="qt">Helideck & lifeboat semantics</span>
+            <span class="verdict-pill v-adjust">Adjust</span>
+          </div>
+          <div class="v-decision">
+            They should be <em>evacuation goals</em>, not display-only. Cruise outbreaks turn on muster
+            drills and medical evac — these are the highest-signal events the sim can produce.
+            Helideck = medical-evac override for severe agents; lifeboats = muster points in a new
+            <code>drill</code> scenario.
+          </div>
+<div class="v-spec"><span class="c"># role hints (consumed by routing override):</span>
+helideck:        { gameplay: med_evac_goal,
+                   trigger: "agent.state == infected && severity ≥ 0.7" }
+lifeboat_p / _s: { gameplay: muster_point,
+                   trigger: "scenario == 'drill'" }
+<span class="c"># scenario to add in src/scenarios.ts: 'drill'</span></div>
+          <div class="v-because">Adds two narrative beats (med-evac, muster) without new geometry. Both are stress tests for the gate code.</div>
+        </div>
+
+        <!-- Q7 -->
+        <div class="v-card adjust">
+          <div class="v-head">
+            <span class="qid">Q7</span>
+            <span class="qt">Room-type palette</span>
+            <span class="verdict-pill v-adjust">Adjust</span>
+          </div>
+          <div class="v-decision">
+            One change: split <code>medical</code> off <code>isolation</code>. Reserve red-pink
+            <code>#f08a8a</code> for active medical (infirmary, future clinic), and give isolation a new
+            purple <code>#b6a0d0</code> that matches the <code>isolated</code> agent-state color. Keeps the visual
+            grammar of <em>state-of-the-agent = state-of-the-room they belong in</em>.
+          </div>
+<div class="v-spec">medical:   { fill: "#f08a8a", ink: "#5a1010" }   <span class="c"># unchanged</span>
+isolation: { fill: "#b6a0d0", ink: "#3a1040",        <span class="c"># NEW (was medical)</span>
+             glyph: "⊘" }                            <span class="c"># U+2298</span>
+<span class="c"># rooms[].type for "isolation" room → "isolation" (new type)</span></div>
+          <div class="v-because">Two rooms shared one color and one of them was a gameplay state. Disambiguate.</div>
+        </div>
+
+        <!-- Q8 -->
+        <div class="v-card adjust">
+          <div class="v-head">
+            <span class="qid">Q8</span>
+            <span class="qt">Initial agent placement</span>
+            <span class="verdict-pill v-adjust">Adjust</span>
+          </div>
+          <div class="v-decision">
+            Narrative placement — let the opening tableau tell a small story the player can read in
+            10 seconds. Patient-zero is a casino weekend exposure; the crew galley operator is
+            the second-chain vector; the doctor is staffing the infirmary; the kids club seeds a
+            family-spread thread. The remaining 11 stay roughly where they are.
+          </div>
+<div class="v-spec"><span class="c"># data/ship.yaml — agents (deltas only):</span>
+- { id: A12, name: "Carl Brandt",   state: exposed,     x: 23, y: 7  }  <span class="c"># → Casino</span>
+- { id: A06, name: "Omar Haddad",   state: crew,        x: 19, y: 7  }  <span class="c"># → Galley</span>
+- { id: A07, name: "Inez Cruz",     state: crew,        x: 5,  y: 12 }  <span class="c"># → Infirmary</span>
+- { id: A09, name: "Sora Matsui",   state: healthy,     x: 28, y: 12 }  <span class="c"># → Kids Club</span>
+- { id: A03, name: "Dre Okafor",    state: symptomatic, x: 9,  y: 12 }  <span class="c"># → Isolation</span></div>
+          <div class="v-because">Costs nothing at runtime; gains a readable opening. Symptomatic agent <em>already</em> in isolation seeds the "early-detection worked" reading.</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ===== Off-list adds ===== -->
+    <section class="section">
+      <div class="section-head">
+        <span class="num">§04</span>
+        <h2>Three things you didn't ask for</h2>
+        <span class="tag">off-list · own them or push back</span>
+      </div>
+    </section>
+    <div class="extras">
+
+      <div class="extra-card">
+        <div class="h">
+          <span class="tag">X1</span>
+          <span class="title">Tile-coord labels surfaced in dev mode</span>
+        </div>
+        <div class="body">
+          Right now agent positions are tile-precise but invisible. Expose a debug overlay that
+          renders the <code>A01–AJ20</code> coords on hover and the agent's current
+          <code>(zone_id, tx, ty)</code> in a corner readout. Cheap, makes every other bug report
+          ten times more legible. Hide behind <code>?debug=tiles</code>.
+        </div>
+      </div>
+
+      <div class="extra-card">
+        <div class="h">
+          <span class="tag">X2</span>
+          <span class="title">Door state — open/closed flag</span>
+        </div>
+        <div class="body">
+          Doors are currently permeable-or-removed. Add an <code>open: bool</code> field that
+          defaults to <code>true</code>. Closing a door at runtime (e.g., the
+          <code>cabin_stay</code> scenario locking cabin secondary doors) becomes a one-line state
+          change instead of a regen. No movement logic change — closed doors are just impassable
+          like walls.
+        </div>
+      </div>
+
+      <div class="extra-card">
+        <div class="h">
+          <span class="tag">X3</span>
+          <span class="title">Lifeboat capacity per station</span>
+        </div>
+        <div class="body">
+          The lifeboat row is currently one long room. Sub-divide into 8 stations
+          (port: 4, starboard: 4) with an explicit <code>capacity: 12</code> on each. The
+          <code>drill</code> scenario then has somewhere to assign agents and we get a queueing
+          signal we can actually plot. No new geometry — the row already spans 27 tiles.
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Sign-off ===== -->
+    <div class="section" style="padding-bottom: 0;"></div>
+    <div style="padding: 0 36px;">
+      <div class="signoff">
+        <div class="decision">
+          <span class="kicker">Disposition</span>
+          Ship is unblocked.<br />Adjust Q1–Q3, Q5–Q8 + X1–X3 this iteration.
+          <span class="terms">
+            Q4 parked for v2. Total YAML delta: ~40 lines including off-list adds.
+            No hull or grid changes — coordinate system stays <code style="font-style:normal;font-family:'JetBrains Mono',monospace;font-size:13px;background:rgba(20,30,40,0.06);padding:0 4px;border-radius:2px;">36×20 @ 28px</code>.
+            Send me the regen output before <code style="font-style:normal;font-family:'JetBrains Mono',monospace;font-size:13px;background:rgba(20,30,40,0.06);padding:0 4px;border-radius:2px;">large_crowd</code> goes live.
+          </span>
+        </div>
+        <div class="stamp-wrap">
+          <span class="stamp blue">Approved
+            <span class="sub">for iteration · Q1–3 · Q5–8 · X1–3</span>
+          </span>
+          <span class="signature">— A.S.</span>
+          <span class="scrawl-rule">Designer · 2026-05-23</span>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <span>Designer's Markup · 02/03</span>
+      <div class="filed">
+        <span><strong>File:</strong> design/handoff_reply_2026-05-23.md</span>
+        <span><strong>Next:</strong> regen output → designer review</span>
+      </div>
+    </footer>
+  </article>
+</body>
+</html>

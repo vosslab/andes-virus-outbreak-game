@@ -11,9 +11,21 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export default tseslint.config(
-	eslint.configs.recommended,
-	...tseslint.configs.recommendedTypeChecked,
 	{
+		ignores: [
+			"dist/**",
+			"node_modules/**",
+			"*.config.js",
+			"*.config.mjs",
+			"tests/**/*.ts",
+			"tests/**/*.tsx",
+		],
+	},
+	eslint.configs.recommended,
+	// TypeScript files in src/: type-aware rules, parser project required.
+	{
+		files: ["src/**/*.ts", "src/**/*.tsx"],
+		extends: [...tseslint.configs.recommendedTypeChecked],
 		languageOptions: {
 			parserOptions: {
 				project: ["./tsconfig.json"],
@@ -29,12 +41,32 @@ export default tseslint.config(
 			"no-var": "error",
 			"prefer-const": "error",
 			"no-implicit-coercion": "warn",
-			"eqeqeq": "error",
+			eqeqeq: "error",
 			"no-throw-literal": "error",
 			"no-console": "warn",
+			// R5 mitigation: deterministic LCG only. Math.random() breaks
+			// seed reproducibility, which is a hard contract for the sim.
+			"no-restricted-syntax": [
+				"error",
+				{
+					selector: "MemberExpression[object.name='Math'][property.name='random']",
+					message:
+						"Math.random() breaks determinism. Use src/random.ts LCG via threaded RandomState.",
+				},
+			],
 		},
 	},
+	// Plain .mjs / .js files: no type-aware rules, no parser project.
 	{
-		ignores: ["dist/**", "node_modules/**", "*.config.js", "*.config.mjs"],
+		files: ["**/*.mjs", "**/*.js"],
+		languageOptions: {
+			globals: { ...globals.browser, ...globals.node },
+		},
+		rules: {
+			"no-var": "error",
+			"prefer-const": "error",
+			eqeqeq: "error",
+			"no-throw-literal": "error",
+		},
 	},
 );

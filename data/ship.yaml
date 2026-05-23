@@ -1,0 +1,681 @@
+schematic:
+    width: 1008
+    height: 560
+    tile_size: 28
+    bow: "left"
+
+room_types:
+    command: { fill: "#1f3a4d", ink: "#f3e6c8", label: "Command", glyph: "" }
+    cabin: { fill: "#cfe2ec", ink: "#1a3a4d", label: "Cabins", glyph: "" }
+    suite: { fill: "#a8c8d9", ink: "#1a3a4d", label: "Suites", glyph: "" }
+    corridor: { fill: "#ece1c2", ink: "#5a4a30", label: "Corridor", glyph: "" }
+    atrium: { fill: "#f3d889", ink: "#5a4010", label: "Atrium", glyph: "" }
+    food: { fill: "#f4ba6c", ink: "#5a3010", label: "Dining", glyph: "" }
+    leisure: { fill: "#e89a6a", ink: "#5a2010", label: "Leisure", glyph: "" }
+    wellness: { fill: "#9bd2b1", ink: "#1a4d2e", label: "Wellness", glyph: "" }
+    medical: { fill: "#f08a8a", ink: "#5a1010", label: "Medical", glyph: "" }
+    isolation: { fill: "#b6a0d0", ink: "#3a1040", label: "Isolation", glyph: "&#x2298;" }
+    retail: { fill: "#d4a8d8", ink: "#3a1040", label: "Retail", glyph: "" }
+    crew: { fill: "#b5b39a", ink: "#2a2810", label: "Crew", glyph: "" }
+    crew_op: { fill: "#9aa085", ink: "#1a1810", label: "Crew Ops", glyph: "" }
+    emergency: { fill: "#f0a23a", ink: "#3a1c00", label: "Emergency", glyph: "" }
+    transit: { fill: "#7c8c99", ink: "#f3e6c8", label: "Transit", glyph: "" }
+    public: { fill: "#d6c89e", ink: "#3a2e10", label: "Public Deck", glyph: "" }
+
+rooms:
+    - id: obs_p
+      name: "Fwd Promenade (P)"
+      type: public
+      polygon: [[28, 56], [112, 56], [112, 196], [28, 196]]
+      label_anchor: [70, 126]
+      doorways: [door_obs_p_cab_p1]
+    - id: bridge
+      name: "Bridge"
+      type: command
+      polygon: [[0, 196], [112, 196], [112, 364], [0, 364]]
+      label_anchor: [56, 280]
+      doorways: [door_bridge_atrium_1, door_bridge_atrium_2]
+    - id: obs_s
+      name: "Fwd Promenade (S)"
+      type: public
+      polygon: [[28, 364], [112, 364], [112, 504], [28, 504]]
+      label_anchor: [70, 434]
+      doorways: [door_obs_s_cab_s1]
+    - id: lifeboats_p
+      name: "Lifeboat Stations (P)"
+      type: emergency
+      polygon: [[112, 0], [868, 0], [868, 56], [112, 56]]
+      label_anchor: [490, 28]
+      doorways: [door_lifeboats_p_cab_p1, door_lifeboats_p_cab_p2, door_lifeboats_p_cab_p3]
+    - id: cab_p1
+      name: "Cabins 101-118 (P)"
+      type: cabin
+      polygon: [[112, 56], [280, 56], [280, 140], [112, 140]]
+      label_anchor: [196, 98]
+      doorways: [door_lifeboats_p_cab_p1, door_cab_p1_corr_p, door_cab_p1_corr_p_b, door_obs_p_cab_p1]
+    - id: cab_p2
+      name: "Cabins 119-136 (P)"
+      type: cabin
+      polygon: [[280, 56], [448, 56], [448, 140], [280, 140]]
+      label_anchor: [364, 98]
+      doorways: [door_lifeboats_p_cab_p2, door_cab_p2_corr_p, door_cab_p2_corr_p_b]
+    - id: cab_p3
+      name: "Cabins 137-151 (P)"
+      type: cabin
+      polygon: [[448, 56], [588, 56], [588, 140], [448, 140]]
+      label_anchor: [518, 98]
+      doorways: [door_lifeboats_p_cab_p3, door_cab_p3_corr_p, door_cab_p3_corr_p_b]
+    - id: cab_p4
+      name: "Cabins 152-166 (P)"
+      type: cabin
+      polygon: [[588, 56], [728, 56], [728, 140], [588, 140]]
+      label_anchor: [658, 98]
+      doorways: [door_cab_p4_corr_p]
+    - id: suite_p
+      name: "Owner's Suites (P)"
+      type: suite
+      polygon: [[728, 56], [868, 56], [868, 140], [728, 140]]
+      label_anchor: [798, 98]
+      doorways: [door_suite_p_corr_p, door_suite_p_crew_q]
+    - id: corr_p
+      name: "Port Corridor"
+      type: corridor
+      polygon: [[112, 140], [868, 140], [868, 168], [112, 168]]
+      label_anchor: [490, 154]
+      doorways:
+          [
+              door_cab_p1_corr_p,
+              door_cab_p1_corr_p_b,
+              door_cab_p2_corr_p,
+              door_cab_p2_corr_p_b,
+              door_cab_p3_corr_p,
+              door_cab_p3_corr_p_b,
+              door_cab_p4_corr_p,
+              door_suite_p_corr_p,
+              door_corr_p_spa,
+              door_corr_p_library,
+              door_corr_p_dining,
+              door_corr_p_galley,
+              door_corr_p_casino,
+              door_corr_p_theater,
+          ]
+    - id: spa
+      name: "Spa & Hammam"
+      type: wellness
+      polygon: [[112, 168], [224, 168], [224, 252], [112, 252]]
+      label_anchor: [168, 210]
+      doorways: [door_corr_p_spa]
+    - id: library
+      name: "Library"
+      type: leisure
+      polygon: [[224, 168], [336, 168], [336, 252], [224, 252]]
+      label_anchor: [280, 210]
+      doorways: [door_corr_p_library]
+    - id: dining
+      name: "Main Dining"
+      type: food
+      polygon: [[336, 168], [504, 168], [504, 252], [336, 252]]
+      label_anchor: [420, 210]
+      doorways: [door_corr_p_dining, door_dining_atrium_1]
+    - id: galley
+      name: "Galley"
+      type: crew_op
+      polygon: [[504, 168], [588, 168], [588, 252], [504, 252]]
+      label_anchor: [546, 210]
+      doorways: [door_corr_p_galley, door_galley_atrium_1]
+    - id: casino
+      name: "Casino"
+      type: leisure
+      polygon: [[588, 168], [728, 168], [728, 252], [588, 252]]
+      label_anchor: [658, 210]
+      doorways: [door_corr_p_casino, door_casino_atrium_1]
+    - id: theater
+      name: "Theater"
+      type: leisure
+      polygon: [[728, 168], [868, 168], [868, 252], [728, 252]]
+      label_anchor: [798, 210]
+      doorways: [door_corr_p_theater, door_theater_atrium_1, door_theater_crew_mess]
+    - id: atrium
+      name: "Grand Atrium"
+      type: atrium
+      polygon: [[112, 252], [868, 252], [868, 308], [112, 308]]
+      label_anchor: [490, 280]
+      doorways:
+          [
+              door_dining_atrium_1,
+              door_galley_atrium_1,
+              door_casino_atrium_1,
+              door_theater_atrium_1,
+              door_bridge_atrium_1,
+              door_bridge_atrium_2,
+              door_infirmary_atrium,
+              door_isolation_atrium,
+              door_gym_atrium,
+              door_pool_atrium,
+              door_arcade_atrium,
+              door_kids_atrium,
+              door_atrium_comms,
+          ]
+    - id: infirmary
+      name: "Infirmary"
+      type: medical
+      polygon: [[112, 308], [224, 308], [224, 392], [112, 392]]
+      label_anchor: [168, 350]
+      doorways: [door_infirmary_atrium, door_infirmary_isolation]
+    - id: isolation
+      name: "Isolation"
+      type: isolation
+      polygon: [[224, 308], [308, 308], [308, 392], [224, 392]]
+      label_anchor: [266, 350]
+      doorways: [door_isolation_atrium, door_infirmary_isolation]
+    - id: gym
+      name: "Gym"
+      type: wellness
+      polygon: [[308, 308], [420, 308], [420, 392], [308, 392]]
+      label_anchor: [364, 350]
+      doorways: [door_gym_atrium]
+    - id: pool
+      name: "Pool Deck"
+      type: leisure
+      polygon: [[420, 308], [588, 308], [588, 392], [420, 392]]
+      label_anchor: [504, 350]
+      doorways: [door_pool_atrium]
+    - id: arcade
+      name: "Arcade"
+      type: leisure
+      polygon: [[588, 308], [728, 308], [728, 392], [588, 392]]
+      label_anchor: [658, 350]
+      doorways: [door_arcade_atrium]
+    - id: kids
+      name: "Kids Club"
+      type: leisure
+      polygon: [[728, 308], [868, 308], [868, 392], [728, 392]]
+      label_anchor: [798, 350]
+      doorways: [door_kids_atrium, door_kids_engineering]
+    - id: corr_s
+      name: "Starboard Corridor"
+      type: corridor
+      polygon: [[112, 392], [868, 392], [868, 420], [112, 420]]
+      label_anchor: [490, 406]
+      doorways:
+          [
+              door_infirmary_corr_s,
+              door_isolation_corr_s,
+              door_gym_corr_s,
+              door_pool_corr_s,
+              door_arcade_corr_s,
+              door_kids_corr_s,
+              door_cab_s1_corr_s,
+              door_cab_s1_corr_s_b,
+              door_cab_s2_corr_s,
+              door_cab_s2_corr_s_b,
+              door_cab_s3_corr_s,
+              door_cab_s3_corr_s_b,
+              door_cab_s4_corr_s,
+              door_suite_s_corr_s,
+          ]
+    - id: cab_s1
+      name: "Cabins 201-218 (S)"
+      type: cabin
+      polygon: [[112, 420], [280, 420], [280, 504], [112, 504]]
+      label_anchor: [196, 462]
+      doorways: [door_cab_s1_corr_s, door_cab_s1_corr_s_b, door_obs_s_cab_s1]
+    - id: cab_s2
+      name: "Cabins 219-236 (S)"
+      type: cabin
+      polygon: [[280, 420], [448, 420], [448, 504], [280, 504]]
+      label_anchor: [364, 462]
+      doorways: [door_cab_s2_corr_s, door_cab_s2_corr_s_b]
+    - id: cab_s3
+      name: "Cabins 237-251 (S)"
+      type: cabin
+      polygon: [[448, 420], [588, 420], [588, 504], [448, 504]]
+      label_anchor: [518, 462]
+      doorways: [door_cab_s3_corr_s, door_cab_s3_corr_s_b]
+    - id: cab_s4
+      name: "Cabins 252-266 (S)"
+      type: cabin
+      polygon: [[588, 420], [728, 420], [728, 504], [588, 504]]
+      label_anchor: [658, 462]
+      doorways: [door_cab_s4_corr_s]
+    - id: suite_s
+      name: "Owner's Suites (S)"
+      type: suite
+      polygon: [[728, 420], [868, 420], [868, 504], [728, 504]]
+      label_anchor: [798, 462]
+      doorways: [door_suite_s_corr_s, door_suite_s_tender_bay]
+    - id: lifeboats_s
+      name: "Lifeboat Stations (S)"
+      type: emergency
+      polygon: [[112, 504], [868, 504], [868, 560], [112, 560]]
+      label_anchor: [490, 532]
+      doorways: [door_lifeboats_s_cab_s1, door_lifeboats_s_cab_s2, door_lifeboats_s_cab_s3]
+    - id: sun_deck
+      name: "Sun Deck Aft"
+      type: leisure
+      polygon: [[868, 0], [1008, 0], [1008, 56], [868, 56]]
+      label_anchor: [938, 28]
+      doorways: [door_sun_deck_crew_q]
+    - id: crew_q
+      name: "Crew Quarters"
+      type: crew
+      polygon: [[868, 56], [1008, 56], [1008, 168], [868, 168]]
+      label_anchor: [938, 112]
+      doorways: [door_suite_p_crew_q, door_sun_deck_crew_q]
+    - id: crew_mess
+      name: "Crew Mess"
+      type: crew_op
+      polygon: [[868, 168], [1008, 168], [1008, 252], [868, 252]]
+      label_anchor: [938, 210]
+      doorways: [door_theater_crew_mess]
+    - id: comms
+      name: "Comms Room"
+      type: command
+      polygon: [[868, 252], [1008, 252], [1008, 308], [868, 308]]
+      label_anchor: [938, 280]
+      doorways: [door_atrium_comms]
+    - id: engineering
+      name: "Engineering"
+      type: crew_op
+      polygon: [[868, 308], [1008, 308], [1008, 420], [868, 420]]
+      label_anchor: [938, 364]
+      doorways: [door_kids_engineering]
+    - id: tender_bay
+      name: "Tender Bay"
+      type: transit
+      polygon: [[868, 420], [1008, 420], [1008, 504], [868, 504]]
+      label_anchor: [938, 462]
+      doorways: [door_suite_s_tender_bay, door_tender_bay_helideck]
+    - id: helideck
+      name: "Helideck"
+      type: transit
+      polygon: [[868, 504], [1008, 504], [1008, 560], [868, 560]]
+      label_anchor: [938, 532]
+      doorways: [door_tender_bay_helideck]
+
+doorways:
+    - id: door_obs_p_cab_p1
+      between: [obs_p, cab_p1]
+      dir: h
+      tile_anchor: [112, 56]
+      segment: [[112, 56], [168, 56]]
+    - id: door_lifeboats_p_cab_p1
+      between: [lifeboats_p, cab_p1]
+      dir: h
+      tile_anchor: [196, 56]
+      segment: [[196, 56], [252, 56]]
+    - id: door_cab_p1_corr_p
+      between: [cab_p1, corr_p]
+      dir: h
+      tile_anchor: [196, 140]
+      segment: [[196, 140], [252, 140]]
+    - id: door_lifeboats_p_cab_p2
+      between: [lifeboats_p, cab_p2]
+      dir: h
+      tile_anchor: [364, 56]
+      segment: [[364, 56], [420, 56]]
+    - id: door_cab_p2_corr_p
+      between: [cab_p2, corr_p]
+      dir: h
+      tile_anchor: [364, 140]
+      segment: [[364, 140], [420, 140]]
+    - id: door_lifeboats_p_cab_p3
+      between: [lifeboats_p, cab_p3]
+      dir: h
+      tile_anchor: [518, 56]
+      segment: [[518, 56], [574, 56]]
+    - id: door_cab_p3_corr_p
+      between: [cab_p3, corr_p]
+      dir: h
+      tile_anchor: [518, 140]
+      segment: [[518, 140], [574, 140]]
+    - id: door_cab_p4_corr_p
+      between: [cab_p4, corr_p]
+      dir: h
+      tile_anchor: [658, 140]
+      segment: [[658, 140], [714, 140]]
+    - id: door_suite_p_corr_p
+      between: [suite_p, corr_p]
+      dir: h
+      tile_anchor: [798, 140]
+      segment: [[798, 140], [854, 140]]
+    - id: door_corr_p_spa
+      between: [corr_p, spa]
+      dir: h
+      tile_anchor: [168, 168]
+      segment: [[168, 168], [224, 168]]
+    - id: door_corr_p_library
+      between: [corr_p, library]
+      dir: h
+      tile_anchor: [280, 168]
+      segment: [[280, 168], [336, 168]]
+    - id: door_corr_p_dining
+      between: [corr_p, dining]
+      dir: h
+      tile_anchor: [420, 168]
+      segment: [[420, 168], [476, 168]]
+    - id: door_corr_p_galley
+      between: [corr_p, galley]
+      dir: h
+      tile_anchor: [532, 168]
+      segment: [[532, 168], [588, 168]]
+    - id: door_corr_p_casino
+      between: [corr_p, casino]
+      dir: h
+      tile_anchor: [658, 168]
+      segment: [[658, 168], [714, 168]]
+    - id: door_corr_p_theater
+      between: [corr_p, theater]
+      dir: h
+      tile_anchor: [798, 168]
+      segment: [[798, 168], [854, 168]]
+    - id: door_dining_atrium_1
+      between: [dining, atrium]
+      dir: h
+      tile_anchor: [420, 252]
+      segment: [[420, 252], [476, 252]]
+    - id: door_galley_atrium_1
+      between: [galley, atrium]
+      dir: h
+      tile_anchor: [532, 252]
+      segment: [[532, 252], [588, 252]]
+    - id: door_casino_atrium_1
+      between: [casino, atrium]
+      dir: h
+      tile_anchor: [658, 252]
+      segment: [[658, 252], [714, 252]]
+    - id: door_theater_atrium_1
+      between: [theater, atrium]
+      dir: h
+      tile_anchor: [798, 252]
+      segment: [[798, 252], [854, 252]]
+    - id: door_bridge_atrium_1
+      between: [bridge, atrium]
+      dir: v
+      tile_anchor: [112, 252]
+      segment: [[112, 252], [112, 308]]
+    - id: door_bridge_atrium_2
+      between: [bridge, atrium]
+      dir: v
+      tile_anchor: [112, 308]
+      segment: [[112, 308], [112, 364]]
+    - id: door_infirmary_atrium
+      between: [infirmary, atrium]
+      dir: h
+      tile_anchor: [168, 308]
+      segment: [[168, 308], [224, 308]]
+    - id: door_isolation_atrium
+      between: [isolation, atrium]
+      dir: h
+      tile_anchor: [280, 308]
+      segment: [[280, 308], [336, 308]]
+    - id: door_gym_atrium
+      between: [gym, atrium]
+      dir: h
+      tile_anchor: [364, 308]
+      segment: [[364, 308], [420, 308]]
+    - id: door_pool_atrium
+      between: [pool, atrium]
+      dir: h
+      tile_anchor: [476, 308]
+      segment: [[476, 308], [532, 308]]
+    - id: door_arcade_atrium
+      between: [arcade, atrium]
+      dir: h
+      tile_anchor: [658, 308]
+      segment: [[658, 308], [714, 308]]
+    - id: door_kids_atrium
+      between: [kids, atrium]
+      dir: h
+      tile_anchor: [798, 308]
+      segment: [[798, 308], [854, 308]]
+    - id: door_infirmary_isolation
+      between: [infirmary, isolation]
+      dir: v
+      tile_anchor: [224, 350]
+      segment: [[224, 308], [224, 364]]
+    - id: door_infirmary_corr_s
+      between: [infirmary, corr_s]
+      dir: h
+      tile_anchor: [168, 392]
+      segment: [[168, 392], [224, 392]]
+    - id: door_isolation_corr_s
+      between: [isolation, corr_s]
+      dir: h
+      tile_anchor: [252, 392]
+      segment: [[252, 392], [308, 392]]
+    - id: door_gym_corr_s
+      between: [gym, corr_s]
+      dir: h
+      tile_anchor: [336, 392]
+      segment: [[336, 392], [392, 392]]
+    - id: door_pool_corr_s
+      between: [pool, corr_s]
+      dir: h
+      tile_anchor: [476, 392]
+      segment: [[476, 392], [532, 392]]
+    - id: door_arcade_corr_s
+      between: [arcade, corr_s]
+      dir: h
+      tile_anchor: [658, 392]
+      segment: [[658, 392], [714, 392]]
+    - id: door_kids_corr_s
+      between: [kids, corr_s]
+      dir: h
+      tile_anchor: [798, 392]
+      segment: [[798, 392], [854, 392]]
+    - id: door_cab_s1_corr_s
+      between: [cab_s1, corr_s]
+      dir: h
+      tile_anchor: [196, 420]
+      segment: [[196, 420], [252, 420]]
+    - id: door_cab_s2_corr_s
+      between: [cab_s2, corr_s]
+      dir: h
+      tile_anchor: [364, 420]
+      segment: [[364, 420], [420, 420]]
+    - id: door_cab_s3_corr_s
+      between: [cab_s3, corr_s]
+      dir: h
+      tile_anchor: [476, 420]
+      segment: [[476, 420], [532, 420]]
+    - id: door_cab_s4_corr_s
+      between: [cab_s4, corr_s]
+      dir: h
+      tile_anchor: [658, 420]
+      segment: [[658, 420], [714, 420]]
+    - id: door_suite_s_corr_s
+      between: [suite_s, corr_s]
+      dir: h
+      tile_anchor: [798, 420]
+      segment: [[798, 420], [854, 420]]
+    - id: door_lifeboats_s_cab_s1
+      between: [lifeboats_s, cab_s1]
+      dir: h
+      tile_anchor: [196, 504]
+      segment: [[196, 504], [252, 504]]
+    - id: door_lifeboats_s_cab_s2
+      between: [lifeboats_s, cab_s2]
+      dir: h
+      tile_anchor: [364, 504]
+      segment: [[364, 504], [420, 504]]
+    - id: door_lifeboats_s_cab_s3
+      between: [lifeboats_s, cab_s3]
+      dir: h
+      tile_anchor: [504, 504]
+      segment: [[504, 504], [560, 504]]
+    - id: door_suite_p_crew_q
+      between: [suite_p, crew_q]
+      dir: v
+      tile_anchor: [868, 112]
+      segment: [[868, 84], [868, 140]]
+    - id: door_theater_crew_mess
+      between: [theater, crew_mess]
+      dir: v
+      tile_anchor: [868, 196]
+      segment: [[868, 168], [868, 224]]
+    - id: door_atrium_comms
+      between: [atrium, comms]
+      dir: v
+      tile_anchor: [868, 280]
+      segment: [[868, 252], [868, 308]]
+    - id: door_kids_engineering
+      between: [kids, engineering]
+      dir: v
+      tile_anchor: [868, 364]
+      segment: [[868, 336], [868, 392]]
+    - id: door_suite_s_tender_bay
+      between: [suite_s, tender_bay]
+      dir: v
+      tile_anchor: [868, 462]
+      segment: [[868, 434], [868, 490]]
+    # Q1: 3 missing doors connecting previously isolated zones
+    - id: door_obs_s_cab_s1
+      between: [obs_s, cab_s1]
+      dir: v
+      tile_anchor: [112, 448]
+      segment: [[112, 448], [112, 504]]
+    - id: door_sun_deck_crew_q
+      between: [sun_deck, crew_q]
+      dir: h
+      tile_anchor: [868, 56]
+      segment: [[868, 56], [924, 56]]
+    - id: door_tender_bay_helideck
+      between: [tender_bay, helideck]
+      dir: h
+      tile_anchor: [868, 504]
+      segment: [[868, 504], [924, 504]]
+    # Q2: cabin secondary doors (port side)
+    - id: door_cab_p1_corr_p_b
+      between: [cab_p1, corr_p]
+      dir: h
+      tile_anchor: [112, 140]
+      segment: [[112, 140], [168, 140]]
+    - id: door_cab_p2_corr_p_b
+      between: [cab_p2, corr_p]
+      dir: h
+      tile_anchor: [448, 140]
+      segment: [[448, 140], [504, 140]]
+    - id: door_cab_p3_corr_p_b
+      between: [cab_p3, corr_p]
+      dir: h
+      tile_anchor: [588, 140]
+      segment: [[588, 140], [644, 140]]
+    # Q2: cabin secondary doors (starboard mirror at y:15)
+    - id: door_cab_s1_corr_s_b
+      between: [corr_s, cab_s1]
+      dir: h
+      tile_anchor: [112, 420]
+      segment: [[112, 420], [168, 420]]
+    - id: door_cab_s2_corr_s_b
+      between: [corr_s, cab_s2]
+      dir: h
+      tile_anchor: [448, 420]
+      segment: [[448, 420], [504, 420]]
+    - id: door_cab_s3_corr_s_b
+      between: [corr_s, cab_s3]
+      dir: h
+      tile_anchor: [588, 420]
+      segment: [[588, 420], [644, 420]]
+
+agents:
+    - id: A01
+      name: "Liu Wei"
+      role: passenger
+      state: healthy
+      pixel_coords: [210, 98]
+    - id: A02
+      name: "Marisol Vega"
+      role: passenger
+      state: exposed
+      pixel_coords: [406, 210]
+    - id: A03
+      name: "Dre Okafor"
+      role: passenger
+      state: symptomatic
+      pixel_coords: [266, 350]
+    - id: A04
+      name: "Yuki Tanaka"
+      role: passenger
+      state: pre_symptomatic
+      pixel_coords: [154, 350]
+    - id: A05
+      name: "Petra Stern"
+      role: passenger
+      state: isolated
+      pixel_coords: [266, 350]
+    - id: A06
+      name: "Omar Haddad"
+      role: crew
+      state: healthy
+      pixel_coords: [546, 210]
+    - id: A07
+      name: "Inez Cruz"
+      role: crew
+      state: healthy
+      pixel_coords: [154, 350]
+    - id: A08
+      name: "Roman Kade"
+      role: passenger
+      state: recovered
+      pixel_coords: [798, 350]
+    - id: A09
+      name: "Sora Matsui"
+      role: passenger
+      state: healthy
+      pixel_coords: [798, 350]
+    - id: A10
+      name: "Felipe Romero"
+      role: crew
+      state: healthy
+      pixel_coords: [938, 210]
+    - id: A11
+      name: "Aisha N'Diaye"
+      role: passenger
+      state: exposed
+      pixel_coords: [504, 350]
+    - id: A12
+      name: "Carl Brandt"
+      role: passenger
+      state: exposed
+      pixel_coords: [658, 210]
+    - id: A13
+      name: "Sven Lindqvist"
+      role: crew
+      state: healthy
+      pixel_coords: [938, 350]
+    - id: A14
+      name: "Mei-ling Zhao"
+      role: passenger
+      state: pre_symptomatic
+      pixel_coords: [336, 280]
+    - id: A15
+      name: "Hana Park"
+      role: passenger
+      state: healthy
+      pixel_coords: [476, 350]
+    - id: A16
+      name: "Tomás Reyes"
+      role: passenger
+      state: exposed
+      pixel_coords: [658, 462]
+
+health_states:
+    healthy:
+        color: "#2db48a"
+        label: "Healthy"
+    exposed:
+        color: "#e9b145"
+        label: "Exposed"
+    pre_symptomatic:
+        color: "#d63a3a"
+        label: "Pre-symptomatic"
+    symptomatic:
+        color: "#e07856"
+        label: "Symptomatic"
+    isolated:
+        color: "#7d3aa9"
+        label: "Isolated"
+    recovered:
+        color: "#3a82d6"
+        label: "Recovered"

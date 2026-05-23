@@ -1,0 +1,25 @@
+# Centrally maintained docs (propagated from starter repo).
+docs/AUTHORS.md
+docs/CLAUDE_HOOK_USAGE_GUIDE.md
+docs/MARKDOWN_STYLE.md
+docs/PLAYWRIGHT_USAGE.md
+docs/PYTEST_STYLE.md
+docs/PYTHON_STYLE.md
+docs/REPO_STYLE.md
+docs/TYPESCRIPT_STYLE.md
+docs/ARTIFICIAL_LIFE.md
+docs/SEIR_Simulation.md
+
+# External design folder (untracked uploads).
+design/
+
+# Generated / build artifacts.
+dist/
+node_modules/
+package-lock.json
+.pytest_cache/
+
+# Python tooling.
+__pycache__/
+*.pyc
+report_*.txt

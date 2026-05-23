@@ -1,3 +1,5 @@
+import { effectiveR0, effectiveRt, herdImmunityThreshold } from "./epi_derived";
+import { getScenarioPreset } from "./scenarios";
 import { SHIP_ZONES } from "./ship_layout";
 
 import type {
@@ -14,7 +16,8 @@ import type { ZoneId } from "./types/ship";
 const HEALTH_STATES: readonly HealthState[] = [
 	"healthy",
 	"exposed",
-	"infectious",
+	"pre_symptomatic",
+	"symptomatic",
 	"isolated",
 	"recovered",
 ];
@@ -23,10 +26,17 @@ export function summarizeSimulation(state: SimulationState): SimulationSummary {
 	const counts = countHealthStates(state.passengers);
 	const zoneSummaries = summarizeZones(state.passengers, state.zoneContamination);
 	const activeExposureCount =
-		counts.exposed + counts.infectious + counts.isolated;
+		counts.exposed + counts.pre_symptomatic + counts.symptomatic + counts.isolated;
 	const everExposedCount =
-		counts.exposed + counts.infectious + counts.isolated + counts.recovered;
-	const summary = {
+		counts.exposed +
+		counts.pre_symptomatic +
+		counts.symptomatic +
+		counts.isolated +
+		counts.recovered;
+
+	const scenario = getScenarioPreset(state.scenarioId);
+
+	const baseTimestamp = {
 		tick: state.tick,
 		scenarioId: state.scenarioId,
 		counts,
@@ -34,12 +44,29 @@ export function summarizeSimulation(state: SimulationState): SimulationSummary {
 		activeExposureCount,
 		everExposedCount,
 	};
+
+	if (scenario.sepir_rates === undefined) {
+		return baseTimestamp;
+	}
+
+	const susceptibleFraction = counts.healthy / state.passengers.length;
+	const effective_r0 = effectiveR0(scenario.sepir_rates);
+	const effective_rt = effectiveRt(scenario.sepir_rates, susceptibleFraction);
+	const approx_herd_threshold = herdImmunityThreshold(scenario.sepir_rates);
+
+	const summary: SimulationSummary = {
+		...baseTimestamp,
+		derived: {
+			effective_r0,
+			effective_rt,
+			approx_herd_threshold,
+		},
+	};
+
 	return summary;
 }
 
-export function countHealthStates(
-	passengers: readonly Passenger[],
-): HealthCounts {
+export function countHealthStates(passengers: readonly Passenger[]): HealthCounts {
 	const counts = createEmptyHealthCounts();
 
 	for (const passenger of passengers) {
@@ -66,10 +93,7 @@ export function summarizeZones(
 	return zoneSummaries;
 }
 
-function countHealthStatesInZone(
-	passengers: readonly Passenger[],
-	zoneId: ZoneId,
-): HealthCounts {
+function countHealthStatesInZone(passengers: readonly Passenger[], zoneId: ZoneId): HealthCounts {
 	const counts = createEmptyHealthCounts();
 
 	for (const passenger of passengers) {
@@ -85,7 +109,8 @@ function createEmptyHealthCounts(): HealthCounts {
 	const counts = {
 		healthy: 0,
 		exposed: 0,
-		infectious: 0,
+		pre_symptomatic: 0,
+		symptomatic: 0,
 		isolated: 0,
 		recovered: 0,
 	};

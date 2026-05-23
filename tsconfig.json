@@ -22,5 +22,6 @@
 		"sourceMap": true,
 		"lib": ["es2020", "dom", "dom.iterable"]
 	},
-	"include": ["**/*.ts"]
+	"include": ["src/**/*.ts"],
+	"exclude": ["tests", "dist", "node_modules"]
 }

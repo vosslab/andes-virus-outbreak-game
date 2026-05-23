@@ -39,14 +39,14 @@ The SIR model divides a fixed population into susceptible, infectious, and recov
 The standard normalized SIR equations are:
 
 ```text
-dS/dt = -βSI/N
-dI/dt = βSI/N - γI
-dR/dt = γI
+dS/dt = -&beta;SI/N
+dI/dt = &beta;SI/N - &gamma;I
+dR/dt = &gamma;I
 ```
 
-In these equations, `S`, `I`, and `R` are the numbers of susceptible, infectious, and recovered individuals. The total population is `N = S + I + R`. The parameter `β` is the transmission rate, and `γ` is the recovery or removal rate.
+In these equations, `S`, `I`, and `R` are the numbers of susceptible, infectious, and recovered individuals. The total population is `N = S + I + R`. The parameter `&beta;` is the transmission rate, and `&gamma;` is the recovery or removal rate.
 
-The term `βSI/N` represents new infections. It increases when there are more susceptible people, more infectious people, or more effective contact between them. The term `γI` represents infectious individuals leaving the infectious compartment.
+The term `&beta;SI/N` represents new infections. It increases when there are more susceptible people, more infectious people, or more effective contact between them. The term `&gamma;I` represents infectious individuals leaving the infectious compartment.
 
 The SIR model is useful because it shows why outbreaks often rise quickly, peak, and then decline. At the beginning of an outbreak, the susceptible population is large, so each infectious person may generate more than one new infection. Later, as susceptible individuals are depleted, transmission slows. The epidemic peak occurs when new infections are no longer increasing fast enough to offset recovery or removal.
 
@@ -57,19 +57,19 @@ The SIR model is useful because it shows why outbreaks often rise quickly, peak,
 The SEIR model expands the SIR framework by adding an exposed compartment. The basic structure is:
 
 ```text
-Susceptible → Exposed → Infectious → Recovered
+Susceptible -> Exposed -> Infectious -> Recovered
 ```
 
 A common deterministic form is:
 
 ```text
-dS/dt = -βSI/N
-dE/dt = βSI/N - σE
-dI/dt = σE - γI
-dR/dt = γI
+dS/dt = -&beta;SI/N
+dE/dt = &beta;SI/N - &sigma;E
+dI/dt = &sigma;E - &gamma;I
+dR/dt = &gamma;I
 ```
 
-Here, `E` is the number of exposed individuals. The parameter `σ` is the rate at which exposed individuals become infectious. The average latent period is often written as `1/σ`. The average infectious period is often written as `1/γ`.
+Here, `E` is the number of exposed individuals. The parameter `&sigma;` is the rate at which exposed individuals become infectious. The average latent period is often written as `1/&sigma;`. The average infectious period is often written as `1/&gamma;`.
 
 The SEIR model is especially useful when infection and infectiousness do not begin at the same time. In the SIR model, a newly infected person immediately enters the infectious compartment. In the SEIR model, that person first enters the exposed compartment. This delay can shift the timing of the epidemic curve and change the apparent speed of early growth.
 
@@ -84,12 +84,12 @@ The basic reproduction number, usually written as `R0`, is the expected number o
 In the simplest normalized SIR model, `R0` is calculated as:
 
 ```text
-R0 = β / γ
+R0 = &beta; / &gamma;
 ```
 
-This expression has an intuitive interpretation. The transmission rate `β` describes how efficiently infection spreads through contact. The recovery rate `γ` describes how quickly infectious people leave the infectious state. If infectious people remain infectious longer, then `γ` is smaller and `R0` becomes larger. If transmission is more efficient, then `β` is larger and `R0` becomes larger.
+This expression has an intuitive interpretation. The transmission rate `&beta;` describes how efficiently infection spreads through contact. The recovery rate `&gamma;` describes how quickly infectious people leave the infectious state. If infectious people remain infectious longer, then `&gamma;` is smaller and `R0` becomes larger. If transmission is more efficient, then `&beta;` is larger and `R0` becomes larger.
 
-For example, if `β = 0.6` per day and `γ = 0.2` per day, then:
+For example, if `&beta; = 0.6` per day and `&gamma; = 0.2` per day, then:
 
 ```text
 R0 = 0.6 / 0.2 = 3
@@ -97,7 +97,7 @@ R0 = 0.6 / 0.2 = 3
 
 In this case, each infectious person would generate about three secondary infections in a fully susceptible population, assuming the model assumptions hold.
 
-Some model formulations write the transmission term as `βSI` rather than `βSI/N`. In that case, the units of `β` differ, and the expression for `R0` may include `N`. This is a common source of confusion. The formula `R0 = β/γ` applies to the normalized mass-action form where transmission is written as `βSI/N`.
+Some model formulations write the transmission term as `&beta;SI` rather than `&beta;SI/N`. In that case, the units of `&beta;` differ, and the expression for `R0` may include `N`. This is a common source of confusion. The formula `R0 = &beta;/&gamma;` applies to the normalized mass-action form where transmission is written as `&beta;SI/N`.
 
 ---
 
@@ -108,14 +108,14 @@ The effective reproduction number, often written as `Rt` or `Re`, describes tran
 In the simple SIR framework, the effective reproduction number is often written as:
 
 ```text
-Rt = R0 × S/N
+Rt = R0 x S/N
 ```
 
 This expression shows why epidemics eventually slow. As the susceptible fraction `S/N` decreases through infection, vaccination, or other forms of immunity, `Rt` declines. When `Rt` is above 1, infections tend to increase. When `Rt` is below 1, infections tend to decline.
 
 This distinction is important. `R0` describes the early potential for spread in a fully susceptible population. `Rt` describes what is happening now.
 
-Public health agencies often estimate `Rt` from case counts, hospitalization data, genomic surveillance, or other epidemic data. These estimates are not the same as directly calculating `β/γ` from a simple model. They are model-dependent statistical estimates based on observed transmission patterns.
+Public health agencies often estimate `Rt` from case counts, hospitalization data, genomic surveillance, or other epidemic data. These estimates are not the same as directly calculating `&beta;/&gamma;` from a simple model. They are model-dependent statistical estimates based on observed transmission patterns.
 
 ---
 
@@ -127,9 +127,9 @@ The herd immunity threshold is the fraction of a population that would need to b
 Herd immunity threshold = 1 - 1/R0
 ```
 
-This formula follows from the condition that transmission declines when `Rt < 1`. Since `Rt = R0 × S/N`, the epidemic begins to decline when the susceptible fraction falls below `1/R0`. The immune fraction needed to reach that condition is therefore `1 - 1/R0`.
+This formula follows from the condition that transmission declines when `Rt < 1`. Since `Rt = R0 x S/N`, the epidemic begins to decline when the susceptible fraction falls below `1/R0`. The immune fraction needed to reach that condition is therefore `1 - 1/R0`.
 
-For measles, a frequently cited `R0` range is about 12 to 18. If `R0 ≈ 15`, then:
+For measles, a frequently cited `R0` range is about 12 to 18. If `R0 ~ 15`, then:
 
 ```text
 1 - 1/15 = 0.933
@@ -173,7 +173,7 @@ Agent-based models go one step further by representing individuals explicitly. E
 
 The simplest SIR and SEIR models assume homogeneous mixing. This means that all individuals are treated as if they interact randomly and evenly. Real populations do not behave this way. People interact through households, schools, workplaces, transportation systems, social networks, and geographic neighborhoods.
 
-The models also often assume fixed parameters. In reality, `β` can change over time as people alter behavior, public health interventions begin, seasons change, schools open or close, or a new variant appears. The recovery rate may also vary by age, treatment, immune status, or case severity.
+The models also often assume fixed parameters. In reality, `&beta;` can change over time as people alter behavior, public health interventions begin, seasons change, schools open or close, or a new variant appears. The recovery rate may also vary by age, treatment, immune status, or case severity.
 
 Another assumption is that recovered individuals are fully immune for the modeled period. This may be reasonable for some short-term outbreaks but not for diseases with waning immunity, reinfection, or immune escape.
 
@@ -195,7 +195,7 @@ Age structure is often important. Children, adults, and older adults may have di
 
 Spatial models divide the population by region. Network models represent contacts between individuals or groups. These models are useful when transmission depends strongly on local contact structure rather than random mixing.
 
-Seasonal forcing can be added by allowing `β` to vary over time. This is often used for respiratory infections that show seasonal patterns.
+Seasonal forcing can be added by allowing `&beta;` to vary over time. This is often used for respiratory infections that show seasonal patterns.
 
 ---
 
@@ -209,7 +209,7 @@ It is usually better to begin with a simple model and add complexity only when n
 
 Calibration is also important. A model should be compared against observed data when data are available. However, fitting a curve does not prove that the model mechanisms are correct. Many different parameter combinations can produce similar epidemic curves.
 
-Sensitivity analysis is essential. The user should ask how results change when `β`, `γ`, latent period, initial infections, reporting rates, or intervention timing are varied. A conclusion that depends on one narrow parameter choice should be treated cautiously.
+Sensitivity analysis is essential. The user should ask how results change when `&beta;`, `&gamma;`, latent period, initial infections, reporting rates, or intervention timing are varied. A conclusion that depends on one narrow parameter choice should be treated cautiously.
 
 ---
 
@@ -241,10 +241,10 @@ The two approaches are not competitors. They are often complementary. A research
 
 # Example Interpretation
 
-Suppose a disease has `R0 = 3` and an average infectious period of 5 days. Since `γ` is the inverse of the infectious period, `γ = 1/5 = 0.2` per day. Using `R0 = β/γ`, the transmission rate is:
+Suppose a disease has `R0 = 3` and an average infectious period of 5 days. Since `&gamma;` is the inverse of the infectious period, `&gamma; = 1/5 = 0.2` per day. Using `R0 = &beta;/&gamma;`, the transmission rate is:
 
 ```text
-β = R0 × γ = 3 × 0.2 = 0.6 per day
+&beta; = R0 x &gamma; = 3 x 0.2 = 0.6 per day
 ```
 
 If the population is initially almost entirely susceptible, infections will tend to increase. As infections accumulate and immunity grows, `S/N` declines. When `S/N` falls below `1/3`, the effective reproduction number falls below 1, and infections decline in the simple model.

@@ -1,22 +1,6 @@
-export type ZoneKind =
-	| "cabins"
-	| "corridor"
-	| "public"
-	| "medical"
-	| "crew"
-	| "operations";
+export type ZoneKind = "cabins" | "corridor" | "public" | "medical" | "crew" | "operations";
 
-export type ZoneId =
-	| "cabins_port"
-	| "cabins_starboard"
-	| "corridor_spine"
-	| "dining"
-	| "lounge_theater"
-	| "pool_deck"
-	| "infirmary"
-	| "isolation"
-	| "crew_area"
-	| "helipad";
+export type ZoneId = string;
 
 export type Point = {
 	readonly x: number;
@@ -28,6 +12,14 @@ export type Bounds = {
 	readonly y: number;
 	readonly width: number;
 	readonly height: number;
+};
+
+export type DoorSegment = {
+	readonly id: string;
+	readonly kind: "h" | "v";
+	readonly tile: Point;
+	readonly segment: readonly [Point, Point];
+	readonly roomIds: readonly [ZoneId, ZoneId];
 };
 
 export type ShipZone = {
@@ -44,4 +36,5 @@ export type ShipLayout = {
 	readonly schematicWidth: number;
 	readonly schematicHeight: number;
 	readonly zones: readonly ShipZone[];
+	readonly doors: readonly DoorSegment[];
 };

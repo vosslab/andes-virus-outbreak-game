@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 520" role="img" aria-labelledby="title desc">
+&#x9;<title id="title">Cruise ship deck plan with passenger health states.</title>
+&#x9;<desc id="desc">Top-down deck plan: cabins, corridor, dining, lounge, pool deck, infirmary, isolation, crew area, helipad.</desc>
+
+&#x9;<rect width="1200" height="520" fill="#f5f7f8"></rect>
+
+&#x9;
+&#x9;<path d="M62 260 C92 92 220 38 394 34 L920 34 C1040 38 1140 110 1170 260 C1140 410 1040 482 920 486 L394 486 C220 482 92 428 62 260 Z" fill="#ffffff" stroke="#25313a" stroke-width="4"></path>
+
+&#x9;
+&#x9;<rect data-zone-id="corridor_spine" x="190" y="226" width="805" height="68" rx="12" fill="#d9dee2" stroke="#53606a" stroke-width="3"></rect>
+&#x9;<text x="592" y="267" text-anchor="middle" font-size="26" font-weight="700" fill="#172026">Corridor</text>
+
+&#x9;
+&#x9;<rect data-zone-id="cabins_port" x="245" y="82" width="310" height="96" rx="8" fill="#8ecae6" stroke="#2f6f88" stroke-width="3"></rect>
+&#x9;<text x="400" y="138" text-anchor="middle" font-size="22" font-weight="700" fill="#172026">Cabins (Port)</text>
+
+&#x9;
+&#x9;<rect data-zone-id="cabins_starboard" x="245" y="342" width="310" height="96" rx="8" fill="#8ecae6" stroke="#2f6f88" stroke-width="3"></rect>
+&#x9;<text x="400" y="398" text-anchor="middle" font-size="22" font-weight="700" fill="#172026">Cabins (Starboard)</text>
+
+&#x9;
+&#x9;<rect data-zone-id="dining" x="585" y="88" width="178" height="116" rx="8" fill="#f4d35e" stroke="#8f6f10" stroke-width="3"></rect>
+&#x9;<text x="674" y="154" text-anchor="middle" font-size="26" font-weight="700" fill="#172026">Dining</text>
+
+&#x9;
+&#x9;<rect data-zone-id="lounge_theater" x="785" y="82" width="176" height="126" rx="8" fill="#ee964b" stroke="#8c4d12" stroke-width="3"></rect>
+&#x9;<text x="873" y="138" text-anchor="middle" font-size="22" font-weight="700" fill="#172026">Lounge /</text>
+&#x9;<text x="873" y="168" text-anchor="middle" font-size="22" font-weight="700" fill="#172026">Theater</text>
+
+&#x9;
+&#x9;<rect data-zone-id="pool_deck" x="610" y="332" width="230" height="110" rx="12" fill="#70c1b3" stroke="#2b6f68" stroke-width="3"></rect>
+&#x9;<ellipse cx="680" cy="387" rx="48" ry="24" fill="#d8f3f2" stroke="#2b6f68" stroke-width="2"></ellipse>
+&#x9;<text x="788" y="395" text-anchor="middle" font-size="22" font-weight="700" fill="#172026">Pool</text>
+
+&#x9;
+&#x9;<rect data-zone-id="infirmary" x="100" y="132" width="110" height="86" rx="8" fill="#f8a4a0" stroke="#9d2f28" stroke-width="3"></rect>
+&#x9;<text x="155" y="168" text-anchor="middle" font-size="18" font-weight="700" fill="#172026">Infirmary</text>
+&#x9;<path d="M155 188 V208 M145 198 H165" stroke="#9d2f28" stroke-width="4" stroke-linecap="round" fill="none"></path>
+
+&#x9;
+&#x9;<rect data-zone-id="isolation" x="100" y="302" width="110" height="86" rx="8" fill="#c44a52" stroke="#6b1a22" stroke-width="3"></rect>
+&#x9;<text x="155" y="338" text-anchor="middle" font-size="18" font-weight="700" fill="#ffffff">Isolation</text>
+&#x9;<path d="M141 364 H169 M141 372 H169" stroke="#ffffff" stroke-width="3" stroke-linecap="round" fill="none"></path>
+
+&#x9;
+&#x9;<rect data-zone-id="crew_area" x="980" y="166" width="116" height="188" rx="8" fill="#a3b18a" stroke="#4f613a" stroke-width="3"></rect>
+&#x9;<text x="1038" y="252" text-anchor="middle" font-size="20" font-weight="700" fill="#172026">Crew</text>
+&#x9;<text x="1038" y="278" text-anchor="middle" font-size="20" font-weight="700" fill="#172026">Area</text>
+
+&#x9;
+&#x9;<rect data-zone-id="helipad" x="940" y="390" width="56" height="56" rx="28" fill="#adb5bd" stroke="#4c5963" stroke-width="3"></rect>
+&#x9;<circle cx="968" cy="418" r="18" fill="none" stroke="#4c5963" stroke-width="3"></circle>
+&#x9;<text x="968" y="425" text-anchor="middle" font-size="18" font-weight="700" fill="#172026">H</text>
+
+&#x9;
+&#x9;<g class="zone-bridge" fill="#d9dee2" stroke="#53606a" stroke-width="2">
+&#x9;&#x9;
+&#x9;&#x9;<rect x="380" y="178" width="40" height="48" rx="4"></rect>
+&#x9;&#x9;
+&#x9;&#x9;<rect x="380" y="294" width="40" height="48" rx="4"></rect>
+&#x9;&#x9;
+&#x9;&#x9;<rect x="654" y="204" width="40" height="22" rx="4"></rect>
+&#x9;&#x9;
+&#x9;&#x9;<rect x="853" y="208" width="40" height="18" rx="4"></rect>
+&#x9;&#x9;
+&#x9;&#x9;<rect x="705" y="294" width="40" height="38" rx="4"></rect>
+&#x9;&#x9;
+&#x9;&#x9;<rect x="140" y="218" width="30" height="8" rx="3"></rect>
+&#x9;&#x9;
+&#x9;&#x9;<rect x="140" y="294" width="30" height="8" rx="3"></rect>
+&#x9;&#x9;
+&#x9;&#x9;<rect x="980" y="246" width="20" height="28" rx="3"></rect>
+&#x9;&#x9;
+&#x9;&#x9;<rect x="1027" y="354" width="26" height="24" rx="4"></rect>
+&#x9;&#x9;
+&#x9;&#x9;<rect x="763" y="130" width="22" height="40" rx="4"></rect>
+&#x9;</g>
+</svg>

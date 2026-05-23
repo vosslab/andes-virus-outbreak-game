@@ -1,80 +1,86 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 520" role="img" aria-labelledby="title desc">
-	<title id="title">Cruise ship deck plan with passenger health states.</title>
-	<desc id="desc">Top-down deck plan: cabins, corridor, dining, lounge, pool deck, infirmary, isolation, crew area, helipad.</desc>
-
-	<rect width="1200" height="520" fill="#f5f7f8"/>
-
-	<!-- Hull: single stroke, stern (left) blunt, bow (right) tapered -->
-	<path d="M62 260 C92 92 220 38 394 34 L920 34 C1040 38 1140 110 1170 260 C1140 410 1040 482 920 486 L394 486 C220 482 92 428 62 260 Z"
-		fill="#ffffff" stroke="#25313a" stroke-width="4"/>
-
-	<!-- Corridor spine -->
-	<rect data-zone-id="corridor_spine" x="190" y="226" width="805" height="68" rx="12" fill="#d9dee2" stroke="#53606a" stroke-width="3"/>
-	<text x="592" y="267" text-anchor="middle" font-size="26" font-weight="700" fill="#172026">Corridor</text>
-
-	<!-- Cabins (port) -->
-	<rect data-zone-id="cabins_port" x="245" y="82" width="310" height="96" rx="8" fill="#8ecae6" stroke="#2f6f88" stroke-width="3"/>
-	<text x="400" y="138" text-anchor="middle" font-size="22" font-weight="700" fill="#172026">Cabins (Port)</text>
-
-	<!-- Cabins (starboard) -->
-	<rect data-zone-id="cabins_starboard" x="245" y="342" width="310" height="96" rx="8" fill="#8ecae6" stroke="#2f6f88" stroke-width="3"/>
-	<text x="400" y="398" text-anchor="middle" font-size="22" font-weight="700" fill="#172026">Cabins (Starboard)</text>
-
-	<!-- Dining -->
-	<rect data-zone-id="dining" x="585" y="88" width="178" height="116" rx="8" fill="#f4d35e" stroke="#8f6f10" stroke-width="3"/>
-	<text x="674" y="154" text-anchor="middle" font-size="26" font-weight="700" fill="#172026">Dining</text>
-
-	<!-- Lounge / Theater -->
-	<rect data-zone-id="lounge_theater" x="785" y="82" width="176" height="126" rx="8" fill="#ee964b" stroke="#8c4d12" stroke-width="3"/>
-	<text x="873" y="138" text-anchor="middle" font-size="22" font-weight="700" fill="#172026">Lounge /</text>
-	<text x="873" y="168" text-anchor="middle" font-size="22" font-weight="700" fill="#172026">Theater</text>
-
-	<!-- Pool Deck -->
-	<rect data-zone-id="pool_deck" x="610" y="332" width="230" height="110" rx="12" fill="#70c1b3" stroke="#2b6f68" stroke-width="3"/>
-	<ellipse cx="680" cy="387" rx="48" ry="24" fill="#d8f3f2" stroke="#2b6f68" stroke-width="2"/>
-	<text x="788" y="395" text-anchor="middle" font-size="22" font-weight="700" fill="#172026">Pool</text>
-
-	<!-- Infirmary (red) -->
-	<rect data-zone-id="infirmary" x="100" y="132" width="110" height="86" rx="8" fill="#f8a4a0" stroke="#9d2f28" stroke-width="3"/>
-	<text x="155" y="168" text-anchor="middle" font-size="18" font-weight="700" fill="#172026">Infirmary</text>
-	<path d="M155 188 V208 M145 198 H165" stroke="#9d2f28" stroke-width="4" stroke-linecap="round" fill="none"/>
-
-	<!-- Isolation (deeper red, distinct from infirmary) -->
-	<rect data-zone-id="isolation" x="100" y="302" width="110" height="86" rx="8" fill="#c44a52" stroke="#6b1a22" stroke-width="3"/>
-	<text x="155" y="338" text-anchor="middle" font-size="18" font-weight="700" fill="#ffffff">Isolation</text>
-	<path d="M141 364 H169 M141 372 H169" stroke="#ffffff" stroke-width="3" stroke-linecap="round" fill="none"/>
-
-	<!-- Crew Area -->
-	<rect data-zone-id="crew_area" x="980" y="166" width="116" height="188" rx="8" fill="#a3b18a" stroke="#4f613a" stroke-width="3"/>
-	<text x="1038" y="252" text-anchor="middle" font-size="20" font-weight="700" fill="#172026">Crew</text>
-	<text x="1038" y="278" text-anchor="middle" font-size="20" font-weight="700" fill="#172026">Area</text>
-
-	<!-- Helipad: small ICAO landing pad tucked inside the bow, no protruding pill -->
-	<rect data-zone-id="helipad" x="940" y="390" width="56" height="56" rx="28" fill="#adb5bd" stroke="#4c5963" stroke-width="3"/>
-	<circle cx="968" cy="418" r="18" fill="none" stroke="#4c5963" stroke-width="3"/>
-	<text x="968" y="425" text-anchor="middle" font-size="18" font-weight="700" fill="#172026">H</text>
-
-	<!-- Doorway bridges: short hall stubs connecting zones to the corridor and to each other -->
-	<g class="zone-bridge" fill="#d9dee2" stroke="#53606a" stroke-width="2">
-		<!-- Cabins (port) <-> Corridor -->
-		<rect x="380" y="178" width="40" height="48" rx="4"/>
-		<!-- Cabins (starboard) <-> Corridor -->
-		<rect x="380" y="294" width="40" height="48" rx="4"/>
-		<!-- Dining <-> Corridor -->
-		<rect x="654" y="204" width="40" height="22" rx="4"/>
-		<!-- Lounge/Theater <-> Corridor -->
-		<rect x="853" y="208" width="40" height="18" rx="4"/>
-		<!-- Pool Deck <-> Corridor -->
-		<rect x="705" y="294" width="40" height="38" rx="4"/>
-		<!-- Infirmary <-> Corridor -->
-		<rect x="140" y="218" width="30" height="8" rx="3"/>
-		<!-- Isolation <-> Corridor -->
-		<rect x="140" y="294" width="30" height="8" rx="3"/>
-		<!-- Crew Area <-> Corridor (small overlap doorway) -->
-		<rect x="980" y="246" width="20" height="28" rx="3"/>
-		<!-- Crew Area <-> Helipad -->
-		<rect x="1027" y="354" width="26" height="24" rx="4"/>
-		<!-- Dining <-> Lounge (lateral) -->
-		<rect x="763" y="130" width="22" height="40" rx="4"/>
-	</g>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1008 560">
+<defs><style type="text/css"><![CDATA[
+.room-rect { stroke: #333; stroke-width: 1; }
+.room-label { font-family: sans-serif; font-size: 11px; text-anchor: middle; dominant-baseline: middle; font-weight: 500; }
+]]></style></defs>
+<rect width="1008" height="560" fill="#e8e8e8"/>
+<g id="rooms">
+	<path class="room-rect" d="M 28 56 L 112 56 L 112 196 L 28 196 Z" fill="#d6c89e"/>
+	<path class="room-rect" d="M 0 196 L 112 196 L 112 364 L 0 364 Z" fill="#1f3a4d"/>
+	<path class="room-rect" d="M 28 364 L 112 364 L 112 504 L 28 504 Z" fill="#d6c89e"/>
+	<path class="room-rect" d="M 112 0 L 868 0 L 868 56 L 112 56 Z" fill="#f0a23a"/>
+	<path class="room-rect" d="M 112 56 L 280 56 L 280 140 L 112 140 Z" fill="#cfe2ec"/>
+	<path class="room-rect" d="M 280 56 L 448 56 L 448 140 L 280 140 Z" fill="#cfe2ec"/>
+	<path class="room-rect" d="M 448 56 L 588 56 L 588 140 L 448 140 Z" fill="#cfe2ec"/>
+	<path class="room-rect" d="M 588 56 L 728 56 L 728 140 L 588 140 Z" fill="#cfe2ec"/>
+	<path class="room-rect" d="M 728 56 L 868 56 L 868 140 L 728 140 Z" fill="#a8c8d9"/>
+	<path class="room-rect" d="M 112 140 L 868 140 L 868 168 L 112 168 Z" fill="#ece1c2"/>
+	<path class="room-rect" d="M 112 168 L 224 168 L 224 252 L 112 252 Z" fill="#9bd2b1"/>
+	<path class="room-rect" d="M 224 168 L 336 168 L 336 252 L 224 252 Z" fill="#e89a6a"/>
+	<path class="room-rect" d="M 336 168 L 504 168 L 504 252 L 336 252 Z" fill="#f4ba6c"/>
+	<path class="room-rect" d="M 504 168 L 588 168 L 588 252 L 504 252 Z" fill="#9aa085"/>
+	<path class="room-rect" d="M 588 168 L 728 168 L 728 252 L 588 252 Z" fill="#e89a6a"/>
+	<path class="room-rect" d="M 728 168 L 868 168 L 868 252 L 728 252 Z" fill="#e89a6a"/>
+	<path class="room-rect" d="M 112 252 L 868 252 L 868 308 L 112 308 Z" fill="#f3d889"/>
+	<path class="room-rect" d="M 112 308 L 224 308 L 224 392 L 112 392 Z" fill="#f08a8a"/>
+	<path class="room-rect" d="M 224 308 L 308 308 L 308 392 L 224 392 Z" fill="#b6a0d0"/>
+	<path class="room-rect" d="M 308 308 L 420 308 L 420 392 L 308 392 Z" fill="#9bd2b1"/>
+	<path class="room-rect" d="M 420 308 L 588 308 L 588 392 L 420 392 Z" fill="#e89a6a"/>
+	<path class="room-rect" d="M 588 308 L 728 308 L 728 392 L 588 392 Z" fill="#e89a6a"/>
+	<path class="room-rect" d="M 728 308 L 868 308 L 868 392 L 728 392 Z" fill="#e89a6a"/>
+	<path class="room-rect" d="M 112 392 L 868 392 L 868 420 L 112 420 Z" fill="#ece1c2"/>
+	<path class="room-rect" d="M 112 420 L 280 420 L 280 504 L 112 504 Z" fill="#cfe2ec"/>
+	<path class="room-rect" d="M 280 420 L 448 420 L 448 504 L 280 504 Z" fill="#cfe2ec"/>
+	<path class="room-rect" d="M 448 420 L 588 420 L 588 504 L 448 504 Z" fill="#cfe2ec"/>
+	<path class="room-rect" d="M 588 420 L 728 420 L 728 504 L 588 504 Z" fill="#cfe2ec"/>
+	<path class="room-rect" d="M 728 420 L 868 420 L 868 504 L 728 504 Z" fill="#a8c8d9"/>
+	<path class="room-rect" d="M 112 504 L 868 504 L 868 560 L 112 560 Z" fill="#f0a23a"/>
+	<path class="room-rect" d="M 868 0 L 1008 0 L 1008 56 L 868 56 Z" fill="#e89a6a"/>
+	<path class="room-rect" d="M 868 56 L 1008 56 L 1008 168 L 868 168 Z" fill="#b5b39a"/>
+	<path class="room-rect" d="M 868 168 L 1008 168 L 1008 252 L 868 252 Z" fill="#9aa085"/>
+	<path class="room-rect" d="M 868 252 L 1008 252 L 1008 308 L 868 308 Z" fill="#1f3a4d"/>
+	<path class="room-rect" d="M 868 308 L 1008 308 L 1008 420 L 868 420 Z" fill="#9aa085"/>
+	<path class="room-rect" d="M 868 420 L 1008 420 L 1008 504 L 868 504 Z" fill="#7c8c99"/>
+	<path class="room-rect" d="M 868 504 L 1008 504 L 1008 560 L 868 560 Z" fill="#7c8c99"/>
+</g>
+<g id="labels">
+	<text class="room-label" x="70" y="126" fill="#3a2e10">Fwd Promenade (P)</text>
+	<text class="room-label" x="56" y="280" fill="#f3e6c8">Bridge</text>
+	<text class="room-label" x="70" y="434" fill="#3a2e10">Fwd Promenade (S)</text>
+	<text class="room-label" x="490" y="28" fill="#3a1c00">Lifeboat Stations (P)</text>
+	<text class="room-label" x="196" y="98" fill="#1a3a4d">Cabins 101-118 (P)</text>
+	<text class="room-label" x="364" y="98" fill="#1a3a4d">Cabins 119-136 (P)</text>
+	<text class="room-label" x="518" y="98" fill="#1a3a4d">Cabins 137-151 (P)</text>
+	<text class="room-label" x="658" y="98" fill="#1a3a4d">Cabins 152-166 (P)</text>
+	<text class="room-label" x="798" y="98" fill="#1a3a4d">Owner's Suites (P)</text>
+	<text class="room-label" x="490" y="154" fill="#5a4a30">Port Corridor</text>
+	<text class="room-label" x="168" y="210" fill="#1a4d2e">Spa &amp; Hammam</text>
+	<text class="room-label" x="280" y="210" fill="#5a2010">Library</text>
+	<text class="room-label" x="420" y="210" fill="#5a3010">Main Dining</text>
+	<text class="room-label" x="546" y="210" fill="#1a1810">Galley</text>
+	<text class="room-label" x="658" y="210" fill="#5a2010">Casino</text>
+	<text class="room-label" x="798" y="210" fill="#5a2010">Theater</text>
+	<text class="room-label" x="490" y="280" fill="#5a4010">Grand Atrium</text>
+	<text class="room-label" x="168" y="350" fill="#5a1010">Infirmary</text>
+	<text class="room-label" x="266" y="350" fill="#3a1040">Isolation</text>
+	<text class="room-label" x="364" y="350" fill="#1a4d2e">Gym</text>
+	<text class="room-label" x="504" y="350" fill="#5a2010">Pool Deck</text>
+	<text class="room-label" x="658" y="350" fill="#5a2010">Arcade</text>
+	<text class="room-label" x="798" y="350" fill="#5a2010">Kids Club</text>
+	<text class="room-label" x="490" y="406" fill="#5a4a30">Starboard Corridor</text>
+	<text class="room-label" x="196" y="462" fill="#1a3a4d">Cabins 201-218 (S)</text>
+	<text class="room-label" x="364" y="462" fill="#1a3a4d">Cabins 219-236 (S)</text>
+	<text class="room-label" x="518" y="462" fill="#1a3a4d">Cabins 237-251 (S)</text>
+	<text class="room-label" x="658" y="462" fill="#1a3a4d">Cabins 252-266 (S)</text>
+	<text class="room-label" x="798" y="462" fill="#1a3a4d">Owner's Suites (S)</text>
+	<text class="room-label" x="490" y="532" fill="#3a1c00">Lifeboat Stations (S)</text>
+	<text class="room-label" x="938" y="28" fill="#5a2010">Sun Deck Aft</text>
+	<text class="room-label" x="938" y="112" fill="#2a2810">Crew Quarters</text>
+	<text class="room-label" x="938" y="210" fill="#1a1810">Crew Mess</text>
+	<text class="room-label" x="938" y="280" fill="#f3e6c8">Comms Room</text>
+	<text class="room-label" x="938" y="364" fill="#1a1810">Engineering</text>
+	<text class="room-label" x="938" y="462" fill="#f3e6c8">Tender Bay</text>
+	<text class="room-label" x="938" y="532" fill="#f3e6c8">Helideck</text>
+</g>
 </svg>

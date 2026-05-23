@@ -8,11 +8,20 @@
 		"check": "./check_codebase.sh",
 		"serve": "./run_web_server.sh",
 		"smoke": "node tests/playwright/smoke_app.mjs",
-		"typecheck": "npx tsc --noEmit -p src/tsconfig.json"
+		"typecheck": "npx tsc --noEmit -p src/tsconfig.json",
+		"lint": "npx eslint src/ tests/",
+		"format:check": "npx prettier --check .",
+		"format": "npx prettier --write ."
 	},
 	"devDependencies": {
+		"@eslint/js": "^10.0.1",
+		"@types/node": "^20.0.0",
 		"esbuild": ">=0.28.0",
+		"eslint": "^10.4.0",
+		"globals": "^17.6.0",
 		"playwright": ">=1.60.0",
-		"typescript": ">=6.0.3"
+		"prettier": "^3.8.3",
+		"typescript": ">=6.0.3",
+		"typescript-eslint": "^8.59.4"
 	}
 }

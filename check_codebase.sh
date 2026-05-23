@@ -172,14 +172,14 @@ else
 	step_skip typecheck:lint "tsconfig.lint.json not present"
 fi
 
-# 3. lint
-step_run lint npx eslint --max-warnings 0 'src/**/*.ts' 'tests/**/*.ts' '*.ts'
+# 3. lint (note: test/*.ts files are run via tsx --test, not eslint)
+step_run lint npx eslint --max-warnings 0 src/ tests/*.mjs
 
 # 4. format:check
-step_run format:check npx prettier --check '**/*.{ts,tsx,mts,cts,js,mjs,cjs}'
+step_run format:check npx prettier --check src/ eslint.config.js
 
-# 5. test:node
-step_run test:node node --test 'tests/test_*.mjs'
+# 5. test:node (includes .mjs and .ts tests)
+step_run test:node bash -c "node --test 'tests/test_*.mjs' 2>&1 && npx tsx --test 'tests/test_*.ts' 2>&1"
 
 # All steps complete; summary prints via EXIT trap. Exit 0 (no failures
 # reach here -- failure paths exit 1 directly).

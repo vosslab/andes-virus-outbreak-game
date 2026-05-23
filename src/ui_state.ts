@@ -28,8 +28,7 @@ export function controlsFromScenario(
 	scenario: ScenarioConfig,
 	fomiteEnabled: boolean,
 ): AppControlState {
-	const averageMovement =
-		(scenario.movementChance + scenario.publicGatheringWeight) / 2;
+	const averageMovement = (scenario.movementChance + scenario.publicGatheringWeight) / 2;
 	const state = {
 		mode,
 		scenarioId: scenario.id,
@@ -43,16 +42,10 @@ export function controlsFromScenario(
 	return state;
 }
 
-export function buildScenarioFromControls(
-	controls: AppControlState,
-): ScenarioConfig {
+export function buildScenarioFromControls(controls: AppControlState): ScenarioConfig {
 	const baseScenario = getScenarioPreset(controls.scenarioId);
 	const movementChance = clamp(controls.movementGatheringLevel, 0.12, 0.95);
-	const publicGatheringWeight = clamp(
-		controls.movementGatheringLevel * 1.18,
-		0.2,
-		1.45,
-	);
+	const publicGatheringWeight = clamp(controls.movementGatheringLevel * 1.18, 0.2, 1.45);
 	const scenario = {
 		...baseScenario,
 		incubationTicks: controls.incubationTicks,

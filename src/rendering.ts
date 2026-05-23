@@ -1,5 +1,6 @@
 import { EDUCATION_DISCLAIMER, EDUCATION_PANELS } from "./educational_content";
 import { SHIP_LAYOUT, SHIP_ZONES, getZoneById } from "./ship_layout";
+import { PERCEPTION_RADIUS } from "./sim_constants";
 
 import type { AppControlState, AppMode } from "./ui_state";
 import type {
@@ -13,11 +14,9 @@ import type {
 import type { ShipZone } from "./types/ship";
 
 const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
-const PASSENGER_MOVE_MS = 600;
+const PASSENGER_MOVE_MS = 100;
 const PASSENGER_STAGGER_MS = 40;
 const PASSENGER_STAGGER_BUCKETS = 8;
-const PASSENGER_ZONE_INSET = 0.44;
-const PASSENGER_ZONE_SPAN = 0.12;
 const PASSENGER_MIN_RADIUS = 2.6;
 const PASSENGER_RADIUS_CELL_RATIO = 0.32;
 
@@ -106,15 +105,9 @@ export function formatRisk(value: number): string {
 	return `${percent}%`;
 }
 
-export function setModeButtons(
-	elements: AppElements,
-	mode: AppMode,
-): void {
+export function setModeButtons(elements: AppElements, mode: AppMode): void {
 	elements.gameModeButton.setAttribute("aria-pressed", String(mode === "game"));
-	elements.scienceModeButton.setAttribute(
-		"aria-pressed",
-		String(mode === "science"),
-	);
+	elements.scienceModeButton.setAttribute("aria-pressed", String(mode === "science"));
 }
 
 export function renderApp(elements: AppElements, model: RenderModel): void {
@@ -133,11 +126,8 @@ export function renderApp(elements: AppElements, model: RenderModel): void {
 	elements.cleaningInput.value = String(model.controls.cleaningEffect);
 	elements.incubationValue.textContent = `${model.controls.incubationTicks} ticks`;
 	elements.riskValue.textContent = formatRisk(model.controls.closeContactRisk);
-	elements.isolationValue.textContent =
-		`${model.controls.isolationSpeedTicks} ticks`;
-	elements.movementValue.textContent = formatPercent(
-		model.controls.movementGatheringLevel,
-	);
+	elements.isolationValue.textContent = `${model.controls.isolationSpeedTicks} ticks`;
+	elements.movementValue.textContent = formatPercent(model.controls.movementGatheringLevel);
 	elements.cleaningValue.textContent = formatPercent(model.controls.cleaningEffect);
 
 	setModeButtons(elements, model.mode);
@@ -149,23 +139,19 @@ export function renderApp(elements: AppElements, model: RenderModel): void {
 	renderZoneSummary(elements.zoneSummary, model.summary);
 }
 
-function renderPassengerOverlay(
-	overlay: SVGSVGElement,
-	passengers: readonly Passenger[],
-): void {
+function renderPassengerOverlay(overlay: SVGSVGElement, passengers: readonly Passenger[]): void {
 	const seenPassengerIds = new Set<number>();
-	const placements = createPassengerPlacements(passengers);
 
 	for (const passenger of passengers) {
 		seenPassengerIds.add(passenger.id);
-		const placement = placements.get(passenger.id);
-		if (placement === undefined) {
-			throw new Error(`Missing passenger placement: ${passenger.id}`);
-		}
-		const circle = getOrCreatePassengerNode(overlay, passenger, placement);
-		circle.setAttribute("cx", placement.point.x.toFixed(1));
-		circle.setAttribute("cy", placement.point.y.toFixed(1));
-		circle.setAttribute("r", placement.radius.toFixed(1));
+		const radius = getPassengerRadius(passenger.health, 28, 28);
+		const circle = getOrCreatePassengerNode(overlay, passenger, {
+			point: passenger.position,
+			radius,
+		});
+		circle.setAttribute("cx", passenger.position.x.toFixed(1));
+		circle.setAttribute("cy", passenger.position.y.toFixed(1));
+		circle.setAttribute("r", radius.toFixed(1));
 		circle.setAttribute("data-health", passenger.health);
 		circle.setAttribute(
 			"aria-label",
@@ -179,80 +165,9 @@ function renderPassengerOverlay(
 			passengerNodes.delete(passengerId);
 		}
 	}
-}
 
-function createPassengerPlacements(
-	passengers: readonly Passenger[],
-): Map<number, PassengerPlacement> {
-	const placements = new Map<number, PassengerPlacement>();
-
-	for (const zone of SHIP_ZONES) {
-		const zonePassengers = getPassengersInZone(passengers, zone);
-		addZonePassengerPlacements(placements, zone, zonePassengers);
-	}
-
-	return placements;
-}
-
-function getPassengersInZone(
-	passengers: readonly Passenger[],
-	zone: ShipZone,
-): readonly Passenger[] {
-	const zonePassengers = passengers
-		.filter(function filterPassenger(passenger) {
-			return passenger.zoneId === zone.id;
-		})
-		.sort(comparePassengersById);
-	return zonePassengers;
-}
-
-function comparePassengersById(left: Passenger, right: Passenger): number {
-	const diff = left.id - right.id;
-	return diff;
-}
-
-function addZonePassengerPlacements(
-	placements: Map<number, PassengerPlacement>,
-	zone: ShipZone,
-	passengers: readonly Passenger[],
-): void {
-	if (passengers.length === 0) {
-		return;
-	}
-
-	const grid = getZoneGrid(zone, passengers.length);
-	const cellWidth = zone.bounds.width / grid.columns;
-	const cellHeight = zone.bounds.height / grid.rows;
-
-	for (let index = 0; index < passengers.length; index += 1) {
-		const passenger = passengers[index];
-		if (passenger === undefined) {
-			throw new Error("Missing passenger while building zone placement");
-		}
-		const column = index % grid.columns;
-		const row = Math.floor(index / grid.columns);
-		const jitter = getPassengerJitter(passenger.id);
-		const xCellOffset = PASSENGER_ZONE_INSET + PASSENGER_ZONE_SPAN * jitter.x;
-		const yCellOffset = PASSENGER_ZONE_INSET + PASSENGER_ZONE_SPAN * jitter.y;
-		const point = {
-			x: zone.bounds.x + cellWidth * (column + xCellOffset),
-			y: zone.bounds.y + cellHeight * (row + yCellOffset),
-		};
-		const radius = getPassengerRadius(passenger.health, cellWidth, cellHeight);
-		placements.set(passenger.id, { point, radius });
-	}
-}
-
-function getZoneGrid(
-	zone: ShipZone,
-	passengerCount: number,
-): { readonly columns: number; readonly rows: number } {
-	const aspectRatio = zone.bounds.width / zone.bounds.height;
-	const estimatedColumns = Math.ceil(Math.sqrt(passengerCount * aspectRatio));
-	const columns = Math.max(1, estimatedColumns);
-	const rows = Math.max(1, Math.ceil(passengerCount / columns));
-	const grid = { columns, rows };
-	return grid;
+	// Render debug overlay if debug=1 query param is present
+	renderDebugOverlay(overlay, passengers);
 }
 
 function getOrCreatePassengerNode(
@@ -283,31 +198,84 @@ function getOrCreatePassengerNode(
 	return circle;
 }
 
-function getPassengerJitter(
-	passengerId: number,
-): { readonly x: number; readonly y: number } {
-	const xHash = hashPassengerValue(passengerId, 0x45d9f3b);
-	const yHash = hashPassengerValue(passengerId, 0x119de1f3);
-	const jitter = {
-		x: xHash / 0xffffffff,
-		y: yHash / 0xffffffff,
-	};
-	return jitter;
+//============================================
+
+function renderDebugOverlay(overlay: SVGSVGElement, passengers: readonly Passenger[]): void {
+	// Remove existing debug elements
+	const debugGroup = overlay.querySelector("g.debug-overlay");
+	if (debugGroup !== null) {
+		debugGroup.remove();
+	}
+
+	// Check if debug=1 query parameter is present
+	const params = new URLSearchParams(window.location.search);
+	if (params.get("debug") !== "1") {
+		return;
+	}
+
+	// Create a group for all debug elements
+	const group = createSvgElement("g", "debug-overlay");
+	group.setAttribute("pointer-events", "none");
+	group.setAttribute("opacity", "0.3");
+
+	// Render perception radius circles for each passenger
+	for (const passenger of passengers) {
+		const circle = createSvgElement("circle", "debug-perception");
+		circle.setAttribute("cx", passenger.position.x.toFixed(1));
+		circle.setAttribute("cy", passenger.position.y.toFixed(1));
+		circle.setAttribute("r", PERCEPTION_RADIUS.toFixed(1));
+		circle.setAttribute("fill", "none");
+		circle.setAttribute("stroke", "blue");
+		circle.setAttribute("stroke-width", "0.5");
+		group.appendChild(circle);
+
+		// Render steering vector arrow
+		const magnitude = Math.sqrt(
+			passenger.velocity.x * passenger.velocity.x +
+				passenger.velocity.y * passenger.velocity.y,
+		);
+		if (magnitude > 0.1) {
+			const scale = 10;
+			const endX = passenger.position.x + passenger.velocity.x * scale;
+			const endY = passenger.position.y + passenger.velocity.y * scale;
+
+			const line = createSvgElement("line", "debug-velocity");
+			line.setAttribute("x1", passenger.position.x.toFixed(1));
+			line.setAttribute("y1", passenger.position.y.toFixed(1));
+			line.setAttribute("x2", endX.toFixed(1));
+			line.setAttribute("y2", endY.toFixed(1));
+			line.setAttribute("stroke", "green");
+			line.setAttribute("stroke-width", "0.5");
+			line.setAttribute("marker-end", "url(#debug-arrow-marker)");
+			group.appendChild(line);
+		}
+	}
+
+	// Add arrow marker definition if not present
+	if (!overlay.querySelector("#debug-arrow-marker")) {
+		const defs = createSvgElement("defs", "");
+		const marker = createSvgElement("marker", "");
+		marker.setAttribute("id", "debug-arrow-marker");
+		marker.setAttribute("markerWidth", "10");
+		marker.setAttribute("markerHeight", "10");
+		marker.setAttribute("refX", "5");
+		marker.setAttribute("refY", "3");
+		marker.setAttribute("orient", "auto");
+		marker.setAttribute("markerUnits", "strokeWidth");
+
+		const polygon = createSvgElement("polygon", "");
+		polygon.setAttribute("points", "0 0, 10 3, 0 6");
+		polygon.setAttribute("fill", "green");
+
+		marker.appendChild(polygon);
+		defs.appendChild(marker);
+		overlay.appendChild(defs);
+	}
+
+	overlay.appendChild(group);
 }
 
-function hashPassengerValue(passengerId: number, salt: number): number {
-	let value = passengerId + 1;
-	value = Math.imul(value ^ salt, 0x7feb352d);
-	value = Math.imul(value ^ (value >>> 15), 0x846ca68b);
-	const hash = (value ^ (value >>> 16)) >>> 0;
-	return hash;
-}
-
-function getPassengerRadius(
-	health: HealthState,
-	cellWidth: number,
-	cellHeight: number,
-): number {
+function getPassengerRadius(health: HealthState, cellWidth: number, cellHeight: number): number {
 	const maxRadius = Math.max(
 		PASSENGER_MIN_RADIUS,
 		Math.min(cellWidth, cellHeight) * PASSENGER_RADIUS_CELL_RATIO,
@@ -318,7 +286,7 @@ function getPassengerRadius(
 }
 
 function getDefaultPassengerRadius(health: HealthState): number {
-	if (health === "infectious" || health === "isolated") {
+	if (health === "pre_symptomatic" || health === "symptomatic" || health === "isolated") {
 		return 6.2;
 	}
 
@@ -331,7 +299,8 @@ function renderLegend(legendList: HTMLElement, counts: HealthCounts): void {
 	const healthStates: readonly HealthState[] = [
 		"healthy",
 		"exposed",
-		"infectious",
+		"pre_symptomatic",
+		"symptomatic",
 		"isolated",
 		"recovered",
 	];
@@ -364,7 +333,8 @@ function renderCurveChart(
 
 	const healthStates: readonly HealthState[] = [
 		"exposed",
-		"infectious",
+		"pre_symptomatic",
+		"symptomatic",
 		"isolated",
 		"recovered",
 	];
@@ -403,10 +373,7 @@ function makeCurvePoints(
 	return points.join(" ");
 }
 
-function renderAssumptions(
-	assumptionList: HTMLElement,
-	scenario: ScenarioConfig,
-): void {
+function renderAssumptions(assumptionList: HTMLElement, scenario: ScenarioConfig): void {
 	assumptionList.replaceChildren();
 
 	for (const assumption of scenario.assumptions) {
@@ -440,6 +407,19 @@ function renderSciencePanel(
 		`Fomite route: ${formatFomiteMode(model.controls.fomiteEnabled)}.`,
 	];
 
+	if (model.summary.derived !== undefined) {
+		const r0 = model.summary.derived.effective_r0;
+		const rt = model.summary.derived.effective_rt;
+		const herdThreshold = formatPercent(model.summary.derived.approx_herd_threshold);
+		const r0Text = isFinite(r0) ? r0.toFixed(2) : "Inf";
+		const rtText = isFinite(rt) ? rt.toFixed(2) : "Inf";
+		details.push(
+			`Effective R0: ${r0Text} (avg secondary infections per case).`,
+			`Effective Rt: ${rtText} (live, adjusted for susceptible population).`,
+			`Approx. herd immunity threshold: ${herdThreshold}.`,
+		);
+	}
+
 	for (const detail of details) {
 		const item = createElement("li", "science-detail");
 		item.textContent = detail;
@@ -469,10 +449,7 @@ function formatFomiteMode(enabled: boolean): string {
 	return "off by default";
 }
 
-function renderZoneSummary(
-	zoneSummaryElement: HTMLElement,
-	summary: SimulationSummary,
-): void {
+function renderZoneSummary(zoneSummaryElement: HTMLElement, summary: SimulationSummary): void {
 	zoneSummaryElement.replaceChildren();
 
 	for (const zoneSummary of summary.zoneSummaries) {
@@ -484,7 +461,7 @@ function renderZoneSummary(
 		label.textContent = zone.label;
 		counts.textContent =
 			`H ${zoneSummary.counts.healthy} / E ${zoneSummary.counts.exposed} / ` +
-			`I ${zoneSummary.counts.infectious} / Iso ${zoneSummary.counts.isolated}`;
+			`PS ${zoneSummary.counts.pre_symptomatic} / S ${zoneSummary.counts.symptomatic} / Iso ${zoneSummary.counts.isolated}`;
 		item.append(label, counts);
 		zoneSummaryElement.appendChild(item);
 	}
@@ -519,16 +496,12 @@ function createZoneItem(zone: ShipZone): HTMLLIElement {
 }
 
 export function configureOverlaySvg(svg: SVGSVGElement): void {
-	const viewBox =
-		`0 0 ${SHIP_LAYOUT.schematicWidth} ${SHIP_LAYOUT.schematicHeight}`;
+	const viewBox = `0 0 ${SHIP_LAYOUT.schematicWidth} ${SHIP_LAYOUT.schematicHeight}`;
 	svg.setAttribute("viewBox", viewBox);
 	svg.setAttribute("role", "img");
 	svg.setAttribute("aria-label", "Passenger health states on the ship map");
 }
 
-export function setScenarioSelectValue(
-	select: HTMLSelectElement,
-	scenarioId: ScenarioId,
-): void {
+export function setScenarioSelectValue(select: HTMLSelectElement, scenarioId: ScenarioId): void {
 	select.value = scenarioId;
 }

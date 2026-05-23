@@ -26,7 +26,10 @@ export function nextRandom(state: RandomState): RandomStep {
 	return step;
 }
 
-export function chance(state: RandomState, probability: number): RandomStep & {
+export function chance(
+	state: RandomState,
+	probability: number,
+): RandomStep & {
 	readonly happened: boolean;
 } {
 	const boundedProbability = clampProbability(probability);
@@ -81,4 +84,29 @@ function normalizeSeed(seed: number): number {
 
 	const shiftedSeed = wrappedSeed + LCG_MODULUS - 1;
 	return shiftedSeed;
+}
+
+export function normalRandom(
+	state: RandomState,
+	mean: number,
+	stddev: number,
+): RandomStep & { readonly normal: number } {
+	// Box-Muller transform: generate standard normal using two uniform randoms
+	const step1 = nextRandom(state);
+	const step2 = nextRandom(step1.state);
+	const u1 = step1.value;
+	const u2 = step2.value;
+
+	// Avoid log(0)
+	const u1Safe = Math.max(u1, 1e-10);
+	const u2Safe = Math.max(u2, 1e-10);
+	const z0 = Math.sqrt(-2 * Math.log(u1Safe)) * Math.cos(2 * Math.PI * u2Safe);
+	const normal = mean + stddev * z0;
+
+	const result = {
+		state: step2.state,
+		value: step2.value,
+		normal,
+	};
+	return result;
 }
