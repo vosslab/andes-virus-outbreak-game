@@ -1,9 +1,9 @@
-import { chance, createRandomState, normalRandom, randomInt } from "./random";
+import { chance, createRandomState, nextRandom, normalRandom, randomInt } from "./random";
 import { SHIP_ZONES, getZoneById } from "./ship_layout";
 import { CABIN_ZONE_IDS } from "./ship_roles";
 import { getNamedAgentSeed } from "./named_agent_seed";
 import { planRoomPath, nextWaypoint, initNavmesh } from "./navigation";
-import { DT_DAYS, CONTACT_RADIUS, PERCEPTION_RADIUS, BETA_PAIR_SCALE } from "./sim_constants";
+import { DT_DAYS, CONTACT_RADIUS, PERCEPTION_RADIUS, BETA_PAIR_SCALE, PASSENGER_RADIUS } from "./sim_constants";
 import {
 	separation,
 	alignment,
@@ -13,7 +13,7 @@ import {
 	doorwayBias,
 } from "./steering";
 import { buildAgentIndex, queryNeighborsWithinDistance } from "./perception";
-import { stepWithCollision, pointInPolygon } from "./collision";
+import { stepWithCollision, pointInPolygon, resolveOverlaps } from "./collision";
 import { SHIP_LAYOUT } from "./ship_layout.generated.js";
 
 import type { RandomState } from "./random";
@@ -201,10 +201,18 @@ function createRandomPassengers(scenario: ScenarioConfig): readonly Passenger[] 
 		randomState = paramsResult.randomState;
 		const params = paramsResult.params;
 
-		// Initialize position within the cabin zone using deterministic placement.
+		// Scatter passengers deterministically within cabin bounds so they do not all
+		// start at the exact same pixel. Margin keeps centers PASSENGER_RADIUS away
+		// from walls so the collision-resolve pass does not push them through polygons.
 		const cabinZone = getZoneById(cabinZoneId);
-		const posX = cabinZone.bounds.x + cabinZone.bounds.width / 2;
-		const posY = cabinZone.bounds.y + cabinZone.bounds.height / 2;
+		const innerWidth = Math.max(0, cabinZone.bounds.width - 2 * PASSENGER_RADIUS);
+		const innerHeight = Math.max(0, cabinZone.bounds.height - 2 * PASSENGER_RADIUS);
+		const xStep = nextRandom(randomState);
+		randomState = xStep.state;
+		const yStep = nextRandom(randomState);
+		randomState = yStep.state;
+		const posX = cabinZone.bounds.x + PASSENGER_RADIUS + xStep.value * innerWidth;
+		const posY = cabinZone.bounds.y + PASSENGER_RADIUS + yStep.value * innerHeight;
 
 		const passenger: Passenger = {
 			id,
@@ -499,8 +507,20 @@ function movePassengers(
 		}
 	}
 
+	// Passenger-vs-passenger overlap resolution (M10.5).
+	// Runs after all polygon clamps and deadlock perturbations, so each agent's
+	// position is already within its current room polygon. resolveOverlaps does
+	// at most 2 relaxation passes, clamps pushed positions back inside their
+	// polygons, and preserves deterministic id-order to keep seed reproducibility.
+	const separatedPassengers = resolveOverlaps(
+		perturbedPassengers,
+		spatialHash,
+		PASSENGER_RADIUS,
+		(zoneId) => getZonePolygonAndDoors(zoneId).polygon,
+	);
+
 	const result = {
-		passengers: perturbedPassengers,
+		passengers: separatedPassengers,
 		events,
 		randomState: currentRandomState,
 	};
@@ -675,7 +695,11 @@ function movePassengerContinuous(
 		}
 	}
 
-	const avoid = obstacleAvoid(passenger.position, wallSegments, 14); // lookahead = 14 pixels
+	// M10.5: avoidance lookahead reduced from 14 to 5 px so agents can approach and
+	// pass through doorways without the avoidance force blocking forward progress at
+	// 7-14 px from the wall. Avoidance still activates at close range (< 5 px) for
+	// soft wall repulsion.
+	const avoid = obstacleAvoid(passenger.position, wallSegments, 5); // lookahead = 5 pixels
 
 	// Doorway bias: target the door to the next zone (if on a multi-zone path).
 	let doorSegment: readonly [Point, Point] | null = null;
@@ -718,10 +742,22 @@ function movePassengerContinuous(
 		y: sepForce.y + alignForce.y + cohereForce.y + seekForce.y + avoidForce.y + doorForce.y,
 	};
 
-	// Update velocity: apply forces scaled by DT_DAYS.
+	// Cap force magnitude before velocity integration to prevent numerical blowup.
+	// Forces are treated as per-tick velocity deltas (px/tick^2 with implicit tick=1).
+	// DT_DAYS is intentionally NOT applied here: velocity is in px/tick and position
+	// updates are also per-tick, so no day-unit scaling is needed in the movement phase.
+	// DT_DAYS is used only in the epi/SEPIR transition probability calculations.
+	const forceCap = 2.0 * passenger.params.speed;
+	const forceMag = Math.hypot(totalForce.x, totalForce.y);
+	const cappedForce =
+		forceMag > forceCap
+			? { x: (totalForce.x / forceMag) * forceCap, y: (totalForce.y / forceMag) * forceCap }
+			: totalForce;
+
+	// Update velocity: velocity in px/tick; forces in px/tick^2 with implicit tick=1 integration.
 	let newVelocity = {
-		x: passenger.velocity.x + totalForce.x * DT_DAYS,
-		y: passenger.velocity.y + totalForce.y * DT_DAYS,
+		x: passenger.velocity.x + cappedForce.x,
+		y: passenger.velocity.y + cappedForce.y,
 	};
 
 	// Cap velocity magnitude at max speed.

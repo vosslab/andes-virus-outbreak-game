@@ -467,14 +467,52 @@ function main(): void {
 	const elements = buildShell(root);
 	let state = createInitialAppState();
 
+	// Accumulate cumulative zone-transition counts for each passenger across ticks.
+	// Keys are passenger ids; values are total number of zone crossings since last reset.
+	// Reset on simulation reset (tick === 0).
+	// Test-only: used by window.__simTelemetry for Playwright G10.5g gate.
+	const zoneTransitionCounts: Map<number, number> = new Map();
+
 	function getState(): AppState {
 		return state;
 	}
 
 	function setState(nextState: AppState): void {
 		state = nextState;
+
+		// Reset cumulative counters when sim resets to tick 0.
+		if (state.simulation.tick === 0) {
+			zoneTransitionCounts.clear();
+		}
+
+		// Accumulate passenger_moved events from the latest tick batch.
+		for (const event of state.simulation.events) {
+			if (event.type === "passenger_moved") {
+				const prev = zoneTransitionCounts.get(event.passengerId) ?? 0;
+				zoneTransitionCounts.set(event.passengerId, prev + 1);
+			}
+		}
+
 		setScenarioSelectValue(elements.scenarioSelect, state.controls.scenarioId);
 		renderApp(elements, makeRenderModel(state));
+		// Expose a telemetry snapshot to Playwright for G10.5g gate checks.
+		// Do NOT use in production UI; this is a test-only export.
+		// The object is overwritten each tick; Playwright reads it after N ticks.
+		// zoneTransitions: cumulative count of zone crossings since sim start (or last reset).
+		(window as Window & typeof globalThis & { __simTelemetry?: unknown }).__simTelemetry = {
+			tick: state.simulation.tick,
+			passengers: state.simulation.passengers.map(function extractPassengerTelemetry(p) {
+				return {
+					id: p.id,
+					health: p.health,
+					zoneId: p.zoneId,
+					x: p.position.x,
+					y: p.position.y,
+					pathIndex: p.pathIndex,
+					zoneTransitions: zoneTransitionCounts.get(p.id) ?? 0,
+				};
+			}),
+		};
 	}
 
 	wireEvents(elements, getState, setState);

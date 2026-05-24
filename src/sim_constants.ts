@@ -23,3 +23,14 @@ export const PERCEPTION_RADIUS = 84;
 
 /** Calibrated M7b multiplier on per-pair beta in homogeneous-mixing limit. TODO: M7b calibration pending */
 export const BETA_PAIR_SCALE = 1.0;
+
+/**
+ * Physical radius of a passenger avatar (pixels).
+ * Two passengers whose centers are closer than 2 * PASSENGER_RADIUS are overlapping.
+ * Added in M10.5: resolveOverlaps enforces hard separation using this radius.
+ * Changing this value may affect perceived crowding density and steering separation
+ * distance; recalibrate separation weight if crowd behavior changes significantly.
+ * Part of the M7 calibration tuple per risk R2: any change here may affect contact
+ * frequency and should trigger a recalibration check.
+ */
+export const PASSENGER_RADIUS = 4;

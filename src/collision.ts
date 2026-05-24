@@ -1,4 +1,5 @@
-import type { Point } from "./types/simulation";
+import type { Point, Passenger } from "./types/simulation";
+import type { SpatialHash } from "./spatial_hash";
 
 // ==============================================
 // Helper utilities
@@ -161,38 +162,83 @@ export function segmentsCross(
 // ==============================================
 
 /**
- * Tests whether a wall segment overlaps with any door segment.
+ * Tests whether a movement path crosses through a door opening.
  *
- * A wall segment overlaps a door if the midpoint of the wall segment
- * is within epsilon distance of any door segment.
+ * The wall segment (a zone polygon edge) is checked against each door segment.
+ * A door allows passage if the movement path's crossing point lies within the
+ * door segment's range along the shared wall axis.
  *
- * This allows movement through a permeable door opening even though
- * the door segment is technically part of the wall polygon.
+ * Algorithm:
+ *   1. Find where the movement path intersects the wall segment (intersection point).
+ *   2. For each door segment, check if the intersection point lies on the door
+ *      segment (i.e., is within the door's x- or y-range with a small tolerance).
+ *
+ * This replaces the older midpoint-distance heuristic, which failed when doors
+ * were not centered on their wall segment (epsilon=2 was too tight).
+ *
+ * epsilon: tolerance in pixels for the point-on-segment check (default 2px).
  */
 function segmentOverlapsDoor(
 	wallSeg: readonly [Point, Point],
 	doorSegs: readonly (readonly [Point, Point])[],
 	epsilon: number,
+	movementPath?: readonly [Point, Point],
 ): boolean {
-	// Midpoint of the wall segment.
-	const midpoint: Point = {
-		x: (wallSeg[0].x + wallSeg[1].x) / 2,
-		y: (wallSeg[0].y + wallSeg[1].y) / 2,
-	};
-
-	for (const doorSeg of doorSegs) {
-		const doorMid: Point = {
-			x: (doorSeg[0].x + doorSeg[1].x) / 2,
-			y: (doorSeg[0].y + doorSeg[1].y) / 2,
+	// Compute the crossing point of the movement path with the wall segment.
+	// If movementPath is not provided, fall back to using the wall segment midpoint.
+	let crossPoint: Point;
+	if (movementPath !== undefined) {
+		const intersection = segmentsCross(
+			[movementPath[0], movementPath[1]],
+			[wallSeg[0], wallSeg[1]],
+		);
+		if (intersection !== null) {
+			crossPoint = intersection;
+		} else {
+			// No intersection found; use wall midpoint as fallback.
+			crossPoint = {
+				x: (wallSeg[0].x + wallSeg[1].x) / 2,
+				y: (wallSeg[0].y + wallSeg[1].y) / 2,
+			};
+		}
+	} else {
+		crossPoint = {
+			x: (wallSeg[0].x + wallSeg[1].x) / 2,
+			y: (wallSeg[0].y + wallSeg[1].y) / 2,
 		};
+	}
 
-		const dist = distance(midpoint, doorMid);
+	// Check if the crossing point lies on any door segment.
+	for (const doorSeg of doorSegs) {
+		// Compute the minimum distance from the crossing point to the door segment.
+		const projected = projectPointOntoSegmentInternal(crossPoint, doorSeg);
+		const dist = distance(crossPoint, projected);
 		if (dist <= epsilon) {
 			return true;
 		}
 	}
 
 	return false;
+}
+
+/**
+ * Internal: projects a point onto a segment, returning the closest point on the segment.
+ * Used by segmentOverlapsDoor without exporting.
+ */
+function projectPointOntoSegmentInternal(
+	point: Point,
+	segment: readonly [Point, Point],
+): Point {
+	const p0 = segment[0];
+	const p1 = segment[1];
+	const dx = p1.x - p0.x;
+	const dy = p1.y - p0.y;
+	const lenSq = dx * dx + dy * dy;
+	if (lenSq === 0) {
+		return p0;
+	}
+	const t = Math.max(0, Math.min(1, ((point.x - p0.x) * dx + (point.y - p0.y) * dy) / lenSq));
+	return { x: p0.x + t * dx, y: p0.y + t * dy };
 }
 
 // ==============================================
@@ -242,8 +288,10 @@ export function stepWithCollision(
 		const intersection = segmentsCross(movementPath, wallEdge);
 		if (intersection !== null) {
 			// Movement path crosses this wall edge.
-			// Check if the crossing point is near a door segment (epsilon = 2 pixels).
-			if (segmentOverlapsDoor(wallEdge, doorSegments, 2)) {
+			// Check if the crossing point falls within a door segment (epsilon = 2 pixels).
+			// Pass the movement path so the function uses the exact crossing point rather
+			// than the wall midpoint (which may be far from the door if the wall is wide).
+			if (segmentOverlapsDoor(wallEdge, doorSegments, 2, movementPath)) {
 				// Door overlap: allow passage through the door.
 				return candidatePos;
 			}
@@ -365,4 +413,167 @@ function clampToPolygon(point: Point, polygon: readonly Point[]): Point {
 	}
 
 	return add(closestPoint, scale(inwardDir, 0.5));
+}
+
+// ==============================================
+// Passenger-vs-passenger overlap resolution (M10.5)
+// ==============================================
+
+/**
+ * Resolves pairwise passenger overlaps using a two-pass relaxation loop.
+ *
+ * After each tick's polygon-clamp step, two or more passengers can have their
+ * centers closer than 2 * radius. This function pushes overlapping pairs apart
+ * along their connecting axis (half the overlap distance each), then re-clamps
+ * the pushed agent back inside its current room polygon to prevent wall penetration.
+ *
+ * Algorithm:
+ *   1. Build a mutable position map from the input array.
+ *   2. For each relaxation pass (max MAX_RELAXATION_PASSES = 2):
+ *      a. Sort agents by ID (deterministic order, required for seed reproducibility).
+ *      b. For each agent A, query spatial hash for neighbors within 2 * radius.
+ *      c. For each overlapping neighbor B (dist < 2 * radius), push A and B
+ *         apart by half the overlap along their connecting axis.
+ *      d. Clamp each pushed position back inside its room polygon.
+ *   3. Assemble and return updated Passenger objects with new positions.
+ *
+ * Edge cases:
+ *   - Coincident centers (dist === 0): push along +x by the full diameter to
+ *     guarantee separation (deterministic tiebreak via id order).
+ *   - Post-push polygon re-clamp: if the clamped position is still overlapping,
+ *     accept the residual; the strict gate is "no exact-center coincidence", not
+ *     "always separated by >= 2*r" under dense conditions (per plan risk RH4).
+ *
+ * Args:
+ *   passengers: current passenger array (immutable Passenger objects).
+ *   spatialHash: pre-built index of passenger IDs -> positions.
+ *   radius: agent physical radius (px). Overlap when dist < 2 * radius.
+ *   getPolygon: function that returns the room polygon for a given zoneId.
+ *     Used for post-push wall re-clamp. Pass null to skip polygon re-clamp
+ *     (useful in tests with no room geometry).
+ *
+ * Returns:
+ *   New array of Passenger objects with updated positions. Non-overlapping agents
+ *   are returned unchanged (same object reference).
+ */
+export function resolveOverlaps(
+	passengers: readonly Passenger[],
+	spatialHash: SpatialHash<number>,
+	radius: number,
+	getPolygon: ((zoneId: string) => readonly Point[]) | null,
+): readonly Passenger[] {
+	// MAX_RELAXATION_PASSES bounds the cost per tick (plan: 2 iterations).
+	const MAX_RELAXATION_PASSES = 2;
+	// Minimum separation distance: 2 * radius, with a tiny epsilon to avoid
+	// floating-point equality at the boundary.
+	const minSep = 2.0 * radius;
+
+	// Mutable position map for in-pass updates, keyed by passenger id.
+	const positions = new Map<number, Point>();
+	for (const p of passengers) {
+		positions.set(p.id, p.position);
+	}
+
+	// Build an id-ordered array for deterministic iteration.
+	const sortedIds = passengers.map((p) => p.id).sort((a, b) => a - b);
+
+	for (let pass = 0; pass < MAX_RELAXATION_PASSES; pass++) {
+		for (const idA of sortedIds) {
+			const posA = positions.get(idA);
+			if (posA === undefined) {
+				continue;
+			}
+
+			// Query spatial hash for candidate neighbors within 2 * radius.
+			// The spatial hash holds original positions, so results are approximate.
+			// We do exact-distance filtering ourselves below.
+			const candidates = spatialHash.query(posA.x, posA.y, minSep);
+
+			for (const idB of candidates) {
+				if (idB <= idA) {
+					// Process each pair once per pass (lower id owns the push).
+					continue;
+				}
+
+				const posB = positions.get(idB);
+				if (posB === undefined) {
+					continue;
+				}
+
+				const dx = posB.x - posA.x;
+				const dy = posB.y - posA.y;
+				const dist = Math.sqrt(dx * dx + dy * dy);
+
+				if (dist >= minSep) {
+					// No overlap; skip.
+					continue;
+				}
+
+				// Overlap detected. Compute push direction and magnitude.
+				let normX: number;
+				let normY: number;
+
+				if (dist < 0.001) {
+					// Coincident centers: push A leftward, B rightward (deterministic tiebreak).
+					normX = 1.0;
+					normY = 0.0;
+				} else {
+					normX = dx / dist;
+					normY = dy / dist;
+				}
+
+				// Each agent moves half the overlap distance.
+				const overlap = minSep - dist;
+				const pushHalf = overlap / 2.0;
+
+				let newPosA: Point = {
+					x: posA.x - normX * pushHalf,
+					y: posA.y - normY * pushHalf,
+				};
+				let newPosB: Point = {
+					x: posB.x + normX * pushHalf,
+					y: posB.y + normY * pushHalf,
+				};
+
+				// Re-clamp pushed positions inside their room polygons (wall penetration guard).
+				if (getPolygon !== null) {
+					const passengerA = passengers.find((p) => p.id === idA);
+					const passengerB = passengers.find((p) => p.id === idB);
+					if (passengerA !== undefined) {
+						const polyA = getPolygon(passengerA.zoneId);
+						if (!pointInPolygon(newPosA, polyA)) {
+							// Clamp A back to boundary.
+							newPosA = clampToPolygon(newPosA, polyA);
+						}
+					}
+					if (passengerB !== undefined) {
+						const polyB = getPolygon(passengerB.zoneId);
+						if (!pointInPolygon(newPosB, polyB)) {
+							newPosB = clampToPolygon(newPosB, polyB);
+						}
+					}
+				}
+
+				positions.set(idA, newPosA);
+				positions.set(idB, newPosB);
+			}
+		}
+	}
+
+	// Assemble updated passenger array. Reuse original object if position unchanged.
+	const result: Passenger[] = [];
+
+	for (const p of passengers) {
+		const newPos = positions.get(p.id);
+		if (
+			newPos !== undefined &&
+			(newPos.x !== p.position.x || newPos.y !== p.position.y)
+		) {
+			result.push({ ...p, position: newPos });
+		} else {
+			result.push(p);
+		}
+	}
+
+	return result;
 }

@@ -37,15 +37,18 @@ const ISOLATION_SEPIR_RATES = {
 	isolation_goal_rate: 0.2,
 } as const satisfies SepirRates;
 
+// speed unit: px/tick. After the M10.5 motion-scaling fix, velocity integration
+// is 1:1 per tick (no DT_DAYS multiplier). mean=2.0 px/tick crosses a 50-px cabin
+// in ~25 ticks (nominal); stddev=0.3 allows ~10% variance across agents.
 const DEFAULT_AGENT_PARAMS_DISTRIBUTION = {
-	speed: { mean: 2.0, stddev: 0.3 },
+	speed: { mean: 2.0, stddev: 0.3 }, // px/tick
 	reaction_time: { mean: 2.0, stddev: 0.5 },
 	contact_multiplier: { mean: 1.0, stddev: 0.2 },
 	risk_tolerance: { mean: 0.5, stddev: 0.15 },
 } as const satisfies AgentParamsDistribution;
 
 const HIGH_VARIABILITY_AGENT_PARAMS_DISTRIBUTION = {
-	speed: { mean: 2.0, stddev: 0.6 },
+	speed: { mean: 2.0, stddev: 0.6 }, // px/tick
 	reaction_time: { mean: 2.0, stddev: 1.0 },
 	contact_multiplier: { mean: 1.0, stddev: 0.4 },
 	risk_tolerance: { mean: 0.5, stddev: 0.3 },
