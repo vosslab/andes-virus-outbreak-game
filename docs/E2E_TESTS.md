@@ -40,8 +40,8 @@ the `e2e_*` prefix as a secondary, human-readable convention.
 - Pytest is configured to ignore the subtree via `collect_ignore = ["e2e", "playwright"]` in
   `tests/conftest.py`, so file naming inside `tests/e2e/` cannot accidentally pull slow tests into the fast lane.
 - Recommended naming for readability:
-    - `e2e_*.sh` for shell runners.
-    - `e2e_*.py` for Python orchestration.
+  - `e2e_*.sh` for shell runners.
+  - `e2e_*.py` for Python orchestration.
 - Each E2E script is self-contained and exits non-zero on failure.
 
 `tests/` (excluding `tests/e2e/` and `tests/playwright/`) stays reserved for fast pytest tests (see

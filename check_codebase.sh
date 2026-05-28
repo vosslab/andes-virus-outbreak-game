@@ -3,10 +3,17 @@
 #
 # Runs (in order):
 #   1. TypeScript typecheck via tsconfig.json (src/).
-#   2. Wider typecheck via tsconfig.lint.json if present (tests/, tools/).
+#   2. Wider typecheck via tsconfig.lint.json (tests/, tools/).
 #   3. ESLint (zero warnings).
 #   4. Prettier --check.
-#   5. Node unit tests under tests/ (node --test tests/test_*.mjs).
+#   5. CSS content policy via tools/check_css_content_policy.py if present.
+#   6. Node unit tests under tests/ (node --import tsx --test
+#      tests/test_*.mjs). The --import flag loads the tsx npm package
+#      (https://www.npmjs.com/package/tsx) as a runtime loader so .mjs
+#      tests can import .ts source modules directly. Note: tsx is the
+#      runtime loader npm package; tsc is the TypeScript compiler binary
+#      (shipped with the typescript package) and is not a separate npm
+#      package -- the two names look alike but are unrelated.
 #
 # Each step invokes its tool directly (npx tsc, npx eslint, npx prettier,
 # node --test). No dependency on package.json scripts; the package.json
@@ -165,21 +172,48 @@ SUMMARY_ENABLED=1
 # 1. typecheck (always)
 step_run typecheck npx tsc --noEmit -p tsconfig.json
 
-# 2. typecheck:lint only if tsconfig.lint.json exists
-if [ -f tsconfig.lint.json ]; then
-	step_run typecheck:lint npx tsc --noEmit -p tsconfig.lint.json
-else
-	step_skip typecheck:lint "tsconfig.lint.json not present"
-fi
+# 2. typecheck:lint
+# Wider typecheck covers tests/ and tools/ via tsconfig.lint.json.
+# That file ships from the template's noexist/ bucket so every typescript
+# consumer has it at bootstrap; no SKIP fallback needed.
+# Note: `tsc -p tsconfig.lint.json` exits 2 with TS18003 if its include list
+# matches no files. A consumer with no tests/*.ts and no tools/*.ts will hit
+# this. Workaround: seed a stub `.ts` in either tree, or extend the include
+# list locally in the consumer-owned tsconfig.lint.json.
+step_run typecheck:lint npx tsc --noEmit -p tsconfig.lint.json
 
-# 3. lint (note: test/*.ts files are run via tsx --test, not eslint)
-step_run lint npx eslint --max-warnings 0 src/ tests/*.mjs
+# 3. lint
+# Single recursive glob covers every JS/TS extension from cwd: catches src/,
+# tests/, tests/playwright/, tools/, root-level files, and any deeper monorepo
+# layout (packages/*/src/, etc.) without code changes. --no-error-on-unmatched-pattern
+# is deliberately not passed so an empty-match repo fails loudly instead of
+# silently passing -- false-confidence prevention.
+step_run lint npx eslint --max-warnings 0 '**/*.{ts,tsx,mts,cts,js,mjs,cjs}'
 
 # 4. format:check
-step_run format:check npx prettier --check src/ eslint.config.js
+step_run format:check npx prettier --check '**/*.{ts,tsx,mts,cts,js,mjs,cjs}'
 
-# 5. test:node (includes .mjs and .ts tests)
-step_run test:node bash -c "node --test 'tests/test_*.mjs' 2>&1 && npx tsx --test 'tests/test_*.ts' 2>&1"
+# 5. css:policy only if tools/check_css_content_policy.py exists
+if [ -f tools/check_css_content_policy.py ]; then
+	step_run css:policy python3 tools/check_css_content_policy.py
+else
+	step_skip css:policy "tools/check_css_content_policy.py not present"
+fi
+
+# 6. test:node
+# Loads the tsx npm package as a runtime loader so .mjs tests can import
+# .ts source modules. Not to be confused with tsc, which is the
+# TypeScript compiler binary shipped inside the typescript package.
+#
+# compgen -G is used to check whether any tests/test_*.mjs files exist
+# before invoking node --test. A fresh consumer with no test files emits a
+# loud SKIP rather than failing the gate ("Could not find any tests") or
+# silently passing -- same honesty principle as the lint step above.
+if compgen -G 'tests/test_*.mjs' >/dev/null; then
+	step_run test:node node --import tsx --test 'tests/test_*.mjs'
+else
+	step_skip test:node "no tests/test_*.mjs files present"
+fi
 
 # All steps complete; summary prints via EXIT trap. Exit 0 (no failures
 # reach here -- failure paths exit 1 directly).

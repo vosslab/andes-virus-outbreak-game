@@ -1,25 +1,21 @@
-# Centrally maintained docs (propagated from starter repo).
-docs/AUTHORS.md
-docs/CLAUDE_HOOK_USAGE_GUIDE.md
-docs/MARKDOWN_STYLE.md
-docs/PLAYWRIGHT_USAGE.md
-docs/PYTEST_STYLE.md
-docs/PYTHON_STYLE.md
-docs/REPO_STYLE.md
-docs/TYPESCRIPT_STYLE.md
-docs/ARTIFICIAL_LIFE.md
-docs/SEIR_Simulation.md
+# Prettier scope in this repo is .js .mjs .cjs .ts .tsx .mts .cts only.
+# JSON, YAML, Markdown, Python files are explicitly NOT prettier-managed.
+# Script invocations in package.json and check_codebase.sh pin a narrow glob;
+# the entries below cover noisy generated dirs that should still be skipped
+# if prettier is ever invoked with a broader glob from a contributor shell.
 
-# External design folder (untracked uploads).
-design/
-
-# Generated / build artifacts.
-dist/
+# Dependencies and installed package state.
 node_modules/
 package-lock.json
-.pytest_cache/
 
-# Python tooling.
-__pycache__/
-*.pyc
-report_*.txt
+# Build outputs and bundler artifacts.
+dist/
+dist-single/
+_site/
+generated/
+coverage/
+
+# Test runner output trees.
+playwright-report/
+test-results/
+blob-report/
