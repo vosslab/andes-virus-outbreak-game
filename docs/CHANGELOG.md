@@ -4,6 +4,16 @@
 
 ### Fixes and Maintenance
 
+- **GitHub Pages build fix (second pass)**: `package-lock.json` was deleted in
+  commit `d7c1ca2` ("clean up"), which re-broke CI with
+  `Dependencies lock file is not found ... Supported file patterns:
+  package-lock.json,npm-shrinkwrap.json,yarn.lock`. The
+  `.github/workflows/deploy_pages.yml` workflow uses `cache: npm` and
+  `npm ci`, both of which require a committed lockfile. Re-ran `npm install`
+  to regenerate `package-lock.json` (97 packages, 55KB, 1826 lines) and
+  re-tracked it. Verified locally: `npm ci` clean (98 packages audited,
+  0 vulnerabilities). Workflow unchanged.
+
 - **GitHub Pages build fix**: `npm ci` exited 1 in CI because `package.json`
   declared `@types/node` but `package-lock.json` did not list it
   (`Missing: @types/node@20.19.41 from lock file`). Bumped
