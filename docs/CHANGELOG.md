@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-05-27
+
+### Fixes and Maintenance
+
+- **GitHub Pages build fix**: `npm ci` exited 1 in CI because `package.json`
+  declared `@types/node` but `package-lock.json` did not list it
+  (`Missing: @types/node@20.19.41 from lock file`). Bumped
+  `@types/node` to `^24.0.0` (matches Node 24 used in
+  `.github/workflows/deploy_pages.yml`) and ran `npm install` to
+  regenerate `package-lock.json`. Verified locally: `npm ci` clean,
+  full `./build_github_pages.sh` green (dist/main.js 59.9kb).
+
 ## 2026-05-23
 
 ### Additions and New Features
