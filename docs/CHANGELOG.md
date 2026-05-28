@@ -4,6 +4,21 @@
 
 ### Fixes and Maintenance
 
+- **GitHub Pages workflow: Python setup for build script**: `build_github_pages.sh`
+  runs `python3 pipeline/generate_ship_svg.py`, which does `import yaml`. Ubuntu
+  runner has `python3` preinstalled but not `pyyaml`, so CI would fail with
+  `ModuleNotFoundError: No module named 'yaml'`. Added `actions/setup-python@v5`
+  (python 3.12) and `pip install pyyaml` steps to `.github/workflows/deploy_pages.yml`
+  between `actions/setup-node` and `npm ci`.
+
+- **GitHub Pages workflow: bump action versions for Node 24**: GitHub deprecated
+  Node 20 for JavaScript actions (forced default Node 24 on 2026-06-02, Node 20
+  removed 2026-09-16). Bumped to versions that ship with Node 24 runtime:
+  `actions/checkout@v4` -> `@v6`, `actions/setup-node@v4` -> `@v6`,
+  `actions/upload-pages-artifact@v3` -> `@v5`, `actions/deploy-pages@v4` -> `@v5`.
+  Silences the "Node.js 20 actions are deprecated" warning. `setup-node@v6`
+  retains npm caching used by `cache: npm`.
+
 - **GitHub Pages build fix (second pass)**: `package-lock.json` was deleted in
   commit `d7c1ca2` ("clean up"), which re-broke CI with
   `Dependencies lock file is not found ... Supported file patterns:
