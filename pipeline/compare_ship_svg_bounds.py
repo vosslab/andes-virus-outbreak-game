@@ -268,7 +268,7 @@ def compare_bounds(ref_svg_path: str, gen_svg_path: str, tolerance: float = 0.02
 	}
 
 
-def main():
+def main() -> None:
 	"""
 	CLI entry point.
 

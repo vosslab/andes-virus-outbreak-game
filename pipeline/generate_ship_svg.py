@@ -26,11 +26,10 @@ that is reserved for M4 (navigation). The SVG shows doorways as
 import argparse
 import xml.sax.saxutils
 import yaml
-from typing import Any, Dict, List, Tuple
 
 #============================================
 
-def load_yaml_spec(yaml_path: str) -> Dict[str, Any]:
+def load_yaml_spec(yaml_path: str) -> dict[str, object]:
 	"""Load the ship YAML specification."""
 	with open(yaml_path) as f:
 		spec = yaml.safe_load(f)
@@ -38,7 +37,7 @@ def load_yaml_spec(yaml_path: str) -> Dict[str, Any]:
 
 #============================================
 
-def build_room_lookup(spec: Dict[str, Any]) -> Dict[str, Dict[str, Any]]:
+def build_room_lookup(spec: dict[str, object]) -> dict[str, dict[str, object]]:
 	"""Build a lookup table of rooms by ID."""
 	rooms = spec.get('rooms', [])
 	lookup = {}
@@ -48,7 +47,7 @@ def build_room_lookup(spec: Dict[str, Any]) -> Dict[str, Dict[str, Any]]:
 
 #============================================
 
-def build_doorway_lookup(spec: Dict[str, Any]) -> Dict[str, Dict[str, Any]]:
+def build_doorway_lookup(spec: dict[str, object]) -> dict[str, dict[str, object]]:
 	"""Build a lookup table of doorways by ID."""
 	doorways = spec.get('doorways', [])
 	lookup = {}
@@ -58,7 +57,7 @@ def build_doorway_lookup(spec: Dict[str, Any]) -> Dict[str, Dict[str, Any]]:
 
 #============================================
 
-def compute_room_links(spec: Dict[str, Any], room_lookup: Dict[str, Dict[str, Any]]) -> Dict[str, List[str]]:
+def compute_room_links(spec: dict[str, object], room_lookup: dict[str, dict[str, object]]) -> dict[str, list[str]]:
 	"""
 	Compute links (adjacent rooms) for each room from doorways.
 
@@ -66,7 +65,7 @@ def compute_room_links(spec: Dict[str, Any], room_lookup: Dict[str, Dict[str, An
 	connects rooms A and B, then A links to B and B links to A.
 	"""
 	doorways = spec.get('doorways', [])
-	links: Dict[str, List[str]] = {}
+	links: dict[str, list[str]] = {}
 
 	# Initialize all rooms with empty link lists
 	for room in spec.get('rooms', []):
@@ -87,7 +86,7 @@ def compute_room_links(spec: Dict[str, Any], room_lookup: Dict[str, Dict[str, An
 
 #============================================
 
-def generate_svg(spec: Dict[str, Any], output_path: str) -> None:
+def generate_svg(spec: dict[str, object], output_path: str) -> None:
 	"""
 	Generate SVG from YAML spec.
 
@@ -191,7 +190,7 @@ def zone_kind_from_room_type(room_type: str) -> str:
 
 #============================================
 
-def polygon_bounds(polygon: List[List[int]]) -> Tuple[int, int, int, int]:
+def polygon_bounds(polygon: list[list[int]]) -> tuple[int, int, int, int]:
 	"""
 	Compute bounding box of a polygon.
 
@@ -203,7 +202,7 @@ def polygon_bounds(polygon: List[List[int]]) -> Tuple[int, int, int, int]:
 
 #============================================
 
-def polygon_center(polygon: List[List[int]]) -> Tuple[int, int]:
+def polygon_center(polygon: list[list[int]]) -> tuple[int, int]:
 	"""Compute centroid of a polygon."""
 	xs = [pt[0] for pt in polygon]
 	ys = [pt[1] for pt in polygon]
@@ -211,7 +210,7 @@ def polygon_center(polygon: List[List[int]]) -> Tuple[int, int]:
 
 #============================================
 
-def compute_door_segments(spec: Dict[str, Any]) -> List[Dict[str, Any]]:
+def compute_door_segments(spec: dict[str, object]) -> list[dict[str, object]]:
 	"""
 	Compute DoorSegment objects from doorways in spec.
 
@@ -272,8 +271,8 @@ def compute_door_segments(spec: Dict[str, Any]) -> List[Dict[str, Any]]:
 #============================================
 
 def generate_typescript_layout(
-	spec: Dict[str, Any],
-	room_links: Dict[str, List[str]],
+	spec: dict[str, object],
+	room_links: dict[str, list[str]],
 	output_path: str
 ) -> None:
 	"""

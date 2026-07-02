@@ -289,7 +289,7 @@ def parse_args() -> argparse.Namespace:
 	return args
 
 
-def main():
+def main() -> None:
 	"""Run ODE integration from command-line arguments and print results."""
 	args = parse_args()
 

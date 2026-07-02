@@ -158,7 +158,7 @@ Key fast-lane Python tests: lint gates (`test_pyflakes_code_lint.py`, `test_asci
 `test_whitespace.py`, `test_indentation.py`), schema (`test_tsconfig_canonical.py`,
 `test_eslint_config_present.py`), and pipeline freshness (`test_ship_layout_generated.py`).
 
-Helpers: `tests/git_file_utils.py` (REPO_ROOT resolution), `tests/conftest.py`.
+Helpers: `tests/file_utils.py` (REPO_ROOT resolution), `tests/conftest.py`.
 
 ## .github/ -- CI
 

@@ -7,21 +7,31 @@
 		"build": "./build_github_pages.sh",
 		"check": "./check_codebase.sh",
 		"serve": "./run_web_server.sh",
+		"clean": "./devel/clean_build.sh",
+		"test:playwright": "./run_playwright_tests.sh",
 		"smoke": "node tests/playwright/smoke_app.mjs",
 		"typecheck": "npx tsc --noEmit -p src/tsconfig.json",
 		"lint": "npx eslint src/ tests/",
-		"format:check": "npx prettier --check .",
-		"format": "npx prettier --write ."
+		"format:check": "npx prettier --check '**/*.{ts,tsx,mts,cts,js,mjs,cjs}'",
+		"format:write": "npx prettier --write '**/*.{ts,tsx,mts,cts,js,mjs,cjs}'",
+		"setup": "./devel/setup_typescript.sh",
+		"setup:playwright": "./devel/setup_playwright.sh"
 	},
 	"devDependencies": {
 		"@eslint/js": ">=10.0.1",
-		"@types/node": ">=25.9.3",
+		"@types/node": ">=26.1.0",
 		"esbuild": ">=0.28.1",
-		"eslint": ">=10.5.0",
-		"globals": ">=17.6.0",
-		"playwright": ">=1.61.0",
-		"prettier": ">=3.8.4",
+		"eslint": ">=10.6.0",
+		"globals": ">=17.7.0",
+		"playwright": ">=1.61.1",
+		"prettier": ">=3.9.4",
+		"tsx": ">=4.22.4",
 		"typescript": ">=6.0.3",
-		"typescript-eslint": ">=8.61.1"
+		"typescript-eslint": ">=8.62.1"
+	},
+	"allowScripts": {
+		"esbuild@0.28.1": true,
+		"fsevents@2.3.2": true,
+		"fsevents@2.3.3": true
 	}
 }

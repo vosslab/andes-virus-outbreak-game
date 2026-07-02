@@ -12,13 +12,13 @@ import type { SepirRates } from "./types/simulation";
  * Guards against division by zero by returning Infinity if rho or gamma is zero.
  */
 export function effectiveR0(rates: SepirRates): number {
-	if (rates.rho === 0 || rates.gamma === 0) {
-		return Infinity;
-	}
+  if (rates.rho === 0 || rates.gamma === 0) {
+    return Infinity;
+  }
 
-	const preSymptomatic = rates.beta_P / rates.rho;
-	const symptomatic = rates.beta_I / rates.gamma;
-	return preSymptomatic + symptomatic;
+  const preSymptomatic = rates.beta_P / rates.rho;
+  const symptomatic = rates.beta_I / rates.gamma;
+  return preSymptomatic + symptomatic;
 }
 
 /**
@@ -34,8 +34,8 @@ export function effectiveR0(rates: SepirRates): number {
  * Returns the product of R0 and susceptibleFraction.
  */
 export function effectiveRt(rates: SepirRates, susceptibleFraction: number): number {
-	const r0 = effectiveR0(rates);
-	return r0 * susceptibleFraction;
+  const r0 = effectiveR0(rates);
+  return r0 * susceptibleFraction;
 }
 
 /**
@@ -49,15 +49,15 @@ export function effectiveRt(rates: SepirRates, susceptibleFraction: number): num
  * If rates are invalid (e.g., rho or gamma is zero), returns NaN.
  */
 export function herdImmunityThreshold(rates: SepirRates): number {
-	const r0 = effectiveR0(rates);
+  const r0 = effectiveR0(rates);
 
-	if (!isFinite(r0)) {
-		return NaN;
-	}
+  if (!isFinite(r0)) {
+    return NaN;
+  }
 
-	if (r0 <= 1) {
-		return 0;
-	}
+  if (r0 <= 1) {
+    return 0;
+  }
 
-	return 1 - 1 / r0;
+  return 1 - 1 / r0;
 }

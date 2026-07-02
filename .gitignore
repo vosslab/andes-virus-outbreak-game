@@ -4,7 +4,9 @@ node_modules/
 dist/
 
 # === UNIVERSAL ===
+output*/
 _temp*.?*
+OTHER_REPOS/
 # === TYPESCRIPT ===
 _site/
 *.tsbuildinfo

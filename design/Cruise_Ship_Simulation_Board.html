@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>M.S. Verity — Simulation Board</title>
+  <title>M.S. Verity - Simulation Board</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&display=swap" rel="stylesheet" />
@@ -554,15 +554,15 @@ grid:
 
 # Room type styles. Color + ink + optional glyph for the icon corner.
 types:
-  command:   { fill: "#1f3a4d", ink: "#f3e6c8", label: "Command",     glyph: "⚓" }
+  command:   { fill: "#1f3a4d", ink: "#f3e6c8", label: "Command",     glyph: "&#x2693;" }
   cabin:     { fill: "#cfe2ec", ink: "#1a3a4d", label: "Cabins",      glyph: "" }
-  suite:     { fill: "#a8c8d9", ink: "#1a3a4d", label: "Suites",      glyph: "★" }
+  suite:     { fill: "#a8c8d9", ink: "#1a3a4d", label: "Suites",      glyph: "&#x2605;" }
   corridor:  { fill: "#ece1c2", ink: "#5a4a30", label: "Corridor",    glyph: "" }
-  atrium:    { fill: "#f3d889", ink: "#5a4010", label: "Atrium",      glyph: "✦" }
+  atrium:    { fill: "#f3d889", ink: "#5a4010", label: "Atrium",      glyph: "&#x2726;" }
   food:      { fill: "#f4ba6c", ink: "#5a3010", label: "Dining",      glyph: "" }
   leisure:   { fill: "#e89a6a", ink: "#5a2010", label: "Leisure",     glyph: "" }
   wellness:  { fill: "#9bd2b1", ink: "#1a4d2e", label: "Wellness",    glyph: "" }
-  medical:   { fill: "#f08a8a", ink: "#5a1010", label: "Medical",     glyph: "✚" }
+  medical:   { fill: "#f08a8a", ink: "#5a1010", label: "Medical",     glyph: "&#x271A;" }
   retail:    { fill: "#d4a8d8", ink: "#3a1040", label: "Retail",      glyph: "" }
   crew:      { fill: "#b5b39a", ink: "#2a2810", label: "Crew",        glyph: "" }
   crew_op:   { fill: "#9aa085", ink: "#1a1810", label: "Crew Ops",    glyph: "" }
@@ -570,27 +570,27 @@ types:
   transit:   { fill: "#7c8c99", ink: "#f3e6c8", label: "Transit",     glyph: "" }
   public:    { fill: "#d6c89e", ink: "#3a2e10", label: "Public Deck", glyph: "" }
 
-# Rooms — x,y are the top-left tile; w,h are tile width/height.
+# Rooms - x,y are the top-left tile; w,h are tile width/height.
 rooms:
-  # — Bow (forward) —
+  # - Bow (forward) -
   - { id: obs_p,      name: "Fwd Promenade (P)",   type: public,    x: 1,  y: 2,  w: 3, h: 5 }
   - { id: bridge,     name: "Bridge",              type: command,   x: 0,  y: 7,  w: 4, h: 6 }
   - { id: obs_s,      name: "Fwd Promenade (S)",   type: public,    x: 1,  y: 13, w: 3, h: 5 }
 
-  # — Sun Deck (port lifeboat row) —
+  # - Sun Deck (port lifeboat row) -
   - { id: lifeboats_p, name: "Lifeboat Stations (P)", type: emergency, x: 4, y: 0, w: 27, h: 2 }
 
-  # — Cabins Port (rows 2-4) —
+  # - Cabins Port (rows 2-4) -
   - { id: cab_p1, name: "Cabins 101-118 (P)", type: cabin, x: 4,  y: 2, w: 6, h: 3 }
   - { id: cab_p2, name: "Cabins 119-136 (P)", type: cabin, x: 10, y: 2, w: 6, h: 3 }
   - { id: cab_p3, name: "Cabins 137-151 (P)", type: cabin, x: 16, y: 2, w: 5, h: 3 }
   - { id: cab_p4, name: "Cabins 152-166 (P)", type: cabin, x: 21, y: 2, w: 5, h: 3 }
   - { id: suite_p, name: "Owner's Suites (P)", type: suite, x: 26, y: 2, w: 5, h: 3 }
 
-  # — Port Corridor (row 5) —
+  # - Port Corridor (row 5) -
   - { id: corr_p, name: "Port Corridor", type: corridor, x: 4, y: 5, w: 27, h: 1 }
 
-  # — Top Inner (rows 6-8) —
+  # - Top Inner (rows 6-8) -
   - { id: spa,     name: "Spa & Hammam",  type: wellness, x: 4,  y: 6, w: 4, h: 3 }
   - { id: library, name: "Library",       type: leisure,  x: 8,  y: 6, w: 4, h: 3 }
   - { id: dining,  name: "Main Dining",   type: food,     x: 12, y: 6, w: 6, h: 3 }
@@ -598,10 +598,10 @@ rooms:
   - { id: casino,  name: "Casino",        type: leisure,  x: 21, y: 6, w: 5, h: 3 }
   - { id: theater, name: "Theater",       type: leisure,  x: 26, y: 6, w: 5, h: 3 }
 
-  # — Grand Atrium (rows 9-10) —
+  # - Grand Atrium (rows 9-10) -
   - { id: atrium,  name: "Grand Atrium",  type: atrium,   x: 4, y: 9, w: 27, h: 2 }
 
-  # — Bottom Inner (rows 11-13) —
+  # - Bottom Inner (rows 11-13) -
   - { id: infirmary, name: "Infirmary",     type: medical,  x: 4,  y: 11, w: 4, h: 3 }
   - { id: isolation, name: "Isolation",     type: medical,  x: 8,  y: 11, w: 3, h: 3 }
   - { id: gym,       name: "Gym",           type: wellness, x: 11, y: 11, w: 4, h: 3 }
@@ -609,20 +609,20 @@ rooms:
   - { id: arcade,    name: "Arcade",        type: leisure,  x: 21, y: 11, w: 5, h: 3 }
   - { id: kids,      name: "Kids Club",     type: leisure,  x: 26, y: 11, w: 5, h: 3 }
 
-  # — Starboard Corridor (row 14) —
+  # - Starboard Corridor (row 14) -
   - { id: corr_s, name: "Starboard Corridor", type: corridor, x: 4, y: 14, w: 27, h: 1 }
 
-  # — Cabins Starboard (rows 15-17) —
+  # - Cabins Starboard (rows 15-17) -
   - { id: cab_s1, name: "Cabins 201-218 (S)", type: cabin, x: 4,  y: 15, w: 6, h: 3 }
   - { id: cab_s2, name: "Cabins 219-236 (S)", type: cabin, x: 10, y: 15, w: 6, h: 3 }
   - { id: cab_s3, name: "Cabins 237-251 (S)", type: cabin, x: 16, y: 15, w: 5, h: 3 }
   - { id: cab_s4, name: "Cabins 252-266 (S)", type: cabin, x: 21, y: 15, w: 5, h: 3 }
   - { id: suite_s, name: "Owner's Suites (S)", type: suite, x: 26, y: 15, w: 5, h: 3 }
 
-  # — Sun Deck (starboard lifeboat row) —
+  # - Sun Deck (starboard lifeboat row) -
   - { id: lifeboats_s, name: "Lifeboat Stations (S)", type: emergency, x: 4, y: 18, w: 27, h: 2 }
 
-  # — Stern (aft, right) —
+  # - Stern (aft, right) -
   - { id: sun_deck,    name: "Sun Deck Aft",  type: leisure,  x: 31, y: 0,  w: 5, h: 2 }
   - { id: crew_q,      name: "Crew Quarters", type: crew,     x: 31, y: 2,  w: 5, h: 4 }
   - { id: crew_mess,   name: "Crew Mess",     type: crew_op,  x: 31, y: 6,  w: 5, h: 3 }
@@ -631,45 +631,45 @@ rooms:
   - { id: tender_bay,  name: "Tender Bay",    type: transit,  x: 31, y: 15, w: 5, h: 3 }
   - { id: helideck,    name: "Helideck",      type: transit,  x: 31, y: 18, w: 5, h: 2 }
 
-# Doors — passages between rooms.
+# Doors - passages between rooms.
 # dir: h = horizontal wall (between row y-1 and row y at column x)
 # dir: v = vertical wall   (between col x-1 and col x at row y)
 doors:
-  # Port cabins → port corridor
+  # Port cabins -> port corridor
   - { x: 7,  y: 5, dir: h }
   - { x: 13, y: 5, dir: h }
   - { x: 18, y: 5, dir: h }
   - { x: 23, y: 5, dir: h }
   - { x: 28, y: 5, dir: h }
-  # Top inner → port corridor (north)
+  # Top inner -> port corridor (north)
   - { x: 6,  y: 6, dir: h }
   - { x: 10, y: 6, dir: h }
   - { x: 15, y: 6, dir: h }
   - { x: 19, y: 6, dir: h }
   - { x: 23, y: 6, dir: h }
   - { x: 28, y: 6, dir: h }
-  # Top inner → atrium (south)
+  # Top inner -> atrium (south)
   - { x: 6,  y: 9, dir: h }
   - { x: 10, y: 9, dir: h }
   - { x: 15, y: 9, dir: h }
   - { x: 19, y: 9, dir: h }
   - { x: 23, y: 9, dir: h }
   - { x: 28, y: 9, dir: h }
-  # Bottom inner → atrium (north)
+  # Bottom inner -> atrium (north)
   - { x: 6,  y: 11, dir: h }
   - { x: 9,  y: 11, dir: h }
   - { x: 12, y: 11, dir: h }
   - { x: 17, y: 11, dir: h }
   - { x: 23, y: 11, dir: h }
   - { x: 28, y: 11, dir: h }
-  # Bottom inner → starboard corridor (south)
+  # Bottom inner -> starboard corridor (south)
   - { x: 6,  y: 14, dir: h }
   - { x: 9,  y: 14, dir: h }
   - { x: 13, y: 14, dir: h }
   - { x: 17, y: 14, dir: h }
   - { x: 23, y: 14, dir: h }
   - { x: 28, y: 14, dir: h }
-  # Stbd cabins → stbd corridor
+  # Stbd cabins -> stbd corridor
   - { x: 7,  y: 15, dir: h }
   - { x: 13, y: 15, dir: h }
   - { x: 18, y: 15, dir: h }
@@ -683,16 +683,16 @@ doors:
   - { x: 18, y: 18, dir: h }
   - { x: 28, y: 18, dir: h }
   # Bow / forward promenade
-  - { x: 4, y: 4, dir: v }   # obs_p → cab_p1
-  - { x: 4, y: 9, dir: v }   # bridge → atrium
-  - { x: 4, y: 10, dir: v }  # bridge → atrium
-  - { x: 4, y: 16, dir: v }  # obs_s → cab_s1
+  - { x: 4, y: 4, dir: v }   # obs_p -> cab_p1
+  - { x: 4, y: 9, dir: v }   # bridge -> atrium
+  - { x: 4, y: 10, dir: v }  # bridge -> atrium
+  - { x: 4, y: 16, dir: v }  # obs_s -> cab_s1
   # Stern connections
-  - { x: 31, y: 3, dir: v }  # suite_p → crew_q
-  - { x: 31, y: 7, dir: v }  # theater → crew_mess
-  - { x: 31, y: 9, dir: v }  # atrium → comms
-  - { x: 31, y: 12, dir: v } # kids → engineering
-  - { x: 31, y: 16, dir: v } # suite_s → tender_bay
+  - { x: 31, y: 3, dir: v }  # suite_p -> crew_q
+  - { x: 31, y: 7, dir: v }  # theater -> crew_mess
+  - { x: 31, y: 9, dir: v }  # atrium -> comms
+  - { x: 31, y: 12, dir: v } # kids -> engineering
+  - { x: 31, y: 16, dir: v } # suite_s -> tender_bay
 
 # Health states for agents
 states:
@@ -721,7 +721,7 @@ agents:
   - { id: A13, name: "Sven Lindqvist", role: crew,      state: crew,        x: 33, y: 12 }
   - { id: A14, name: "Mei-ling Zhao",  role: passenger, state: symptomatic, x: 12, y: 9  }
   - { id: A15, name: "Hana Park",      role: passenger, state: healthy,     x: 17, y: 12 }
-  - { id: A16, name: "Tomás Reyes",    name_short: "TR", role: passenger, state: exposed, x: 24, y: 16 }
+  - { id: A16, name: "Tomas Reyes",    name_short: "TR", role: passenger, state: exposed, x: 24, y: 16 }
   </script>
 
   <div id="root"></div>

@@ -2,11 +2,46 @@
 
 Language Model guide to Neil TypeScript programming
 
-## TypeScript version
+## Dependency versions and pins
 
-* Require `5.x` (latest stable, loose-pinned via devDependencies; no version lock-in beyond floor `>=9` for ESLint).
-* Required strict flags: `strict: true`, `noImplicitAny: true`, `noUncheckedIndexedAccess: true`, `target: es2020`, `module: esnext`, `moduleResolution: bundler`.
-* Point at canonical `tsconfig.json` at repo root (propagated from `templates/typescript/tsconfig.json`).
+These repos are applications, not published TypeScript libraries (`private: true`, no
+downstream consumers), so dependency floors are set as high as practical and refreshed
+toward newest, not kept low and wide. State the policy, not a frozen version, so this doc
+never goes stale against a sync run.
+
+- Policy: pin every dependency `>={latest}`, with floors raised as high as practical at each
+  template refresh. The policy is the rule; do not hardcode a major version here.
+- Rationale: an application carries no compatibility burden for nonexistent library users.
+  High floors only buy newer bug fixes and diagnostics (better AI-assisted coding) at zero
+  cost. A published library does the opposite and keeps floors low and wide.
+- Pin shape: use `>=` always. Add a `<` upper bound ONLY for a confirmed incompatibility,
+  never as a default. Live example: typescript-eslint caps the TypeScript it supports
+  (currently `<6.1.0`); if TypeScript outruns typescript-eslint, a temporary `<` cap waits
+  for the matching typescript-eslint release rather than breaking lint.
+- Refresh tool: `tools/sync_typescript_package_pins.py` rewrites every pin to `>={latest}`
+  from the npm registry. It is a refresh HELPER, not a dependency solver: it writes `>=`
+  uniformly and never emits `<` caps, compound ranges, non-`latest` dist-tags, or
+  `workspace:*`, and it leaves private/E404 and consumer-extra packages untouched.
+- Manual `<` exception: the tool rewrites a hand-placed `<` cap back to `>={latest}` on its
+  next run, so a necessary cap is a MANUAL exception re-applied after each sync. Teaching the
+  tool to preserve caps is separate follow-up.
+- `allowScripts` keys are version-pinned (`name@version`): after a sync that bumps esbuild or
+  fsevents, re-apply the matching `allowScripts` entry by hand in `noexist/package.json`, the
+  same class of manual exception as a `<` cap. Without it, esbuild's postinstall binary gate
+  returns and fresh `npm install` runs will miss the platform binary.
+- Lockfile: the committed `package-lock.json` is a snapshot regenerated forward on each
+  refresh, so installs move to the newest resolved set. It records the current resolution and
+  keeps moving forward; it is not a safety pin and does not justify the high floors. High
+  floors stand on the apps-not-libraries rationale alone. The `>=` shape also avoids the npm
+  `^0.x` caret quirk that would lock `^0.25` below the current `0.28` line.
+- Post-refresh validation: after a real floor bump, run `npm install` (regenerate the
+  lockfile), then `npm audit`, then `./check_codebase.sh`, so the newest combination is
+  validated by the repo's own typecheck, lint, format, and test gates before it is trusted.
+
+Required strict flags stay fixed regardless of version: `strict: true`, `noImplicitAny: true`,
+`noUncheckedIndexedAccess: true`, `target: es2020`, `module: esnext`,
+`moduleResolution: bundler`. Point at the canonical `tsconfig.json` at repo root (propagated
+from `templates/typescript/tsconfig.json`).
 
 ## FILENAMES
 * Prefer snake_case for TypeScript filenames.
@@ -189,6 +224,21 @@ import { writeReport } from "./write_report";
 * Keep tests small and deterministic.
 * Avoid network calls, random behavior, and time-based logic unless mocked.
 * Browser tests live under `tests/playwright/` (see [PLAYWRIGHT_USAGE.md](PLAYWRIGHT_USAGE.md)). Pure Node unit tests via `node --test tests/test_*.mjs`. TS hygiene tests under `tests/test_typescript_*.py` enforce tsc, package.json schema, tsconfig canonical fields, and ESLint flat-config presence. ESLint correctness is gated by `check_codebase.sh` step 3 directly; no separate pytest wrapper.
+* Node unit tests are `.mjs` and run via `node --test tests/test_*.mjs` (canonical). A `.ts`
+  test with the tsx loader (`node --import tsx --test`) is an accepted variant when the test
+  itself needs TypeScript (`sports-life-game`).
+* `tsx` is a required canonical devDependency: `check_codebase.sh` step 5 runs
+  `node --import tsx --test 'tests/test_*.mjs'`, and the `--import tsx` flag loads the `tsx`
+  npm package as a runtime loader so `.mjs` tests can import `.ts` source modules directly.
+
+### Node test fixture policy
+
+Inline setup first. Keep durable tests on self-contained inputs such as a literal string or
+short array. Durable tests are usually smaller, clearer, and easier to maintain.
+
+Keep separate test data only when file shape, loader behavior, or shared test infrastructure
+is the behavior under test. See the Fixture policy section in PYTEST_STYLE.md for the
+canonical framing.
 
 ## FORMATTERS AND LINTERS
 
@@ -198,9 +248,12 @@ import { writeReport } from "./write_report";
 * ESLint rules should catch problems, not enforce cosmetic preferences that Prettier already handles.
 * Strict typing is preferred. Enable `noImplicitAny` and `strict` in `tsconfig.json`.
 * ESLint config lives at `eslint.config.js` at the repo root (canonical, propagated). Lint correctness is enforced by `check_codebase.sh` step 3 (`npx eslint --max-warnings 0 '**/*.{ts,tsx,mts,cts,js,mjs,cjs}'`).
+* Do not edit `eslint.config.js` directly; propagation overwrites it every run. Repo-specific ESLint overrides go in `eslint.config.local.js` at the repo root: a consumer-owned file shipped once (never overwritten). The canonical config imports and spreads it last, so local entries refine or override canonical rules.
+* Browser globals are supplied to `tests/playwright/**` and `tests/e2e/**` (page.evaluate callbacks reference `window`, `document`, etc.); node-only tools keep `no-undef` so real bugs still surface. Give a repo-specific browser-context tool file its globals via `eslint.config.local.js`, not by widening the canonical glob.
+* `OTHER_REPOS/**` is in the ESLint `ignores`, matching the repo-wide gitignore for the sibling-repo checkout dir.
 * Prettier scope in this repo is JS, TypeScript, MJS, CJS, TSX, MTS, CTS only. JSON, YAML, Markdown, and Python files are explicitly NOT prettier-managed.
 * Indent is two spaces for every prettier-managed extension (prettier default; documented in propagated `.prettierrc`). This differs from the Python tabs rule in `docs/PYTHON_STYLE.md`; agents editing `.py` use tabs, agents editing `.ts`/`.mjs`/etc use two spaces. Do not over-generalize one language's rule to the other.
-* Auto-fix path when `npm run check` step 4 (`format:check`) fails: `npm run format:write` (script alias for `npx prettier --write '**/*.{ts,tsx,mts,cts,js,mjs,cjs}'`).
+* Auto-fix path when `./check_codebase.sh` step 4 (`format:check`) fails: run `npx prettier --write '**/*.{ts,tsx,mts,cts,js,mjs,cjs}'` (the `npm run format:write` alias mirrors this).
 * `.prettierignore` ships from the template and covers noisy generated trees (`node_modules/`, `dist/`, `dist-single/`, `_site/`, `generated/`, `coverage/`, `playwright-report/`, `test-results/`, `blob-report/`, `package-lock.json`).
 
 ### ESLint canonical rules
@@ -208,7 +261,7 @@ import { writeReport } from "./write_report";
 Each enabled rule enforces a single class of error:
 
 - `@typescript-eslint/no-explicit-any: error` &mdash; `any` defeats type system.
-- `@typescript-eslint/no-unused-vars: error` &mdash; dead code rots.
+- `@typescript-eslint/no-unused-vars: error` &mdash; dead code rots. Underscore-prefixed identifiers (`_`, `_unused`) are ignored for args, vars, and caught errors: a deliberate, visible opt-out marker, not a silent default.
 - `@typescript-eslint/explicit-function-return-type: error` &mdash; exported function signatures are API. Severity matches `check_codebase.sh` step 3 `--max-warnings 0` (the prior `warn` setting was dead documentation since `--max-warnings 0` upgraded every warn to a gate failure anyway).
 - `@typescript-eslint/no-floating-promises: error` &mdash; silent async errors.
 - `no-var: error` &mdash; function-scoping breaks expectations.
@@ -217,6 +270,19 @@ Each enabled rule enforces a single class of error:
 - `eqeqeq: error` &mdash; `==` coerces; use `===`.
 - `no-throw-literal: error` &mdash; stack traces require Error instances.
 - `no-console: warn` &mdash; production code should not log to console (user decision: warn only, do not fail builds).
+
+### Test-file rule relaxation
+
+`tests/**/*.{ts,mts}` gets a dedicated ESLint block that turns off two rules:
+
+- `@typescript-eslint/no-floating-promises: off` &mdash; `node:test`'s `test()`, `describe()`,
+  and `it()` return promises the runner awaits internally, so an unawaited call is intended
+  usage, not a floating-promise bug.
+- `no-console: off` &mdash; tests log progress freely.
+
+`src/` and `tools/` keep both rules at their strict setting above. The canonical `.mjs` test
+path already skips typed rules via `tseslint.configs.disableTypeChecked`; this block gives the
+`.ts` test variant the same treatment.
 
 ### tsconfig.json canonical fields
 
@@ -263,12 +329,128 @@ esbuild produces a single deterministic ESM bundle GitHub Pages serves without p
 
 Single `dist/main.js` + `dist/index.html` + `dist/.nojekyll`. GitHub Pages serves `dist/`. No `dist-single/` portable single-file variant in the canonical base.
 
+### esbuild CLI vs JS-API
+
+The default canonical bundler path is the esbuild CLI, invoked inline from
+`build_github_pages.sh` (the `npx esbuild ...` command above). Use the CLI unless a build
+plugin forces the JS-API.
+
+The esbuild JS-API path -- a `pipeline/build.mjs` script that imports esbuild and calls
+`esbuild.build(...)` -- is sanctioned ONLY when a required plugin cannot load through the CLI.
+The live case is `esbuild-plugin-solid` (Solid apps such as `pseudo-code-mapper`,
+`concept-map-maker`, and `virtual-lab-protocol-simulation`): the CLI cannot load the plugin, so
+those repos bundle through `node pipeline/build.mjs`. This is a need-driven second path, not a
+co-equal option to the CLI.
+
+### Build variants tied to a need
+
+Document a build variant only where a real design need drives it, not by head count:
+
+- esbuild loaders: map a non-JS extension to a loader, e.g. `--loader:.csv=text` and
+  `--loader:.json=json`, so the bundle inlines the data and `dist/` stays self-contained
+  (`sports-life-game`).
+- Multi-entry builds: one esbuild bundle per entry when a repo ships several pages
+  (`virtual-lab-protocol-simulation` builds multiple bundles plus per-protocol HTML).
+- Pre-build codegen: a generation step run BEFORE bundling, e.g. compiling YAML to JSON or
+  generating SVG assets, wired into `build_github_pages.sh` ahead of the esbuild call.
+
+### Front door: run the shell scripts directly
+
+The named shell scripts are the operational interface for everyone, including
+non-TypeScript coders and non-technical users. Run them directly by name; you
+never need to open `package.json` to learn how to drive a repo:
+
+- `./check_codebase.sh` (run the fast typecheck, lint, format, and unit-test gate).
+- `./build_github_pages.sh` (build the GitHub Pages bundle).
+- `./run_web_server.sh` (build and serve a local preview).
+- `./dist_clean.sh` (wipe `dist/`).
+- `./run_playwright_tests.sh` (build as needed, then run the Playwright
+  browser tests). This is its own front door so `check_codebase.sh` stays the fast gate.
+
+Each script invokes its tools directly (`npx tsc`, `npx eslint`, `npx prettier`,
+`node --test`). The `package.json` `scripts` block is a thin pass-through: the
+front-door aliases call the same shell scripts 1:1. The script name is the
+interface; the npm alias is an optional mirror for coders with npm muscle memory.
+
+Two audiences, one interface:
+
+- General and non-TypeScript coders: use the named repo scripts. They are the
+  project interface. You should not need to inspect `package.json`, learn npm
+  aliases, or know which JS tool runs underneath.
+- TypeScript coders: the shell scripts are still the source of truth. npm
+  aliases may exist as ecosystem mirrors, so `package.json` never becomes the
+  hidden command router.
+
+This is a command-architecture rule, not an alias inventory. Real, directly-runnable
+commands and named scripts are the operational interface; `package.json` is never a hidden
+command router. Every major operation -- check, build, serve, clean, Playwright -- is
+reachable by a real script name without opening `package.json`. An npm alias earns its place
+only as a thin 1:1 mirror of a shell script or a shortcut for a verbose tool command. The
+specific alias set (`check`, `build`, `serve`, `clean`, `format:write`) only illustrates the
+principle; the principle is primary.
+
+`check_codebase.sh` is the single check gate regardless of which `package.json` scripts a repo
+exposes. Granular-only per-tool scripts (`typecheck`, `lint`, `format:check` with no
+front-door script) are a legacy/divergent shape seen in older repos (`sports-life-game`,
+`hantavirus-outbreak-game`): migrate them toward the named front-door scripts rather than
+treating the per-tool list as canonical.
+
+Alias rules:
+
+- Shell scripts are the canonical project interface; this is the cross-language
+  repo convention. Documentation leads with the shell or direct command, then
+  mentions the npm alias as an optional convenience.
+- Allow an npm alias only when it mirrors a shell script or shortens a verbose
+  tool command. `npm run check` mirroring `./check_codebase.sh` is fine;
+  `format:write` is fine because it hides a long Prettier glob.
+- Remove weak aliases that are niche, broken, or barely simplify. Keep an alias that
+  mirrors a real tool command: the optional `pdf` alias (`node tools/html_to_pdf.mjs`) is
+  present in several repos and is a fine thin mirror of a real tool.
+- Repo-specific domain scripts are acceptable additions when they mirror a real tool, e.g.
+  `virtual-lab-protocol-simulation`'s `layout:*` and `*:png` scripts (`node tools/...`). They
+  are optional per-repo extras, not part of the canonical alias set.
+- Keep a small mirror set. Do not gut all npm scripts unless the repo is
+  intentionally non-idiomatic TypeScript; a TypeScript developer expects some
+  `package.json` scripts.
+
+| Shell script | npm alias | Job |
+| --- | --- | --- |
+| `./check_codebase.sh` | `npm run check` | Typecheck, lint, format-check, Node unit tests |
+| `./build_github_pages.sh` | `npm run build` | Build the esbuild bundle into `dist/` |
+| `./run_web_server.sh` | `npm run serve` | Build and serve `dist/` on a random port |
+| `./dist_clean.sh` | `npm run clean` | Remove `dist/` |
+| `./run_playwright_tests.sh` | `npm run test:playwright` | Build as needed, then run Playwright browser tests |
+
+The remaining `package.json` aliases have no shell-script front door. Run their
+direct command instead of the alias when you are not in an npm workflow. Use the
+locally-installed form (`npx ...`) so the command works without a global install:
+
+| npm alias | Direct command |
+| --- | --- |
+| `npm run format:write` | `npx prettier --write '**/*.{ts,tsx,mts,cts,js,mjs,cjs}'` |
+| `npm run setup` | `./devel/setup_typescript.sh` |
+| `npm run setup:playwright` | `./devel/setup_playwright.sh` |
+
+The `tools/html_to_pdf.mjs` HTML-to-PDF tool is run directly
+(`node tools/html_to_pdf.mjs`), documented in
+[PLAYWRIGHT_USAGE.md](PLAYWRIGHT_USAGE.md); several repos also expose an optional `pdf` npm
+alias that mirrors it 1:1.
+
+### Shell scripts versus Python scripts
+
+Use shell scripts for simple command orchestration: a short, linear sequence of
+existing tools. Use a named Python script when the workflow needs branching,
+parsing, validation, file discovery, structured output, or reusable logic. A
+future Python helper stays named and directly runnable
+(`./calculate_scene_metrics.py` or `python3 calculate_scene_metrics.py`), with a
+shell wrapper only when it improves usability, never a hidden alias.
+
 ### Canonical scripts
 
-- `[build_github_pages.sh](../build_github_pages.sh)` (build esbuild bundle).
-- `[run_web_server.sh](../run_web_server.sh)` (serve `dist/` on random port).
-- `[check_codebase.sh](../check_codebase.sh)` (orchestrates typecheck, wider typecheck via `tsconfig.lint.json`, lint, format-check, css-policy if present, and Node unit tests; build and Playwright are explicitly out of scope and run separately via `npm run build` / `npm run test:playwright`).
-- `[dist_clean.sh](../dist_clean.sh)` (wipe `dist/`).
+See the shell-script/npm-alias table above for the full list of scripts and their jobs.
+Script names for reference:
+`build_github_pages.sh`, `run_web_server.sh`, `check_codebase.sh`,
+`dist_clean.sh`, `run_playwright_tests.sh`.
 
 ### Module system
 
@@ -277,6 +459,32 @@ ESM only. No IIFE. No file:// loading path.
 ### Lockfile policy
 
 `package-lock.json` committed in every TS consumer repo. Not propagated by `propagate_style_guides.py` (per-repo artifact, generated by `npm install` at bootstrap). `yarn.lock` and `pnpm-lock.yaml` not used.
+
+## Live demo / GitHub Pages
+
+When a repo deploys to GitHub Pages, link the live instance near the top of the README so
+readers can play or run the project in one click, right from the browser without cloning or
+building it locally. Treat this as a chosen convention: it began as
+`science-choose-adventure`'s single "Play it live:" line and is promoted here to a standard
+that any Pages-deploying repo opts into.
+
+### Pages deployment shape
+
+These repos deploy through GitHub Actions from the build output:
+
+- `build_github_pages.sh` emits the site into `dist/`, including `dist/.nojekyll`, and `dist/`
+  is the published site root.
+- A root-level `deploy-pages.yml` workflow seed ships alongside the repo files. A human moves
+  it into the workflows directory to activate it. Root placement is the convention: agents
+  edit only repo-root files, so the seed ships cleanly at the root and a human completes the
+  move into the workflows directory.
+
+### Live URL in the README
+
+- Link the live instance as `https://<owner>.github.io/<repo>/`.
+- Place the link near the top of the README, on its own line just below the first paragraph.
+- Keep the first paragraph as pure prose. It is the GitHub About source text per the README
+  first-paragraph rule in docs/REPO_STYLE.md, so the live-URL line sits just below it.
 
 ## CONFIGURATION
 
@@ -288,12 +496,17 @@ ESM only. No IIFE. No file:// loading path.
 
 This is the baseline TypeScript repository layout:
 
-- `src/main.ts` &mdash; entry point (legacy `src/init.ts` accepted via fallback in `build_github_pages.sh`).
+- `src/main.ts` &mdash; canonical entry point (`src/main.tsx` for JSX or Solid).
 - `src/index.html` &mdash; HTML host with `<script type="module" src="main.js">`.
 - `src/style.css` &mdash; stylesheet copied verbatim into `dist/`.
 - `dist/` &mdash; only build output (canonical GitHub Pages artifact).
 
-This is the canonical floor, not a ceiling. Per-repo additions (`src/*.ts` modules, `tests/test_*.mjs`, `tests/playwright/*.spec.ts`) are expected and not constrained. `check_codebase.sh` step 6 (`node --import tsx --test 'tests/test_*.mjs'`) SKIPs cleanly (does not fail the gate) when no `tests/test_*.mjs` files are present, so a fresh consumer can land its first test without a placeholder smoke file shipped by the template.
+Entry point: `src/main.ts` (or `src/main.tsx` for JSX/Solid) is canonical. `src/init.ts` is
+LEGACY: `build_github_pages.sh` still accepts it as a fallback and prints a rename warning, so
+migrate it to `src/main.ts`. The names are not co-equal; `main.ts`/`main.tsx` is the target
+and `init.ts` is deprecated.
+
+This is the canonical floor, not a ceiling. Per-repo additions (`src/*.ts` modules, `tests/test_*.mjs`, `tests/playwright/*.spec.ts`) are expected and not constrained. `src/` modules use snake_case filenames and may be organized into grouping subdirectories as a repo grows. `check_codebase.sh` step 6 (`node --import tsx --test 'tests/test_*.mjs'`) SKIPs cleanly (does not fail the gate) when no `tests/test_*.mjs` files are present, so a fresh consumer can land its first test without a placeholder smoke file shipped by the template.
 
 ## ARGUMENT PARSING
 

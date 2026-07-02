@@ -25,18 +25,18 @@ import { SpatialHash, recordRebuild } from "./spatial_hash";
  *   a fresh index is semantically equivalent to a "rebuild" for perf tracking).
  */
 export function buildAgentIndex(
-	passengers: readonly Passenger[],
-	cellSize: number,
+  passengers: readonly Passenger[],
+  cellSize: number,
 ): SpatialHash<number> {
-	const index = new SpatialHash<number>(cellSize);
-	for (const passenger of passengers) {
-		index.insert(passenger.id, passenger.position.x, passenger.position.y);
-	}
+  const index = new SpatialHash<number>(cellSize);
+  for (const passenger of passengers) {
+    index.insert(passenger.id, passenger.position.x, passenger.position.y);
+  }
 
-	// Instrumentation: record the rebuild event.
-	recordRebuild();
+  // Instrumentation: record the rebuild event.
+  recordRebuild();
 
-	return index;
+  return index;
 }
 
 //============================================
@@ -58,15 +58,15 @@ export function buildAgentIndex(
  *   sorted by ID ascending.
  */
 export function queryNeighborIds(
-	index: SpatialHash<number>,
-	passenger: Passenger,
-	radius: number,
+  index: SpatialHash<number>,
+  passenger: Passenger,
+  radius: number,
 ): readonly number[] {
-	const candidates = index.query(passenger.position.x, passenger.position.y, radius);
+  const candidates = index.query(passenger.position.x, passenger.position.y, radius);
 
-	// Filter out self.
-	const result = candidates.filter((id) => id !== passenger.id);
-	return result;
+  // Filter out self.
+  const result = candidates.filter((id) => id !== passenger.id);
+  return result;
 }
 
 //============================================
@@ -88,45 +88,45 @@ export function queryNeighborIds(
  *   distance ascending, then id ascending. Self is excluded.
  */
 export function queryNeighborsWithinDistance(
-	passengers: readonly Passenger[],
-	index: SpatialHash<number>,
-	passenger: Passenger,
-	radius: number,
+  passengers: readonly Passenger[],
+  index: SpatialHash<number>,
+  passenger: Passenger,
+  radius: number,
 ): readonly { id: number; distance: number }[] {
-	const candidates = index.query(passenger.position.x, passenger.position.y, radius);
+  const candidates = index.query(passenger.position.x, passenger.position.y, radius);
 
-	// Build a map for quick lookup.
-	const passengerMap = new Map<number, Passenger>();
-	for (const p of passengers) {
-		passengerMap.set(p.id, p);
-	}
+  // Build a map for quick lookup.
+  const passengerMap = new Map<number, Passenger>();
+  for (const p of passengers) {
+    passengerMap.set(p.id, p);
+  }
 
-	// Compute exact distances and filter by radius.
-	const results: { id: number; distance: number }[] = [];
-	for (const id of candidates) {
-		if (id === passenger.id) {
-			continue;
-		}
-		const other = passengerMap.get(id);
-		if (other === undefined) {
-			continue;
-		}
-		const dx = other.position.x - passenger.position.x;
-		const dy = other.position.y - passenger.position.y;
-		const distance = Math.sqrt(dx * dx + dy * dy);
-		if (distance <= radius) {
-			results.push({ id, distance });
-		}
-	}
+  // Compute exact distances and filter by radius.
+  const results: { id: number; distance: number }[] = [];
+  for (const id of candidates) {
+    if (id === passenger.id) {
+      continue;
+    }
+    const other = passengerMap.get(id);
+    if (other === undefined) {
+      continue;
+    }
+    const dx = other.position.x - passenger.position.x;
+    const dy = other.position.y - passenger.position.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    if (distance <= radius) {
+      results.push({ id, distance });
+    }
+  }
 
-	// Sort by distance, then by id.
-	results.sort((a, b) => {
-		const distDiff = a.distance - b.distance;
-		if (distDiff !== 0) {
-			return distDiff;
-		}
-		return a.id - b.id;
-	});
+  // Sort by distance, then by id.
+  results.sort((a, b) => {
+    const distDiff = a.distance - b.distance;
+    if (distDiff !== 0) {
+      return distDiff;
+    }
+    return a.id - b.id;
+  });
 
-	return results;
+  return results;
 }

@@ -132,7 +132,7 @@ function Room({ room, type, tile, pad, selected, hovered, onClick, onMouseEnter 
           {shortenName(room.name)}
         </text>
       ) : (
-        // narrow rooms (corridors, lifeboat row, etc.) — small inline label
+        // narrow rooms (corridors, lifeboat row, etc.) - small inline label
         <text
           className="room-label"
           x={cx}
@@ -286,7 +286,7 @@ function RoomDecor({ room, type, tile, x, y, w, h }) {
               textAnchor="middle"
               opacity="0.55"
             >
-              ✦
+              &#x2726;
             </text>
           );
         })}
@@ -297,8 +297,8 @@ function RoomDecor({ room, type, tile, x, y, w, h }) {
 }
 
 function Door({ door, tile, pad }) {
-  // dir h: horizontal wall door (between row y-1 and row y) — width across X
-  // dir v: vertical   wall door (between col x-1 and col x) — height across Y
+  // dir h: horizontal wall door (between row y-1 and row y) - width across X
+  // dir v: vertical   wall door (between col x-1 and col x) - height across Y
   const px = pad + door.x * tile;
   const py = pad + door.y * tile;
   const len = tile * 0.55;
@@ -600,8 +600,8 @@ function Board({
       </g>
 
       {/* Bow / Stern markers */}
-      <text x={pad + 6} y={pad + innerH + 18} className="axis-label" fill="var(--brass, #c89849)">◀ BOW</text>
-      <text x={pad + innerW - 6} y={pad + innerH + 18} className="axis-label" fill="var(--brass, #c89849)" textAnchor="end">STERN ▶</text>
+      <text x={pad + 6} y={pad + innerH + 18} className="axis-label" fill="var(--brass, #c89849)">&#x25C0; BOW</text>
+      <text x={pad + innerW - 6} y={pad + innerH + 18} className="axis-label" fill="var(--brass, #c89849)" textAnchor="end">STERN &#x25B6;</text>
     </svg>
   );
 }

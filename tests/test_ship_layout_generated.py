@@ -15,7 +15,7 @@ import os
 import subprocess
 import sys
 
-import git_file_utils
+import file_utils
 
 
 #============================================
@@ -50,7 +50,7 @@ def test_generated_artifacts_fresh() -> None:
 
 	On failure, report which file drifted and suggest the fix.
 	"""
-	repo_root = git_file_utils.get_repo_root()
+	repo_root = file_utils.get_repo_root()
 
 	svg_path = os.path.join(repo_root, 'src', 'ship_schematic.svg')
 	ts_path = os.path.join(repo_root, 'src', 'ship_layout.generated.ts')

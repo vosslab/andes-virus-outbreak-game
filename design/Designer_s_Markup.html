@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Designer's Markup — Ship Handoff Reply</title>
+  <title>Designer's Markup - Ship Handoff Reply</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet" />
@@ -488,7 +488,7 @@
       padding-top: 8px;
     }
     .v-because::before {
-      content: "Why · ";
+      content: "Why * ";
       font-family: 'JetBrains Mono', monospace;
       font-style: normal;
       font-size: 10px;
@@ -662,41 +662,41 @@
             <path id="botArc2" d="M 12 42 A 28 28 0 0 0 68 42" />
           </defs>
           <text font-family="JetBrains Mono, monospace" font-size="6.5" font-weight="700" fill="#15212b" letter-spacing="1.4">
-            <textPath href="#topArc2" startOffset="50%" text-anchor="middle">M.S. VERITY · DESIGN</textPath>
+            <textPath href="#topArc2" startOffset="50%" text-anchor="middle">M.S. VERITY * DESIGN</textPath>
           </text>
           <text font-family="JetBrains Mono, monospace" font-size="5" font-weight="600" fill="#7a5b1d" letter-spacing="1.6">
-            <textPath href="#botArc2" startOffset="50%" text-anchor="middle">SPEC OF RECORD · v2.1</textPath>
+            <textPath href="#botArc2" startOffset="50%" text-anchor="middle">SPEC OF RECORD * v2.1</textPath>
           </text>
         </svg>
       </div>
       <div class="meta">
-        <div class="doc-kind">Internal · Designer's Markup · 02 of 03</div>
-        <h1 class="doc-title">Re: Ship Handoff · Q1–Q8</h1>
-        <div class="doc-sub">Replying to <code>designer_handoff_20260523.md</code> — verdicts on each open call, plus three small things you didn't ask for.</div>
+        <div class="doc-kind">Internal * Designer's Markup * 02 of 03</div>
+        <h1 class="doc-title">Re: Ship Handoff * Q1-Q8</h1>
+        <div class="doc-sub">Replying to <code>designer_handoff_20260523.md</code> - verdicts on each open call, plus three small things you didn't ask for.</div>
       </div>
       <div class="doc-stamp">
         <span class="stamp">Marked Up
-          <span class="date">2026-05-23 · 16:40</span>
+          <span class="date">2026-05-23 * 16:40</span>
         </span>
       </div>
     </header>
 
     <!-- ===== From / To ===== -->
     <section class="header-grid">
-      <div class="k">To</div><div class="v">Engineering · sim track</div>
+      <div class="k">To</div><div class="v">Engineering * sim track</div>
       <div class="k">Repo</div><div class="v"><code>hantavirus-outbreak-game</code></div>
-      <div class="k">From</div><div class="v">Designer · ship layout</div>
-      <div class="k">Spec</div><div class="v"><code>data/ship.yaml</code> · 36×20 · 28px</div>
-      <div class="k">Re</div><div class="v">8 questions · 8 calls · ship unblocked</div>
+      <div class="k">From</div><div class="v">Designer * ship layout</div>
+      <div class="k">Spec</div><div class="v"><code>data/ship.yaml</code> * 36x20 * 28px</div>
+      <div class="k">Re</div><div class="v">8 questions * 8 calls * ship unblocked</div>
       <div class="k">Cc</div><div class="v mute">Manager (FYI on R2 prereq)</div>
     </section>
 
     <!-- ===== Headline ===== -->
     <section class="section">
       <div class="section-head">
-        <span class="num">§01</span>
+        <span class="num">&sect;01</span>
         <h2>The call, in tallies</h2>
-        <span class="tag">Q1 → Q8 · verdicts</span>
+        <span class="tag">Q1 -> Q8 * verdicts</span>
       </div>
     </section>
     <div class="headline">
@@ -707,7 +707,7 @@
         <div class="tally asis"><span class="n">0</span><span class="l">Ship as-is</span></div>
         <div class="tally"><span class="n" style="font-size:30px;color:var(--markup-red)">+3</span><span class="l" style="color:var(--markup-red)">Off-list</span></div>
         <div class="text">
-          The hull and the 36×20 grid are <em>spec of record</em> — nothing structural is changing.
+          The hull and the 36x20 grid are <em>spec of record</em> - nothing structural is changing.
           Most of what you flagged is a small geometry or palette change in <code>data/ship.yaml</code>,
           plus three off-list adds I want in this iteration before <code>large_crowd</code> goes live.
         </div>
@@ -717,13 +717,13 @@
     <!-- ===== Marked-up blueprint ===== -->
     <section class="section">
       <div class="section-head">
-        <span class="num">§02</span>
+        <span class="num">&sect;02</span>
         <h2>The marked-up blueprint</h2>
-        <span class="tag">red ink · proposed deltas</span>
+        <span class="tag">red ink * proposed deltas</span>
       </div>
     </section>
     <div class="blueprint-wrap">
-      <div class="blueprint-title">M.S. Verity · Tile Coord Grid · proposed deltas</div>
+      <div class="blueprint-title">M.S. Verity * Tile Coord Grid * proposed deltas</div>
       <div class="corners"></div>
       <!-- The blueprint SVG: rooms drawn at relative scale + red markup annotations -->
       <svg class="blueprint-svg" viewBox="0 0 960 460" xmlns="http://www.w3.org/2000/svg">
@@ -758,20 +758,20 @@
 
         <!-- Axis labels: columns A,F,K,P,U,Z,AE -->
         <g font-size="9" font-weight="700" fill="#7a5b1d" letter-spacing="1" font-family="JetBrains Mono, monospace" text-anchor="middle">
-          <text x="100" y="14">A–E</text>
-          <text x="220" y="14">F–J</text>
-          <text x="340" y="14">K–O</text>
-          <text x="460" y="14">P–T</text>
-          <text x="580" y="14">U–Y</text>
-          <text x="700" y="14">Z–AD</text>
-          <text x="820" y="14">AE–AI</text>
+          <text x="100" y="14">A-E</text>
+          <text x="220" y="14">F-J</text>
+          <text x="340" y="14">K-O</text>
+          <text x="460" y="14">P-T</text>
+          <text x="580" y="14">U-Y</text>
+          <text x="700" y="14">Z-AD</text>
+          <text x="820" y="14">AE-AI</text>
         </g>
         <g font-size="9" font-weight="700" fill="#7a5b1d" font-family="JetBrains Mono, monospace" text-anchor="end">
-          <text x="32" y="60">01–04</text>
-          <text x="32" y="160">05–09</text>
-          <text x="32" y="220">10–11</text>
-          <text x="32" y="300">12–14</text>
-          <text x="32" y="400">15–20</text>
+          <text x="32" y="60">01-04</text>
+          <text x="32" y="160">05-09</text>
+          <text x="32" y="220">10-11</text>
+          <text x="32" y="300">12-14</text>
+          <text x="32" y="400">15-20</text>
         </g>
 
         <!-- Hull (smoothed) -->
@@ -793,7 +793,7 @@
         <text x="100" y="113" font-size="9" font-family="Space Grotesk" fill="#3a2e10" text-anchor="middle">Fwd Promenade P</text>
         <!-- Bridge -->
         <rect x="40" y="160" width="96" height="120" fill="#1f3a4d" stroke="rgba(20,30,40,0.6)" />
-        <text x="88" y="223" font-size="10" font-weight="600" font-family="Space Grotesk" fill="#f3e6c8" text-anchor="middle">Bridge ⚓</text>
+        <text x="88" y="223" font-size="10" font-weight="600" font-family="Space Grotesk" fill="#f3e6c8" text-anchor="middle">Bridge &#x2693;</text>
         <!-- Fwd promenade S -->
         <rect x="64" y="280" width="72" height="100" fill="#d6c89e" stroke="rgba(20,30,40,0.4)" />
         <text x="100" y="333" font-size="9" font-family="Space Grotesk" fill="#3a2e10" text-anchor="middle">Fwd Promenade S</text>
@@ -811,12 +811,12 @@
           <text x="352" y="93">Cabins P2</text>
           <text x="484" y="93">Cabins P3</text>
           <text x="604" y="93">Cabins P4</text>
-          <text x="724" y="93">Owner ★</text>
+          <text x="724" y="93">Owner &#x2605;</text>
         </g>
 
         <!-- Port corridor -->
         <rect x="136" y="120" width="648" height="20" fill="#ece1c2" stroke="rgba(20,30,40,0.4)" />
-        <text x="460" y="134" font-size="9" font-family="Space Grotesk" fill="#5a4a30" text-anchor="middle">— — — — Port Corridor — — — —</text>
+        <text x="460" y="134" font-size="9" font-family="Space Grotesk" fill="#5a4a30" text-anchor="middle">- - - - Port Corridor - - - -</text>
 
         <!-- Top inner row (y6..y8): spa library dining galley casino theater -->
         <g stroke="rgba(20,30,40,0.4)" stroke-width="0.8">
@@ -838,7 +838,7 @@
 
         <!-- Atrium -->
         <rect x="136" y="200" width="648" height="40" fill="#f3d889" stroke="rgba(20,30,40,0.5)" />
-        <text x="460" y="225" font-size="11" font-weight="600" font-family="Bricolage Grotesque" fill="#5a4010" text-anchor="middle">✦ Grand Atrium ✦ ✦ ✦</text>
+        <text x="460" y="225" font-size="11" font-weight="600" font-family="Bricolage Grotesque" fill="#5a4010" text-anchor="middle">&#x2726; Grand Atrium &#x2726; &#x2726; &#x2726;</text>
 
         <!-- Bottom inner (y11..y13): infirmary, isolation, gym, pool, arcade, kids -->
         <g stroke="rgba(20,30,40,0.4)" stroke-width="0.8">
@@ -851,17 +851,17 @@
           <rect x="664" y="240" width="120" height="60" fill="#e89a6a" />
         </g>
         <g font-size="9" font-family="Space Grotesk" text-anchor="middle">
-          <text x="184" y="273" fill="#5a1010">Infirmary ✚</text>
+          <text x="184" y="273" fill="#5a1010">Infirmary &#x271A;</text>
           <text x="268" y="273" fill="#3a1040">Isolation</text>
           <text x="352" y="273" fill="#1a4d2e">Gym</text>
-          <text x="472" y="273" fill="#5a2010">Pool ◌</text>
+          <text x="472" y="273" fill="#5a2010">Pool &#x25CC;</text>
           <text x="604" y="273" fill="#5a2010">Arcade</text>
           <text x="724" y="273" fill="#5a2010">Kids Club</text>
         </g>
 
         <!-- Starboard corridor -->
         <rect x="136" y="300" width="648" height="20" fill="#ece1c2" stroke="rgba(20,30,40,0.4)" />
-        <text x="460" y="314" font-size="9" font-family="Space Grotesk" fill="#5a4a30" text-anchor="middle">— — — — Starboard Corridor — — — —</text>
+        <text x="460" y="314" font-size="9" font-family="Space Grotesk" fill="#5a4a30" text-anchor="middle">- - - - Starboard Corridor - - - -</text>
 
         <!-- Cabins starboard -->
         <g stroke="rgba(20,30,40,0.4)" stroke-width="0.8">
@@ -876,7 +876,7 @@
           <text x="352" y="353">Cabins S2</text>
           <text x="484" y="353">Cabins S3</text>
           <text x="604" y="353">Cabins S4</text>
-          <text x="724" y="353">Owner ★</text>
+          <text x="724" y="353">Owner &#x2605;</text>
         </g>
 
         <!-- Lifeboats starboard -->
@@ -898,9 +898,9 @@
           <text x="852" y="103" fill="#2a2810">Crew Quarters</text>
           <text x="852" y="173" fill="#1a1810">Crew Mess</text>
           <text x="852" y="225" fill="#f3e6c8">Comms</text>
-          <text x="852" y="283" fill="#1a1810">Engineering ⚙</text>
+          <text x="852" y="283" fill="#1a1810">Engineering &#x2699;</text>
           <text x="852" y="353" fill="#f3e6c8">Tender Bay</text>
-          <text x="852" y="404" fill="#f3e6c8" font-weight="700">Helideck — H</text>
+          <text x="852" y="404" fill="#f3e6c8" font-weight="700">Helideck - H</text>
         </g>
 
         <!-- ===== RED MARKUP OVERLAY ===== -->
@@ -909,17 +909,17 @@
                obs_s right edge ~ x=136 ; door at top of cab_s1 mid-port ~ (136, 350) -->
           <circle cx="136" cy="346" r="9" fill="#c0392b" fill-opacity="0.15" stroke-width="2.5" />
           <line x1="136" y1="346" x2="180" y2="392" stroke-width="1.5" />
-          <text x="184" y="396" fill="#c0392b">+ door · obs_s ↔ cab_s1</text>
+          <text x="184" y="396" fill="#c0392b">+ door * obs_s <-> cab_s1</text>
 
-          <!-- Q1b: door at sun_deck → crew_q -->
+          <!-- Q1b: door at sun_deck -> crew_q -->
           <circle cx="852" cy="60" r="9" fill="#c0392b" fill-opacity="0.15" stroke-width="2.5" />
           <line x1="852" y1="60" x2="780" y2="44" stroke-width="1.5" />
-          <text x="618" y="48" fill="#c0392b">+ door · sun_deck ↔ crew_q</text>
+          <text x="618" y="48" fill="#c0392b">+ door * sun_deck <-> crew_q</text>
 
-          <!-- Q1c: door at helideck → tender_bay -->
+          <!-- Q1c: door at helideck -> tender_bay -->
           <circle cx="852" cy="380" r="9" fill="#c0392b" fill-opacity="0.15" stroke-width="2.5" />
           <line x1="852" y1="380" x2="780" y2="402" stroke-width="1.5" />
-          <text x="610" y="412" fill="#c0392b">+ door · helideck ↔ tender_bay</text>
+          <text x="610" y="412" fill="#c0392b">+ door * helideck <-> tender_bay</text>
 
           <!-- Q2: secondary cabin doors (port row) -->
           <line x1="178" y1="120" x2="178" y2="115" stroke-width="2.5" />
@@ -934,7 +934,7 @@
 
           <!-- Q3: atrium service stairwell (crew bypass) -->
           <rect x="468" y="208" width="16" height="24" stroke-width="2" stroke-dasharray="3 2" />
-          <text x="478" y="200" fill="#c0392b">+ stairwell · crew bypass</text>
+          <text x="478" y="200" fill="#c0392b">+ stairwell * crew bypass</text>
           <line x1="478" y1="198" x2="478" y2="208" stroke-width="1" />
 
           <!-- Q6: muster stars on lifeboat rows -->
@@ -946,11 +946,11 @@
             <circle cx="448" cy="400" r="5" />
             <circle cx="680" cy="400" r="5" />
           </g>
-          <text x="448" y="68" fill="#c0392b" text-anchor="middle">muster points · drill scenario</text>
+          <text x="448" y="68" fill="#c0392b" text-anchor="middle">muster points * drill scenario</text>
 
           <!-- Q7: isolation new color callout -->
           <line x1="268" y1="240" x2="268" y2="232" stroke-width="2" />
-          <text x="148" y="226" fill="#c0392b" transform="rotate(-2 148 226)">isolation → purple (was red)</text>
+          <text x="148" y="226" fill="#c0392b" transform="rotate(-2 148 226)">isolation -> purple (was red)</text>
 
           <!-- Q6 evac arrow on helideck -->
           <path d="M 800 396 L 836 396 L 832 392 M 836 396 L 832 400" stroke-width="2" />
@@ -968,24 +968,24 @@
         </g>
 
         <!-- Bow / Stern markers -->
-        <text x="48" y="448" font-family="JetBrains Mono, monospace" font-size="10" font-weight="700" fill="#b48838" letter-spacing="1.4">◀ BOW</text>
-        <text x="908" y="448" font-family="JetBrains Mono, monospace" font-size="10" font-weight="700" fill="#b48838" letter-spacing="1.4" text-anchor="end">STERN ▶</text>
+        <text x="48" y="448" font-family="JetBrains Mono, monospace" font-size="10" font-weight="700" fill="#b48838" letter-spacing="1.4">&#x25C0; BOW</text>
+        <text x="908" y="448" font-family="JetBrains Mono, monospace" font-size="10" font-weight="700" fill="#b48838" letter-spacing="1.4" text-anchor="end">STERN &#x25B6;</text>
       </svg>
 
       <div class="bp-legend">
         <span class="swatch add">add door</span>
         <span class="swatch move">add stairwell</span>
         <span class="swatch muster">muster point</span>
-        <span style="opacity:0.7">all callouts → see Q-cards below</span>
+        <span style="opacity:0.7">all callouts -> see Q-cards below</span>
       </div>
     </div>
 
     <!-- ===== Q1-Q8 verdict cards ===== -->
     <section class="section">
       <div class="section-head">
-        <span class="num">§03</span>
+        <span class="num">&sect;03</span>
         <h2>Verdicts</h2>
-        <span class="tag">Q1–Q8 · with specs</span>
+        <span class="tag">Q1-Q8 * with specs</span>
       </div>
     </section>
 
@@ -1000,14 +1000,14 @@
             <span class="verdict-pill v-adjust">Adjust</span>
           </div>
           <div class="v-decision">
-            Add the three missing doors. None of these is intentionally isolated — the starboard
+            Add the three missing doors. None of these is intentionally isolated - the starboard
             promenade is just a missing mirror, and a ship where passengers can't <em>ever</em> reach
             the sun deck or the helideck flattens the playable space too much.
           </div>
-<div class="v-spec"><span class="c"># data/ship.yaml — doors:</span>
-- { x: 4,  y: 16, dir: v }   <span class="c"># obs_s ↔ cab_s1</span>
-- { x: 31, y: 1,  dir: h }   <span class="c"># sun_deck ↔ crew_q</span>
-- { x: 31, y: 18, dir: h }   <span class="c"># tender_bay ↔ helideck</span></div>
+<div class="v-spec"><span class="c"># data/ship.yaml - doors:</span>
+- { x: 4,  y: 16, dir: v }   <span class="c"># obs_s <-> cab_s1</span>
+- { x: 31, y: 1,  dir: h }   <span class="c"># sun_deck <-> crew_q</span>
+- { x: 31, y: 18, dir: h }   <span class="c"># tender_bay <-> helideck</span></div>
           <div class="v-because">Three lines of YAML; cost is trivial. Helideck specifically is needed for Q6's evac goal.</div>
         </div>
 
@@ -1020,15 +1020,15 @@
           </div>
           <div class="v-decision">
             Two-tier answer. <em>Add</em> a secondary door to every cabin run (18 occupants : 1 door is
-            unrealistic and floods the corridor on muster). <em>Keep</em> atrium ↔ dining, atrium ↔ galley,
-            and lifeboat exits narrow on purpose — those are the pedagogical chokepoints.
+            unrealistic and floods the corridor on muster). <em>Keep</em> atrium <-> dining, atrium <-> galley,
+            and lifeboat exits narrow on purpose - those are the pedagogical chokepoints.
           </div>
 <div class="v-spec"><span class="c"># add a 2nd door at the far end of each cabin block:</span>
-- { x: 4,  y: 5,  dir: h }   <span class="c"># cab_p1 mid → corridor (in addition to x:7)</span>
+- { x: 4,  y: 5,  dir: h }   <span class="c"># cab_p1 mid -> corridor (in addition to x:7)</span>
 - { x: 16, y: 5,  dir: h }   <span class="c"># cab_p2 mid</span>
 - { x: 21, y: 5,  dir: h }   <span class="c"># cab_p3 mid</span>
-<span class="c"># …mirror on starboard at y:15</span></div>
-          <div class="v-because">Goal: cabin → corridor egress under ~6s at N=1000. Chokepoint <em>education</em> stays at the atrium tier.</div>
+<span class="c"># ...mirror on starboard at y:15</span></div>
+          <div class="v-because">Goal: cabin -> corridor egress under ~6s at N=1000. Chokepoint <em>education</em> stays at the atrium tier.</div>
         </div>
 
         <!-- Q3 -->
@@ -1039,9 +1039,9 @@
             <span class="verdict-pill v-adjust">Adjust</span>
           </div>
           <div class="v-decision">
-            Keep the full-beam atrium — it's the visual hero of the ship and the dramatic
+            Keep the full-beam atrium - it's the visual hero of the ship and the dramatic
             transmission cell the educational story turns on. Add a <em>service stairwell</em> at
-            <code>R10–11 · P–Q</code> that crew can route through, so officer/crew agents have a
+            <code>R10-11 * P-Q</code> that crew can route through, so officer/crew agents have a
             bypass and the player can observe crew-as-vector independently.
           </div>
 <div class="v-spec"><span class="c"># new room type:</span>
@@ -1061,13 +1061,13 @@ service_stair: { fill: "#7c8c99", ink: "#f3e6c8", label: "Stairs" }
           </div>
           <div class="v-decision">
             Keep the one-block-per-run abstraction in v1. Sub-dividing means doubling the door
-            count and re-doing every cabin label — too much geometry churn ahead of
+            count and re-doing every cabin label - too much geometry churn ahead of
             <code>large_crowd</code> launch. Revisit if cabin-internal contact tracing becomes a
             stated educational goal.
           </div>
 <div class="v-spec"><span class="c"># revisit AFTER large_crowd ships</span>
-<span class="c"># proposed v2: each cab_pN → 3 sub-cells, doors to corridor only</span>
-<span class="c"># cost: ~30 new doors, ~24 new rooms — schedule with a v2 design pass</span></div>
+<span class="c"># proposed v2: each cab_pN -> 3 sub-cells, doors to corridor only</span>
+<span class="c"># cost: ~30 new doors, ~24 new rooms - schedule with a v2 design pass</span></div>
           <div class="v-because">Abstraction is honest at the educational level we're targeting. Don't gold-plate before perf is fixed.</div>
         </div>
 
@@ -1079,21 +1079,21 @@ service_stair: { fill: "#7c8c99", ink: "#f3e6c8", label: "Stairs" }
             <span class="verdict-pill v-adjust">Adjust</span>
           </div>
           <div class="v-decision">
-            Yes — wire the glyphs. Render at 50% opacity, top-right corner of each room. Improves
+            Yes - wire the glyphs. Render at 50% opacity, top-right corner of each room. Improves
             scannability in the live sim when text labels overlap with agent dots. Glyph set below;
             HTML entities (numeric form) carry through to SVG cleanly.
           </div>
-<div class="v-spec"><span class="c"># types in data/ship.yaml — glyph field:</span>
-command:   { glyph: "⚓" }   <span class="c"># U+2693</span>
-suite:     { glyph: "★" }   <span class="c"># U+2605</span>
-medical:   { glyph: "✚" }   <span class="c"># U+271A</span>
-atrium:    { glyph: "✦" }   <span class="c"># U+2726</span>
-food:      { glyph: "◍" }   <span class="c"># U+25CD  (was empty)</span>
-wellness:  { glyph: "❀" }   <span class="c"># U+2740  (was empty)</span>
-crew:      { glyph: "⚙" }   <span class="c"># U+2699  (was empty)</span>
-emergency: { glyph: "⛑" }   <span class="c"># U+26D1  (was empty)</span>
-transit:   { glyph: "↦" }   <span class="c"># U+21A6  (was empty)</span>
-leisure:   { glyph: "♦" }   <span class="c"># U+2666  (was empty)</span></div>
+<div class="v-spec"><span class="c"># types in data/ship.yaml - glyph field:</span>
+command:   { glyph: "&#x2693;" }   <span class="c"># U+2693</span>
+suite:     { glyph: "&#x2605;" }   <span class="c"># U+2605</span>
+medical:   { glyph: "&#x271A;" }   <span class="c"># U+271A</span>
+atrium:    { glyph: "&#x2726;" }   <span class="c"># U+2726</span>
+food:      { glyph: "&#x25CD;" }   <span class="c"># U+25CD  (was empty)</span>
+wellness:  { glyph: "&#x2740;" }   <span class="c"># U+2740  (was empty)</span>
+crew:      { glyph: "&#x2699;" }   <span class="c"># U+2699  (was empty)</span>
+emergency: { glyph: "&#x26D1;" }   <span class="c"># U+26D1  (was empty)</span>
+transit:   { glyph: "&#x21A6;" }   <span class="c"># U+21A6  (was empty)</span>
+leisure:   { glyph: "&#x2666;" }   <span class="c"># U+2666  (was empty)</span></div>
           <div class="v-because">Color carries type; glyph carries <em>category at distance</em>. Two-channel encoding survives small render sizes.</div>
         </div>
 
@@ -1106,13 +1106,13 @@ leisure:   { glyph: "♦" }   <span class="c"># U+2666  (was empty)</span></div>
           </div>
           <div class="v-decision">
             They should be <em>evacuation goals</em>, not display-only. Cruise outbreaks turn on muster
-            drills and medical evac — these are the highest-signal events the sim can produce.
+            drills and medical evac - these are the highest-signal events the sim can produce.
             Helideck = medical-evac override for severe agents; lifeboats = muster points in a new
             <code>drill</code> scenario.
           </div>
 <div class="v-spec"><span class="c"># role hints (consumed by routing override):</span>
 helideck:        { gameplay: med_evac_goal,
-                   trigger: "agent.state == infected && severity ≥ 0.7" }
+                   trigger: "agent.state == infected && severity >= 0.7" }
 lifeboat_p / _s: { gameplay: muster_point,
                    trigger: "scenario == 'drill'" }
 <span class="c"># scenario to add in src/scenarios.ts: 'drill'</span></div>
@@ -1134,8 +1134,8 @@ lifeboat_p / _s: { gameplay: muster_point,
           </div>
 <div class="v-spec">medical:   { fill: "#f08a8a", ink: "#5a1010" }   <span class="c"># unchanged</span>
 isolation: { fill: "#b6a0d0", ink: "#3a1040",        <span class="c"># NEW (was medical)</span>
-             glyph: "⊘" }                            <span class="c"># U+2298</span>
-<span class="c"># rooms[].type for "isolation" room → "isolation" (new type)</span></div>
+             glyph: "&#x2298;" }                       <span class="c"># U+2298</span>
+<span class="c"># rooms[].type for "isolation" room -> "isolation" (new type)</span></div>
           <div class="v-because">Two rooms shared one color and one of them was a gameplay state. Disambiguate.</div>
         </div>
 
@@ -1147,17 +1147,17 @@ isolation: { fill: "#b6a0d0", ink: "#3a1040",        <span class="c"># NEW (was 
             <span class="verdict-pill v-adjust">Adjust</span>
           </div>
           <div class="v-decision">
-            Narrative placement — let the opening tableau tell a small story the player can read in
+            Narrative placement - let the opening tableau tell a small story the player can read in
             10 seconds. Patient-zero is a casino weekend exposure; the crew galley operator is
             the second-chain vector; the doctor is staffing the infirmary; the kids club seeds a
             family-spread thread. The remaining 11 stay roughly where they are.
           </div>
-<div class="v-spec"><span class="c"># data/ship.yaml — agents (deltas only):</span>
-- { id: A12, name: "Carl Brandt",   state: exposed,     x: 23, y: 7  }  <span class="c"># → Casino</span>
-- { id: A06, name: "Omar Haddad",   state: crew,        x: 19, y: 7  }  <span class="c"># → Galley</span>
-- { id: A07, name: "Inez Cruz",     state: crew,        x: 5,  y: 12 }  <span class="c"># → Infirmary</span>
-- { id: A09, name: "Sora Matsui",   state: healthy,     x: 28, y: 12 }  <span class="c"># → Kids Club</span>
-- { id: A03, name: "Dre Okafor",    state: symptomatic, x: 9,  y: 12 }  <span class="c"># → Isolation</span></div>
+<div class="v-spec"><span class="c"># data/ship.yaml - agents (deltas only):</span>
+- { id: A12, name: "Carl Brandt",   state: exposed,     x: 23, y: 7  }  <span class="c"># -> Casino</span>
+- { id: A06, name: "Omar Haddad",   state: crew,        x: 19, y: 7  }  <span class="c"># -> Galley</span>
+- { id: A07, name: "Inez Cruz",     state: crew,        x: 5,  y: 12 }  <span class="c"># -> Infirmary</span>
+- { id: A09, name: "Sora Matsui",   state: healthy,     x: 28, y: 12 }  <span class="c"># -> Kids Club</span>
+- { id: A03, name: "Dre Okafor",    state: symptomatic, x: 9,  y: 12 }  <span class="c"># -> Isolation</span></div>
           <div class="v-because">Costs nothing at runtime; gains a readable opening. Symptomatic agent <em>already</em> in isolation seeds the "early-detection worked" reading.</div>
         </div>
 
@@ -1167,9 +1167,9 @@ isolation: { fill: "#b6a0d0", ink: "#3a1040",        <span class="c"># NEW (was 
     <!-- ===== Off-list adds ===== -->
     <section class="section">
       <div class="section-head">
-        <span class="num">§04</span>
+        <span class="num">&sect;04</span>
         <h2>Three things you didn't ask for</h2>
-        <span class="tag">off-list · own them or push back</span>
+        <span class="tag">off-list * own them or push back</span>
       </div>
     </section>
     <div class="extras">
@@ -1181,7 +1181,7 @@ isolation: { fill: "#b6a0d0", ink: "#3a1040",        <span class="c"># NEW (was 
         </div>
         <div class="body">
           Right now agent positions are tile-precise but invisible. Expose a debug overlay that
-          renders the <code>A01–AJ20</code> coords on hover and the agent's current
+          renders the <code>A01-AJ20</code> coords on hover and the agent's current
           <code>(zone_id, tx, ty)</code> in a corner readout. Cheap, makes every other bug report
           ten times more legible. Hide behind <code>?debug=tiles</code>.
         </div>
@@ -1190,13 +1190,13 @@ isolation: { fill: "#b6a0d0", ink: "#3a1040",        <span class="c"># NEW (was 
       <div class="extra-card">
         <div class="h">
           <span class="tag">X2</span>
-          <span class="title">Door state — open/closed flag</span>
+          <span class="title">Door state - open/closed flag</span>
         </div>
         <div class="body">
           Doors are currently permeable-or-removed. Add an <code>open: bool</code> field that
           defaults to <code>true</code>. Closing a door at runtime (e.g., the
           <code>cabin_stay</code> scenario locking cabin secondary doors) becomes a one-line state
-          change instead of a regen. No movement logic change — closed doors are just impassable
+          change instead of a regen. No movement logic change - closed doors are just impassable
           like walls.
         </div>
       </div>
@@ -1210,7 +1210,7 @@ isolation: { fill: "#b6a0d0", ink: "#3a1040",        <span class="c"># NEW (was 
           The lifeboat row is currently one long room. Sub-divide into 8 stations
           (port: 4, starboard: 4) with an explicit <code>capacity: 12</code> on each. The
           <code>drill</code> scenario then has somewhere to assign agents and we get a queueing
-          signal we can actually plot. No new geometry — the row already spans 27 tiles.
+          signal we can actually plot. No new geometry - the row already spans 27 tiles.
         </div>
       </div>
     </div>
@@ -1221,28 +1221,28 @@ isolation: { fill: "#b6a0d0", ink: "#3a1040",        <span class="c"># NEW (was 
       <div class="signoff">
         <div class="decision">
           <span class="kicker">Disposition</span>
-          Ship is unblocked.<br />Adjust Q1–Q3, Q5–Q8 + X1–X3 this iteration.
+          Ship is unblocked.<br />Adjust Q1-Q3, Q5-Q8 + X1-X3 this iteration.
           <span class="terms">
             Q4 parked for v2. Total YAML delta: ~40 lines including off-list adds.
-            No hull or grid changes — coordinate system stays <code style="font-style:normal;font-family:'JetBrains Mono',monospace;font-size:13px;background:rgba(20,30,40,0.06);padding:0 4px;border-radius:2px;">36×20 @ 28px</code>.
+            No hull or grid changes - coordinate system stays <code style="font-style:normal;font-family:'JetBrains Mono',monospace;font-size:13px;background:rgba(20,30,40,0.06);padding:0 4px;border-radius:2px;">36x20 @ 28px</code>.
             Send me the regen output before <code style="font-style:normal;font-family:'JetBrains Mono',monospace;font-size:13px;background:rgba(20,30,40,0.06);padding:0 4px;border-radius:2px;">large_crowd</code> goes live.
           </span>
         </div>
         <div class="stamp-wrap">
           <span class="stamp blue">Approved
-            <span class="sub">for iteration · Q1–3 · Q5–8 · X1–3</span>
+            <span class="sub">for iteration * Q1-3 * Q5-8 * X1-3</span>
           </span>
-          <span class="signature">— A.S.</span>
-          <span class="scrawl-rule">Designer · 2026-05-23</span>
+          <span class="signature">- A.S.</span>
+          <span class="scrawl-rule">Designer * 2026-05-23</span>
         </div>
       </div>
     </div>
 
     <footer class="footer">
-      <span>Designer's Markup · 02/03</span>
+      <span>Designer's Markup * 02/03</span>
       <div class="filed">
         <span><strong>File:</strong> design/handoff_reply_2026-05-23.md</span>
-        <span><strong>Next:</strong> regen output → designer review</span>
+        <span><strong>Next:</strong> regen output -> designer review</span>
       </div>
     </footer>
   </article>

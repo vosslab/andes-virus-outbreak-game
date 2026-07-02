@@ -57,7 +57,7 @@ TUNING_TICKS = 100
 # Helper: read current cell size
 # ============================================
 
-def read_current_cell_size():
+def read_current_cell_size() -> int:
 	"""
 	Read SPATIAL_HASH_CELL_SIZE from src/sim_constants.ts.
 	Returns the integer value.
@@ -77,7 +77,7 @@ def read_current_cell_size():
 # Helper: write cell size
 # ============================================
 
-def write_cell_size(cell_size):
+def write_cell_size(cell_size: int) -> None:
 	"""
 	Update SPATIAL_HASH_CELL_SIZE in src/sim_constants.ts to the given value.
 	"""
@@ -102,7 +102,7 @@ def write_cell_size(cell_size):
 # Helper: run perf test and extract mean tick time
 # ============================================
 
-def run_perf_test_for_cell_size(cell_size):
+def run_perf_test_for_cell_size(cell_size: int) -> float | None:
 	"""
 	Run the perf budget test (via Node) with the current cell size.
 	Parses stdout for "Mean tick time: X.XXX ms" and returns the value.
@@ -148,7 +148,7 @@ def run_perf_test_for_cell_size(cell_size):
 # Main: sweep and report
 # ============================================
 
-def main():
+def main() -> None:
 	print("===========================================")
 	print("Spatial-Hash Cell-Size Tuning Study")
 	print("===========================================")

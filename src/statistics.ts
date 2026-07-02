@@ -3,134 +3,134 @@ import { getScenarioPreset } from "./scenarios";
 import { SHIP_ZONES } from "./ship_layout";
 
 import type {
-	HealthCounts,
-	HealthState,
-	Passenger,
-	SimulationState,
-	SimulationSummary,
-	ZoneContamination,
-	ZoneHealthSummary,
+  HealthCounts,
+  HealthState,
+  Passenger,
+  SimulationState,
+  SimulationSummary,
+  ZoneContamination,
+  ZoneHealthSummary,
 } from "./types/simulation";
 import type { ZoneId } from "./types/ship";
 
 const HEALTH_STATES: readonly HealthState[] = [
-	"healthy",
-	"exposed",
-	"pre_symptomatic",
-	"symptomatic",
-	"isolated",
-	"recovered",
+  "healthy",
+  "exposed",
+  "pre_symptomatic",
+  "symptomatic",
+  "isolated",
+  "recovered",
 ];
 
 export function summarizeSimulation(state: SimulationState): SimulationSummary {
-	const counts = countHealthStates(state.passengers);
-	const zoneSummaries = summarizeZones(state.passengers, state.zoneContamination);
-	const activeExposureCount =
-		counts.exposed + counts.pre_symptomatic + counts.symptomatic + counts.isolated;
-	const everExposedCount =
-		counts.exposed +
-		counts.pre_symptomatic +
-		counts.symptomatic +
-		counts.isolated +
-		counts.recovered;
+  const counts = countHealthStates(state.passengers);
+  const zoneSummaries = summarizeZones(state.passengers, state.zoneContamination);
+  const activeExposureCount =
+    counts.exposed + counts.pre_symptomatic + counts.symptomatic + counts.isolated;
+  const everExposedCount =
+    counts.exposed +
+    counts.pre_symptomatic +
+    counts.symptomatic +
+    counts.isolated +
+    counts.recovered;
 
-	const scenario = getScenarioPreset(state.scenarioId);
+  const scenario = getScenarioPreset(state.scenarioId);
 
-	const baseTimestamp = {
-		tick: state.tick,
-		scenarioId: state.scenarioId,
-		counts,
-		zoneSummaries,
-		activeExposureCount,
-		everExposedCount,
-	};
+  const baseTimestamp = {
+    tick: state.tick,
+    scenarioId: state.scenarioId,
+    counts,
+    zoneSummaries,
+    activeExposureCount,
+    everExposedCount,
+  };
 
-	if (scenario.sepir_rates === undefined) {
-		return baseTimestamp;
-	}
+  if (scenario.sepir_rates === undefined) {
+    return baseTimestamp;
+  }
 
-	const susceptibleFraction = counts.healthy / state.passengers.length;
-	const effective_r0 = effectiveR0(scenario.sepir_rates);
-	const effective_rt = effectiveRt(scenario.sepir_rates, susceptibleFraction);
-	const approx_herd_threshold = herdImmunityThreshold(scenario.sepir_rates);
+  const susceptibleFraction = counts.healthy / state.passengers.length;
+  const effective_r0 = effectiveR0(scenario.sepir_rates);
+  const effective_rt = effectiveRt(scenario.sepir_rates, susceptibleFraction);
+  const approx_herd_threshold = herdImmunityThreshold(scenario.sepir_rates);
 
-	const summary: SimulationSummary = {
-		...baseTimestamp,
-		derived: {
-			effective_r0,
-			effective_rt,
-			approx_herd_threshold,
-		},
-	};
+  const summary: SimulationSummary = {
+    ...baseTimestamp,
+    derived: {
+      effective_r0,
+      effective_rt,
+      approx_herd_threshold,
+    },
+  };
 
-	return summary;
+  return summary;
 }
 
 export function countHealthStates(passengers: readonly Passenger[]): HealthCounts {
-	const counts = createEmptyHealthCounts();
+  const counts = createEmptyHealthCounts();
 
-	for (const passenger of passengers) {
-		counts[passenger.health] += 1;
-	}
+  for (const passenger of passengers) {
+    counts[passenger.health] += 1;
+  }
 
-	return counts;
+  return counts;
 }
 
 export function summarizeZones(
-	passengers: readonly Passenger[],
-	contamination: readonly ZoneContamination[],
+  passengers: readonly Passenger[],
+  contamination: readonly ZoneContamination[],
 ): readonly ZoneHealthSummary[] {
-	const zoneSummaries = SHIP_ZONES.map(function mapZone(zone) {
-		const counts = countHealthStatesInZone(passengers, zone.id);
-		const contaminationLevel = getContaminationLevel(contamination, zone.id);
-		const summary = {
-			zoneId: zone.id,
-			counts,
-			contaminationLevel,
-		};
-		return summary;
-	});
-	return zoneSummaries;
+  const zoneSummaries = SHIP_ZONES.map(function mapZone(zone) {
+    const counts = countHealthStatesInZone(passengers, zone.id);
+    const contaminationLevel = getContaminationLevel(contamination, zone.id);
+    const summary = {
+      zoneId: zone.id,
+      counts,
+      contaminationLevel,
+    };
+    return summary;
+  });
+  return zoneSummaries;
 }
 
 function countHealthStatesInZone(passengers: readonly Passenger[], zoneId: ZoneId): HealthCounts {
-	const counts = createEmptyHealthCounts();
+  const counts = createEmptyHealthCounts();
 
-	for (const passenger of passengers) {
-		if (passenger.zoneId === zoneId) {
-			counts[passenger.health] += 1;
-		}
-	}
+  for (const passenger of passengers) {
+    if (passenger.zoneId === zoneId) {
+      counts[passenger.health] += 1;
+    }
+  }
 
-	return counts;
+  return counts;
 }
 
 function createEmptyHealthCounts(): HealthCounts {
-	const counts = {
-		healthy: 0,
-		exposed: 0,
-		pre_symptomatic: 0,
-		symptomatic: 0,
-		isolated: 0,
-		recovered: 0,
-	};
+  const counts = {
+    healthy: 0,
+    exposed: 0,
+    pre_symptomatic: 0,
+    symptomatic: 0,
+    isolated: 0,
+    recovered: 0,
+  };
 
-	for (const healthState of HEALTH_STATES) {
-		counts[healthState] = 0;
-	}
+  for (const healthState of HEALTH_STATES) {
+    counts[healthState] = 0;
+  }
 
-	return counts;
+  return counts;
 }
 
 function getContaminationLevel(
-	contamination: readonly ZoneContamination[],
-	zoneId: ZoneId,
+  contamination: readonly ZoneContamination[],
+  zoneId: ZoneId,
 ): number {
-	for (const zoneContamination of contamination) {
-		if (zoneContamination.zoneId === zoneId) {
-			return zoneContamination.level;
-		}
-	}
+  for (const zoneContamination of contamination) {
+    if (zoneContamination.zoneId === zoneId) {
+      return zoneContamination.level;
+    }
+  }
 
-	throw new Error(`Missing contamination state for zone: ${zoneId}`);
+  throw new Error(`Missing contamination state for zone: ${zoneId}`);
 }

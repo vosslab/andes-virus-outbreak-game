@@ -6,10 +6,10 @@ zero transition rates, final-size calculation, and peak prevalence.
 """
 
 import sys
-import git_file_utils
+import file_utils
 
 # Add pipeline to path
-REPO_ROOT = git_file_utils.get_repo_root()
+REPO_ROOT = file_utils.get_repo_root()
 sys.path.insert(0, f"{REPO_ROOT}/pipeline")
 
 from seir_ode import (
@@ -23,7 +23,7 @@ from seir_ode import (
 
 #============================================
 
-def test_conservation_of_population():
+def test_conservation_of_population() -> None:
 	"""
 	Test that integrate conserves total population N.
 
@@ -49,7 +49,7 @@ def test_conservation_of_population():
 		assert error < 1e-6, f"Conservation error at t={time}: {error}"
 
 
-def test_susceptible_monotonic_with_no_waning():
+def test_susceptible_monotonic_with_no_waning() -> None:
 	"""
 	Test that S decreases monotonically when omega=0.
 
@@ -77,7 +77,7 @@ def test_susceptible_monotonic_with_no_waning():
 	assert final_S < initial.S - 0.1, "S should decrease significantly"
 
 
-def test_zero_recovery_rate():
+def test_zero_recovery_rate() -> None:
 	"""
 	Test that with gamma=0, recovered count stays at initial value.
 
@@ -100,7 +100,7 @@ def test_zero_recovery_rate():
 		assert state.R == 0.0, "R should remain at initial value when gamma=0"
 
 
-def test_final_size_analytic_check():
+def test_final_size_analytic_check() -> None:
 	"""
 	Test final size against SEIR final-size relationship.
 
@@ -132,7 +132,7 @@ def test_final_size_analytic_check():
 		f"Final size mismatch: ODE={ode_final_size:.4f}, expected={z_target:.4f}"
 
 
-def test_peak_prevalence_grows_with_r0():
+def test_peak_prevalence_grows_with_r0() -> None:
 	"""
 	Test that peak prevalence increases with higher R0.
 

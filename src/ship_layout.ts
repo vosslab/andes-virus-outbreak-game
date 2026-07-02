@@ -14,9 +14,9 @@ export const SHIP_ZONES: readonly ShipZone[] = SHIP_LAYOUT.zones;
 // layout zones, summaries iterate layout zones). A missing zone here means
 // either a stale generated layout or a code bug; either way, fail loud.
 export function getZoneById(id: ZoneId): ShipZone {
-	const zone = SHIP_ZONES.find((z) => z.id === id);
-	if (zone === undefined) {
-		throw new Error(`getZoneById: zone id not found in layout: ${id}`);
-	}
-	return zone;
+  const zone = SHIP_ZONES.find((z) => z.id === id);
+  if (zone === undefined) {
+    throw new Error(`getZoneById: zone id not found in layout: ${id}`);
+  }
+  return zone;
 }

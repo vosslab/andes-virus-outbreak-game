@@ -25,7 +25,7 @@ REFERENCE_SVG = os.path.join(REPO_ROOT, 'data', 'reference', 'ship_schematic_pre
 GENERATED_SVG = os.path.join(REPO_ROOT, 'src', 'ship_schematic.svg')
 
 
-def test_ship_svg_visual_bounds_within_tolerance():
+def test_ship_svg_visual_bounds_within_tolerance() -> None:
 	"""
 	Verify that every zone in the generated SVG's bounding box stays within
 	2% relative error of the reference SVG.
@@ -61,7 +61,7 @@ def test_ship_svg_visual_bounds_within_tolerance():
 	reason="Reference SVG has 10 zones; generated has 37 from design YAML expansion. "
 	"Acceptable mismatch until reference is updated."
 )
-def test_no_zone_dropped_or_added():
+def test_no_zone_dropped_or_added() -> None:
 	"""
 	Verify that every zone in the reference SVG appears in the generated SVG,
 	and vice versa.

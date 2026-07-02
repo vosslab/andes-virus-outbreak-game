@@ -4,1367 +4,1404 @@
 import type { ShipLayout } from "./types/ship.js";
 
 export const SHIP_LAYOUT: ShipLayout = {
-	schematicWidth: 1008,
-	schematicHeight: 560,
-	zones: [
-		{
-			id: "obs_p",
-			label: "Fwd Promenade (P)",
-			kind: "public",
-			bounds: {
-				x: 28,
-				y: 56,
-				width: 84,
-				height: 140,
-			},
-			center: {
-				x: 70,
-				y: 126,
-			},
-			links: ["cab_p1"],
-			color: "#d6c89e",
-		},
-		{
-			id: "bridge",
-			label: "Bridge",
-			kind: "operations",
-			bounds: {
-				x: 0,
-				y: 196,
-				width: 112,
-				height: 168,
-			},
-			center: {
-				x: 56,
-				y: 280,
-			},
-			links: ["atrium"],
-			color: "#1f3a4d",
-		},
-		{
-			id: "obs_s",
-			label: "Fwd Promenade (S)",
-			kind: "public",
-			bounds: {
-				x: 28,
-				y: 364,
-				width: 84,
-				height: 140,
-			},
-			center: {
-				x: 70,
-				y: 434,
-			},
-			links: ["cab_s1"],
-			color: "#d6c89e",
-		},
-		{
-			id: "lifeboats_p",
-			label: "Lifeboat Stations (P)",
-			kind: "public",
-			bounds: {
-				x: 112,
-				y: 0,
-				width: 756,
-				height: 56,
-			},
-			center: {
-				x: 490,
-				y: 28,
-			},
-			links: ["cab_p1", "cab_p2", "cab_p3"],
-			color: "#f0a23a",
-		},
-		{
-			id: "cab_p1",
-			label: "Cabins 101-118 (P)",
-			kind: "cabins",
-			bounds: {
-				x: 112,
-				y: 56,
-				width: 168,
-				height: 84,
-			},
-			center: {
-				x: 196,
-				y: 98,
-			},
-			links: ["obs_p", "lifeboats_p", "corr_p"],
-			color: "#cfe2ec",
-		},
-		{
-			id: "cab_p2",
-			label: "Cabins 119-136 (P)",
-			kind: "cabins",
-			bounds: {
-				x: 280,
-				y: 56,
-				width: 168,
-				height: 84,
-			},
-			center: {
-				x: 364,
-				y: 98,
-			},
-			links: ["lifeboats_p", "corr_p"],
-			color: "#cfe2ec",
-		},
-		{
-			id: "cab_p3",
-			label: "Cabins 137-151 (P)",
-			kind: "cabins",
-			bounds: {
-				x: 448,
-				y: 56,
-				width: 140,
-				height: 84,
-			},
-			center: {
-				x: 518,
-				y: 98,
-			},
-			links: ["lifeboats_p", "corr_p"],
-			color: "#cfe2ec",
-		},
-		{
-			id: "cab_p4",
-			label: "Cabins 152-166 (P)",
-			kind: "cabins",
-			bounds: {
-				x: 588,
-				y: 56,
-				width: 140,
-				height: 84,
-			},
-			center: {
-				x: 658,
-				y: 98,
-			},
-			links: ["corr_p"],
-			color: "#cfe2ec",
-		},
-		{
-			id: "suite_p",
-			label: "Owner's Suites (P)",
-			kind: "cabins",
-			bounds: {
-				x: 728,
-				y: 56,
-				width: 140,
-				height: 84,
-			},
-			center: {
-				x: 798,
-				y: 98,
-			},
-			links: ["corr_p", "crew_q"],
-			color: "#a8c8d9",
-		},
-		{
-			id: "corr_p",
-			label: "Port Corridor",
-			kind: "corridor",
-			bounds: {
-				x: 112,
-				y: 140,
-				width: 756,
-				height: 28,
-			},
-			center: {
-				x: 490,
-				y: 154,
-			},
-			links: ["cab_p1", "cab_p2", "cab_p3", "cab_p4", "suite_p", "spa", "library", "dining", "galley", "casino", "theater"],
-			color: "#ece1c2",
-		},
-		{
-			id: "spa",
-			label: "Spa & Hammam",
-			kind: "medical",
-			bounds: {
-				x: 112,
-				y: 168,
-				width: 112,
-				height: 84,
-			},
-			center: {
-				x: 168,
-				y: 210,
-			},
-			links: ["corr_p"],
-			color: "#9bd2b1",
-		},
-		{
-			id: "library",
-			label: "Library",
-			kind: "public",
-			bounds: {
-				x: 224,
-				y: 168,
-				width: 112,
-				height: 84,
-			},
-			center: {
-				x: 280,
-				y: 210,
-			},
-			links: ["corr_p"],
-			color: "#e89a6a",
-		},
-		{
-			id: "dining",
-			label: "Main Dining",
-			kind: "public",
-			bounds: {
-				x: 336,
-				y: 168,
-				width: 168,
-				height: 84,
-			},
-			center: {
-				x: 420,
-				y: 210,
-			},
-			links: ["corr_p", "atrium"],
-			color: "#f4ba6c",
-		},
-		{
-			id: "galley",
-			label: "Galley",
-			kind: "crew",
-			bounds: {
-				x: 504,
-				y: 168,
-				width: 84,
-				height: 84,
-			},
-			center: {
-				x: 546,
-				y: 210,
-			},
-			links: ["corr_p", "atrium"],
-			color: "#9aa085",
-		},
-		{
-			id: "casino",
-			label: "Casino",
-			kind: "public",
-			bounds: {
-				x: 588,
-				y: 168,
-				width: 140,
-				height: 84,
-			},
-			center: {
-				x: 658,
-				y: 210,
-			},
-			links: ["corr_p", "atrium"],
-			color: "#e89a6a",
-		},
-		{
-			id: "theater",
-			label: "Theater",
-			kind: "public",
-			bounds: {
-				x: 728,
-				y: 168,
-				width: 140,
-				height: 84,
-			},
-			center: {
-				x: 798,
-				y: 210,
-			},
-			links: ["corr_p", "atrium", "crew_mess"],
-			color: "#e89a6a",
-		},
-		{
-			id: "atrium",
-			label: "Grand Atrium",
-			kind: "public",
-			bounds: {
-				x: 112,
-				y: 252,
-				width: 756,
-				height: 56,
-			},
-			center: {
-				x: 490,
-				y: 280,
-			},
-			links: ["dining", "galley", "casino", "theater", "bridge", "infirmary", "isolation", "gym", "pool", "arcade", "kids", "comms"],
-			color: "#f3d889",
-		},
-		{
-			id: "infirmary",
-			label: "Infirmary",
-			kind: "medical",
-			bounds: {
-				x: 112,
-				y: 308,
-				width: 112,
-				height: 84,
-			},
-			center: {
-				x: 168,
-				y: 350,
-			},
-			links: ["atrium", "isolation", "corr_s"],
-			color: "#f08a8a",
-		},
-		{
-			id: "isolation",
-			label: "Isolation",
-			kind: "medical",
-			bounds: {
-				x: 224,
-				y: 308,
-				width: 84,
-				height: 84,
-			},
-			center: {
-				x: 266,
-				y: 350,
-			},
-			links: ["atrium", "infirmary", "corr_s"],
-			color: "#b6a0d0",
-		},
-		{
-			id: "gym",
-			label: "Gym",
-			kind: "medical",
-			bounds: {
-				x: 308,
-				y: 308,
-				width: 112,
-				height: 84,
-			},
-			center: {
-				x: 364,
-				y: 350,
-			},
-			links: ["atrium", "corr_s"],
-			color: "#9bd2b1",
-		},
-		{
-			id: "pool",
-			label: "Pool Deck",
-			kind: "public",
-			bounds: {
-				x: 420,
-				y: 308,
-				width: 168,
-				height: 84,
-			},
-			center: {
-				x: 504,
-				y: 350,
-			},
-			links: ["atrium", "corr_s"],
-			color: "#e89a6a",
-		},
-		{
-			id: "arcade",
-			label: "Arcade",
-			kind: "public",
-			bounds: {
-				x: 588,
-				y: 308,
-				width: 140,
-				height: 84,
-			},
-			center: {
-				x: 658,
-				y: 350,
-			},
-			links: ["atrium", "corr_s"],
-			color: "#e89a6a",
-		},
-		{
-			id: "kids",
-			label: "Kids Club",
-			kind: "public",
-			bounds: {
-				x: 728,
-				y: 308,
-				width: 140,
-				height: 84,
-			},
-			center: {
-				x: 798,
-				y: 350,
-			},
-			links: ["atrium", "corr_s", "engineering"],
-			color: "#e89a6a",
-		},
-		{
-			id: "corr_s",
-			label: "Starboard Corridor",
-			kind: "corridor",
-			bounds: {
-				x: 112,
-				y: 392,
-				width: 756,
-				height: 28,
-			},
-			center: {
-				x: 490,
-				y: 406,
-			},
-			links: ["infirmary", "isolation", "gym", "pool", "arcade", "kids", "cab_s1", "cab_s2", "cab_s3", "cab_s4", "suite_s"],
-			color: "#ece1c2",
-		},
-		{
-			id: "cab_s1",
-			label: "Cabins 201-218 (S)",
-			kind: "cabins",
-			bounds: {
-				x: 112,
-				y: 420,
-				width: 168,
-				height: 84,
-			},
-			center: {
-				x: 196,
-				y: 462,
-			},
-			links: ["corr_s", "lifeboats_s", "obs_s"],
-			color: "#cfe2ec",
-		},
-		{
-			id: "cab_s2",
-			label: "Cabins 219-236 (S)",
-			kind: "cabins",
-			bounds: {
-				x: 280,
-				y: 420,
-				width: 168,
-				height: 84,
-			},
-			center: {
-				x: 364,
-				y: 462,
-			},
-			links: ["corr_s", "lifeboats_s"],
-			color: "#cfe2ec",
-		},
-		{
-			id: "cab_s3",
-			label: "Cabins 237-251 (S)",
-			kind: "cabins",
-			bounds: {
-				x: 448,
-				y: 420,
-				width: 140,
-				height: 84,
-			},
-			center: {
-				x: 518,
-				y: 462,
-			},
-			links: ["corr_s", "lifeboats_s"],
-			color: "#cfe2ec",
-		},
-		{
-			id: "cab_s4",
-			label: "Cabins 252-266 (S)",
-			kind: "cabins",
-			bounds: {
-				x: 588,
-				y: 420,
-				width: 140,
-				height: 84,
-			},
-			center: {
-				x: 658,
-				y: 462,
-			},
-			links: ["corr_s"],
-			color: "#cfe2ec",
-		},
-		{
-			id: "suite_s",
-			label: "Owner's Suites (S)",
-			kind: "cabins",
-			bounds: {
-				x: 728,
-				y: 420,
-				width: 140,
-				height: 84,
-			},
-			center: {
-				x: 798,
-				y: 462,
-			},
-			links: ["corr_s", "tender_bay"],
-			color: "#a8c8d9",
-		},
-		{
-			id: "lifeboats_s",
-			label: "Lifeboat Stations (S)",
-			kind: "public",
-			bounds: {
-				x: 112,
-				y: 504,
-				width: 756,
-				height: 56,
-			},
-			center: {
-				x: 490,
-				y: 532,
-			},
-			links: ["cab_s1", "cab_s2", "cab_s3"],
-			color: "#f0a23a",
-		},
-		{
-			id: "sun_deck",
-			label: "Sun Deck Aft",
-			kind: "public",
-			bounds: {
-				x: 868,
-				y: 0,
-				width: 140,
-				height: 56,
-			},
-			center: {
-				x: 938,
-				y: 28,
-			},
-			links: ["crew_q"],
-			color: "#e89a6a",
-		},
-		{
-			id: "crew_q",
-			label: "Crew Quarters",
-			kind: "crew",
-			bounds: {
-				x: 868,
-				y: 56,
-				width: 140,
-				height: 112,
-			},
-			center: {
-				x: 938,
-				y: 112,
-			},
-			links: ["suite_p", "sun_deck"],
-			color: "#b5b39a",
-		},
-		{
-			id: "crew_mess",
-			label: "Crew Mess",
-			kind: "crew",
-			bounds: {
-				x: 868,
-				y: 168,
-				width: 140,
-				height: 84,
-			},
-			center: {
-				x: 938,
-				y: 210,
-			},
-			links: ["theater"],
-			color: "#9aa085",
-		},
-		{
-			id: "comms",
-			label: "Comms Room",
-			kind: "operations",
-			bounds: {
-				x: 868,
-				y: 252,
-				width: 140,
-				height: 56,
-			},
-			center: {
-				x: 938,
-				y: 280,
-			},
-			links: ["atrium"],
-			color: "#1f3a4d",
-		},
-		{
-			id: "engineering",
-			label: "Engineering",
-			kind: "crew",
-			bounds: {
-				x: 868,
-				y: 308,
-				width: 140,
-				height: 112,
-			},
-			center: {
-				x: 938,
-				y: 364,
-			},
-			links: ["kids"],
-			color: "#9aa085",
-		},
-		{
-			id: "tender_bay",
-			label: "Tender Bay",
-			kind: "public",
-			bounds: {
-				x: 868,
-				y: 420,
-				width: 140,
-				height: 84,
-			},
-			center: {
-				x: 938,
-				y: 462,
-			},
-			links: ["suite_s", "helideck"],
-			color: "#7c8c99",
-		},
-		{
-			id: "helideck",
-			label: "Helideck",
-			kind: "public",
-			bounds: {
-				x: 868,
-				y: 504,
-				width: 140,
-				height: 56,
-			},
-			center: {
-				x: 938,
-				y: 532,
-			},
-			links: ["tender_bay"],
-			color: "#7c8c99",
-		},
-	],
-	doors: [
-		{
-			id: "d000",
-			kind: "h",
-			tile: {
-				x: 4,
-				y: 2,
-			},
-			segment: [
-				{ x: 112, y: 56 },
-				{ x: 168, y: 56 },
-			],
-			roomIds: ["obs_p", "cab_p1"],
-		},
-		{
-			id: "d001",
-			kind: "h",
-			tile: {
-				x: 7,
-				y: 2,
-			},
-			segment: [
-				{ x: 196, y: 56 },
-				{ x: 252, y: 56 },
-			],
-			roomIds: ["lifeboats_p", "cab_p1"],
-		},
-		{
-			id: "d002",
-			kind: "h",
-			tile: {
-				x: 7,
-				y: 5,
-			},
-			segment: [
-				{ x: 196, y: 140 },
-				{ x: 252, y: 140 },
-			],
-			roomIds: ["cab_p1", "corr_p"],
-		},
-		{
-			id: "d003",
-			kind: "h",
-			tile: {
-				x: 13,
-				y: 2,
-			},
-			segment: [
-				{ x: 364, y: 56 },
-				{ x: 420, y: 56 },
-			],
-			roomIds: ["lifeboats_p", "cab_p2"],
-		},
-		{
-			id: "d004",
-			kind: "h",
-			tile: {
-				x: 13,
-				y: 5,
-			},
-			segment: [
-				{ x: 364, y: 140 },
-				{ x: 420, y: 140 },
-			],
-			roomIds: ["cab_p2", "corr_p"],
-		},
-		{
-			id: "d005",
-			kind: "h",
-			tile: {
-				x: 18,
-				y: 2,
-			},
-			segment: [
-				{ x: 518, y: 56 },
-				{ x: 574, y: 56 },
-			],
-			roomIds: ["lifeboats_p", "cab_p3"],
-		},
-		{
-			id: "d006",
-			kind: "h",
-			tile: {
-				x: 18,
-				y: 5,
-			},
-			segment: [
-				{ x: 518, y: 140 },
-				{ x: 574, y: 140 },
-			],
-			roomIds: ["cab_p3", "corr_p"],
-		},
-		{
-			id: "d007",
-			kind: "h",
-			tile: {
-				x: 23,
-				y: 5,
-			},
-			segment: [
-				{ x: 658, y: 140 },
-				{ x: 714, y: 140 },
-			],
-			roomIds: ["cab_p4", "corr_p"],
-		},
-		{
-			id: "d008",
-			kind: "h",
-			tile: {
-				x: 28,
-				y: 5,
-			},
-			segment: [
-				{ x: 798, y: 140 },
-				{ x: 854, y: 140 },
-			],
-			roomIds: ["suite_p", "corr_p"],
-		},
-		{
-			id: "d009",
-			kind: "h",
-			tile: {
-				x: 6,
-				y: 6,
-			},
-			segment: [
-				{ x: 168, y: 168 },
-				{ x: 224, y: 168 },
-			],
-			roomIds: ["corr_p", "spa"],
-		},
-		{
-			id: "d010",
-			kind: "h",
-			tile: {
-				x: 10,
-				y: 6,
-			},
-			segment: [
-				{ x: 280, y: 168 },
-				{ x: 336, y: 168 },
-			],
-			roomIds: ["corr_p", "library"],
-		},
-		{
-			id: "d011",
-			kind: "h",
-			tile: {
-				x: 15,
-				y: 6,
-			},
-			segment: [
-				{ x: 420, y: 168 },
-				{ x: 476, y: 168 },
-			],
-			roomIds: ["corr_p", "dining"],
-		},
-		{
-			id: "d012",
-			kind: "h",
-			tile: {
-				x: 19,
-				y: 6,
-			},
-			segment: [
-				{ x: 532, y: 168 },
-				{ x: 588, y: 168 },
-			],
-			roomIds: ["corr_p", "galley"],
-		},
-		{
-			id: "d013",
-			kind: "h",
-			tile: {
-				x: 23,
-				y: 6,
-			},
-			segment: [
-				{ x: 658, y: 168 },
-				{ x: 714, y: 168 },
-			],
-			roomIds: ["corr_p", "casino"],
-		},
-		{
-			id: "d014",
-			kind: "h",
-			tile: {
-				x: 28,
-				y: 6,
-			},
-			segment: [
-				{ x: 798, y: 168 },
-				{ x: 854, y: 168 },
-			],
-			roomIds: ["corr_p", "theater"],
-		},
-		{
-			id: "d015",
-			kind: "h",
-			tile: {
-				x: 15,
-				y: 9,
-			},
-			segment: [
-				{ x: 420, y: 252 },
-				{ x: 476, y: 252 },
-			],
-			roomIds: ["dining", "atrium"],
-		},
-		{
-			id: "d016",
-			kind: "h",
-			tile: {
-				x: 19,
-				y: 9,
-			},
-			segment: [
-				{ x: 532, y: 252 },
-				{ x: 588, y: 252 },
-			],
-			roomIds: ["galley", "atrium"],
-		},
-		{
-			id: "d017",
-			kind: "h",
-			tile: {
-				x: 23,
-				y: 9,
-			},
-			segment: [
-				{ x: 658, y: 252 },
-				{ x: 714, y: 252 },
-			],
-			roomIds: ["casino", "atrium"],
-		},
-		{
-			id: "d018",
-			kind: "h",
-			tile: {
-				x: 28,
-				y: 9,
-			},
-			segment: [
-				{ x: 798, y: 252 },
-				{ x: 854, y: 252 },
-			],
-			roomIds: ["theater", "atrium"],
-		},
-		{
-			id: "d019",
-			kind: "v",
-			tile: {
-				x: 4,
-				y: 9,
-			},
-			segment: [
-				{ x: 112, y: 252 },
-				{ x: 112, y: 308 },
-			],
-			roomIds: ["bridge", "atrium"],
-		},
-		{
-			id: "d020",
-			kind: "v",
-			tile: {
-				x: 4,
-				y: 11,
-			},
-			segment: [
-				{ x: 112, y: 308 },
-				{ x: 112, y: 364 },
-			],
-			roomIds: ["bridge", "atrium"],
-		},
-		{
-			id: "d021",
-			kind: "h",
-			tile: {
-				x: 6,
-				y: 11,
-			},
-			segment: [
-				{ x: 168, y: 308 },
-				{ x: 224, y: 308 },
-			],
-			roomIds: ["infirmary", "atrium"],
-		},
-		{
-			id: "d022",
-			kind: "h",
-			tile: {
-				x: 10,
-				y: 11,
-			},
-			segment: [
-				{ x: 280, y: 308 },
-				{ x: 336, y: 308 },
-			],
-			roomIds: ["isolation", "atrium"],
-		},
-		{
-			id: "d023",
-			kind: "h",
-			tile: {
-				x: 13,
-				y: 11,
-			},
-			segment: [
-				{ x: 364, y: 308 },
-				{ x: 420, y: 308 },
-			],
-			roomIds: ["gym", "atrium"],
-		},
-		{
-			id: "d024",
-			kind: "h",
-			tile: {
-				x: 17,
-				y: 11,
-			},
-			segment: [
-				{ x: 476, y: 308 },
-				{ x: 532, y: 308 },
-			],
-			roomIds: ["pool", "atrium"],
-		},
-		{
-			id: "d025",
-			kind: "h",
-			tile: {
-				x: 23,
-				y: 11,
-			},
-			segment: [
-				{ x: 658, y: 308 },
-				{ x: 714, y: 308 },
-			],
-			roomIds: ["arcade", "atrium"],
-		},
-		{
-			id: "d026",
-			kind: "h",
-			tile: {
-				x: 28,
-				y: 11,
-			},
-			segment: [
-				{ x: 798, y: 308 },
-				{ x: 854, y: 308 },
-			],
-			roomIds: ["kids", "atrium"],
-		},
-		{
-			id: "d027",
-			kind: "v",
-			tile: {
-				x: 8,
-				y: 12,
-			},
-			segment: [
-				{ x: 224, y: 308 },
-				{ x: 224, y: 364 },
-			],
-			roomIds: ["infirmary", "isolation"],
-		},
-		{
-			id: "d028",
-			kind: "h",
-			tile: {
-				x: 6,
-				y: 14,
-			},
-			segment: [
-				{ x: 168, y: 392 },
-				{ x: 224, y: 392 },
-			],
-			roomIds: ["infirmary", "corr_s"],
-		},
-		{
-			id: "d029",
-			kind: "h",
-			tile: {
-				x: 9,
-				y: 14,
-			},
-			segment: [
-				{ x: 252, y: 392 },
-				{ x: 308, y: 392 },
-			],
-			roomIds: ["isolation", "corr_s"],
-		},
-		{
-			id: "d030",
-			kind: "h",
-			tile: {
-				x: 12,
-				y: 14,
-			},
-			segment: [
-				{ x: 336, y: 392 },
-				{ x: 392, y: 392 },
-			],
-			roomIds: ["gym", "corr_s"],
-		},
-		{
-			id: "d031",
-			kind: "h",
-			tile: {
-				x: 17,
-				y: 14,
-			},
-			segment: [
-				{ x: 476, y: 392 },
-				{ x: 532, y: 392 },
-			],
-			roomIds: ["pool", "corr_s"],
-		},
-		{
-			id: "d032",
-			kind: "h",
-			tile: {
-				x: 23,
-				y: 14,
-			},
-			segment: [
-				{ x: 658, y: 392 },
-				{ x: 714, y: 392 },
-			],
-			roomIds: ["arcade", "corr_s"],
-		},
-		{
-			id: "d033",
-			kind: "h",
-			tile: {
-				x: 28,
-				y: 14,
-			},
-			segment: [
-				{ x: 798, y: 392 },
-				{ x: 854, y: 392 },
-			],
-			roomIds: ["kids", "corr_s"],
-		},
-		{
-			id: "d034",
-			kind: "h",
-			tile: {
-				x: 7,
-				y: 15,
-			},
-			segment: [
-				{ x: 196, y: 420 },
-				{ x: 252, y: 420 },
-			],
-			roomIds: ["cab_s1", "corr_s"],
-		},
-		{
-			id: "d035",
-			kind: "h",
-			tile: {
-				x: 13,
-				y: 15,
-			},
-			segment: [
-				{ x: 364, y: 420 },
-				{ x: 420, y: 420 },
-			],
-			roomIds: ["cab_s2", "corr_s"],
-		},
-		{
-			id: "d036",
-			kind: "h",
-			tile: {
-				x: 17,
-				y: 15,
-			},
-			segment: [
-				{ x: 476, y: 420 },
-				{ x: 532, y: 420 },
-			],
-			roomIds: ["cab_s3", "corr_s"],
-		},
-		{
-			id: "d037",
-			kind: "h",
-			tile: {
-				x: 23,
-				y: 15,
-			},
-			segment: [
-				{ x: 658, y: 420 },
-				{ x: 714, y: 420 },
-			],
-			roomIds: ["cab_s4", "corr_s"],
-		},
-		{
-			id: "d038",
-			kind: "h",
-			tile: {
-				x: 28,
-				y: 15,
-			},
-			segment: [
-				{ x: 798, y: 420 },
-				{ x: 854, y: 420 },
-			],
-			roomIds: ["suite_s", "corr_s"],
-		},
-		{
-			id: "d039",
-			kind: "h",
-			tile: {
-				x: 7,
-				y: 18,
-			},
-			segment: [
-				{ x: 196, y: 504 },
-				{ x: 252, y: 504 },
-			],
-			roomIds: ["lifeboats_s", "cab_s1"],
-		},
-		{
-			id: "d040",
-			kind: "h",
-			tile: {
-				x: 13,
-				y: 18,
-			},
-			segment: [
-				{ x: 364, y: 504 },
-				{ x: 420, y: 504 },
-			],
-			roomIds: ["lifeboats_s", "cab_s2"],
-		},
-		{
-			id: "d041",
-			kind: "h",
-			tile: {
-				x: 18,
-				y: 18,
-			},
-			segment: [
-				{ x: 504, y: 504 },
-				{ x: 560, y: 504 },
-			],
-			roomIds: ["lifeboats_s", "cab_s3"],
-		},
-		{
-			id: "d042",
-			kind: "v",
-			tile: {
-				x: 31,
-				y: 4,
-			},
-			segment: [
-				{ x: 868, y: 84 },
-				{ x: 868, y: 140 },
-			],
-			roomIds: ["suite_p", "crew_q"],
-		},
-		{
-			id: "d043",
-			kind: "v",
-			tile: {
-				x: 31,
-				y: 7,
-			},
-			segment: [
-				{ x: 868, y: 168 },
-				{ x: 868, y: 224 },
-			],
-			roomIds: ["theater", "crew_mess"],
-		},
-		{
-			id: "d044",
-			kind: "v",
-			tile: {
-				x: 31,
-				y: 10,
-			},
-			segment: [
-				{ x: 868, y: 252 },
-				{ x: 868, y: 308 },
-			],
-			roomIds: ["atrium", "comms"],
-		},
-		{
-			id: "d045",
-			kind: "v",
-			tile: {
-				x: 31,
-				y: 13,
-			},
-			segment: [
-				{ x: 868, y: 336 },
-				{ x: 868, y: 392 },
-			],
-			roomIds: ["kids", "engineering"],
-		},
-		{
-			id: "d046",
-			kind: "v",
-			tile: {
-				x: 31,
-				y: 16,
-			},
-			segment: [
-				{ x: 868, y: 434 },
-				{ x: 868, y: 490 },
-			],
-			roomIds: ["suite_s", "tender_bay"],
-		},
-		{
-			id: "d047",
-			kind: "v",
-			tile: {
-				x: 4,
-				y: 16,
-			},
-			segment: [
-				{ x: 112, y: 448 },
-				{ x: 112, y: 504 },
-			],
-			roomIds: ["obs_s", "cab_s1"],
-		},
-		{
-			id: "d048",
-			kind: "h",
-			tile: {
-				x: 31,
-				y: 2,
-			},
-			segment: [
-				{ x: 868, y: 56 },
-				{ x: 924, y: 56 },
-			],
-			roomIds: ["sun_deck", "crew_q"],
-		},
-		{
-			id: "d049",
-			kind: "h",
-			tile: {
-				x: 31,
-				y: 18,
-			},
-			segment: [
-				{ x: 868, y: 504 },
-				{ x: 924, y: 504 },
-			],
-			roomIds: ["tender_bay", "helideck"],
-		},
-		{
-			id: "d050",
-			kind: "h",
-			tile: {
-				x: 4,
-				y: 5,
-			},
-			segment: [
-				{ x: 112, y: 140 },
-				{ x: 168, y: 140 },
-			],
-			roomIds: ["cab_p1", "corr_p"],
-		},
-		{
-			id: "d051",
-			kind: "h",
-			tile: {
-				x: 16,
-				y: 5,
-			},
-			segment: [
-				{ x: 448, y: 140 },
-				{ x: 504, y: 140 },
-			],
-			roomIds: ["cab_p2", "corr_p"],
-		},
-		{
-			id: "d052",
-			kind: "h",
-			tile: {
-				x: 21,
-				y: 5,
-			},
-			segment: [
-				{ x: 588, y: 140 },
-				{ x: 644, y: 140 },
-			],
-			roomIds: ["cab_p3", "corr_p"],
-		},
-		{
-			id: "d053",
-			kind: "h",
-			tile: {
-				x: 4,
-				y: 15,
-			},
-			segment: [
-				{ x: 112, y: 420 },
-				{ x: 168, y: 420 },
-			],
-			roomIds: ["corr_s", "cab_s1"],
-		},
-		{
-			id: "d054",
-			kind: "h",
-			tile: {
-				x: 16,
-				y: 15,
-			},
-			segment: [
-				{ x: 448, y: 420 },
-				{ x: 504, y: 420 },
-			],
-			roomIds: ["corr_s", "cab_s2"],
-		},
-		{
-			id: "d055",
-			kind: "h",
-			tile: {
-				x: 21,
-				y: 15,
-			},
-			segment: [
-				{ x: 588, y: 420 },
-				{ x: 644, y: 420 },
-			],
-			roomIds: ["corr_s", "cab_s3"],
-		},
-	],
+  schematicWidth: 1008,
+  schematicHeight: 560,
+  zones: [
+    {
+      id: "obs_p",
+      label: "Fwd Promenade (P)",
+      kind: "public",
+      bounds: {
+        x: 28,
+        y: 56,
+        width: 84,
+        height: 140,
+      },
+      center: {
+        x: 70,
+        y: 126,
+      },
+      links: ["cab_p1"],
+      color: "#d6c89e",
+    },
+    {
+      id: "bridge",
+      label: "Bridge",
+      kind: "operations",
+      bounds: {
+        x: 0,
+        y: 196,
+        width: 112,
+        height: 168,
+      },
+      center: {
+        x: 56,
+        y: 280,
+      },
+      links: ["atrium"],
+      color: "#1f3a4d",
+    },
+    {
+      id: "obs_s",
+      label: "Fwd Promenade (S)",
+      kind: "public",
+      bounds: {
+        x: 28,
+        y: 364,
+        width: 84,
+        height: 140,
+      },
+      center: {
+        x: 70,
+        y: 434,
+      },
+      links: ["cab_s1"],
+      color: "#d6c89e",
+    },
+    {
+      id: "lifeboats_p",
+      label: "Lifeboat Stations (P)",
+      kind: "public",
+      bounds: {
+        x: 112,
+        y: 0,
+        width: 756,
+        height: 56,
+      },
+      center: {
+        x: 490,
+        y: 28,
+      },
+      links: ["cab_p1", "cab_p2", "cab_p3"],
+      color: "#f0a23a",
+    },
+    {
+      id: "cab_p1",
+      label: "Cabins 101-118 (P)",
+      kind: "cabins",
+      bounds: {
+        x: 112,
+        y: 56,
+        width: 168,
+        height: 84,
+      },
+      center: {
+        x: 196,
+        y: 98,
+      },
+      links: ["obs_p", "lifeboats_p", "corr_p"],
+      color: "#cfe2ec",
+    },
+    {
+      id: "cab_p2",
+      label: "Cabins 119-136 (P)",
+      kind: "cabins",
+      bounds: {
+        x: 280,
+        y: 56,
+        width: 168,
+        height: 84,
+      },
+      center: {
+        x: 364,
+        y: 98,
+      },
+      links: ["lifeboats_p", "corr_p"],
+      color: "#cfe2ec",
+    },
+    {
+      id: "cab_p3",
+      label: "Cabins 137-151 (P)",
+      kind: "cabins",
+      bounds: {
+        x: 448,
+        y: 56,
+        width: 140,
+        height: 84,
+      },
+      center: {
+        x: 518,
+        y: 98,
+      },
+      links: ["lifeboats_p", "corr_p"],
+      color: "#cfe2ec",
+    },
+    {
+      id: "cab_p4",
+      label: "Cabins 152-166 (P)",
+      kind: "cabins",
+      bounds: {
+        x: 588,
+        y: 56,
+        width: 140,
+        height: 84,
+      },
+      center: {
+        x: 658,
+        y: 98,
+      },
+      links: ["corr_p"],
+      color: "#cfe2ec",
+    },
+    {
+      id: "suite_p",
+      label: "Owner's Suites (P)",
+      kind: "cabins",
+      bounds: {
+        x: 728,
+        y: 56,
+        width: 140,
+        height: 84,
+      },
+      center: {
+        x: 798,
+        y: 98,
+      },
+      links: ["corr_p", "crew_q"],
+      color: "#a8c8d9",
+    },
+    {
+      id: "corr_p",
+      label: "Port Corridor",
+      kind: "corridor",
+      bounds: {
+        x: 112,
+        y: 140,
+        width: 756,
+        height: 28,
+      },
+      center: {
+        x: 490,
+        y: 154,
+      },
+      links: [
+        "cab_p1",
+        "cab_p2",
+        "cab_p3",
+        "cab_p4",
+        "suite_p",
+        "spa",
+        "library",
+        "dining",
+        "galley",
+        "casino",
+        "theater",
+      ],
+      color: "#ece1c2",
+    },
+    {
+      id: "spa",
+      label: "Spa & Hammam",
+      kind: "medical",
+      bounds: {
+        x: 112,
+        y: 168,
+        width: 112,
+        height: 84,
+      },
+      center: {
+        x: 168,
+        y: 210,
+      },
+      links: ["corr_p"],
+      color: "#9bd2b1",
+    },
+    {
+      id: "library",
+      label: "Library",
+      kind: "public",
+      bounds: {
+        x: 224,
+        y: 168,
+        width: 112,
+        height: 84,
+      },
+      center: {
+        x: 280,
+        y: 210,
+      },
+      links: ["corr_p"],
+      color: "#e89a6a",
+    },
+    {
+      id: "dining",
+      label: "Main Dining",
+      kind: "public",
+      bounds: {
+        x: 336,
+        y: 168,
+        width: 168,
+        height: 84,
+      },
+      center: {
+        x: 420,
+        y: 210,
+      },
+      links: ["corr_p", "atrium"],
+      color: "#f4ba6c",
+    },
+    {
+      id: "galley",
+      label: "Galley",
+      kind: "crew",
+      bounds: {
+        x: 504,
+        y: 168,
+        width: 84,
+        height: 84,
+      },
+      center: {
+        x: 546,
+        y: 210,
+      },
+      links: ["corr_p", "atrium"],
+      color: "#9aa085",
+    },
+    {
+      id: "casino",
+      label: "Casino",
+      kind: "public",
+      bounds: {
+        x: 588,
+        y: 168,
+        width: 140,
+        height: 84,
+      },
+      center: {
+        x: 658,
+        y: 210,
+      },
+      links: ["corr_p", "atrium"],
+      color: "#e89a6a",
+    },
+    {
+      id: "theater",
+      label: "Theater",
+      kind: "public",
+      bounds: {
+        x: 728,
+        y: 168,
+        width: 140,
+        height: 84,
+      },
+      center: {
+        x: 798,
+        y: 210,
+      },
+      links: ["corr_p", "atrium", "crew_mess"],
+      color: "#e89a6a",
+    },
+    {
+      id: "atrium",
+      label: "Grand Atrium",
+      kind: "public",
+      bounds: {
+        x: 112,
+        y: 252,
+        width: 756,
+        height: 56,
+      },
+      center: {
+        x: 490,
+        y: 280,
+      },
+      links: [
+        "dining",
+        "galley",
+        "casino",
+        "theater",
+        "bridge",
+        "infirmary",
+        "isolation",
+        "gym",
+        "pool",
+        "arcade",
+        "kids",
+        "comms",
+      ],
+      color: "#f3d889",
+    },
+    {
+      id: "infirmary",
+      label: "Infirmary",
+      kind: "medical",
+      bounds: {
+        x: 112,
+        y: 308,
+        width: 112,
+        height: 84,
+      },
+      center: {
+        x: 168,
+        y: 350,
+      },
+      links: ["atrium", "isolation", "corr_s"],
+      color: "#f08a8a",
+    },
+    {
+      id: "isolation",
+      label: "Isolation",
+      kind: "medical",
+      bounds: {
+        x: 224,
+        y: 308,
+        width: 84,
+        height: 84,
+      },
+      center: {
+        x: 266,
+        y: 350,
+      },
+      links: ["atrium", "infirmary", "corr_s"],
+      color: "#b6a0d0",
+    },
+    {
+      id: "gym",
+      label: "Gym",
+      kind: "medical",
+      bounds: {
+        x: 308,
+        y: 308,
+        width: 112,
+        height: 84,
+      },
+      center: {
+        x: 364,
+        y: 350,
+      },
+      links: ["atrium", "corr_s"],
+      color: "#9bd2b1",
+    },
+    {
+      id: "pool",
+      label: "Pool Deck",
+      kind: "public",
+      bounds: {
+        x: 420,
+        y: 308,
+        width: 168,
+        height: 84,
+      },
+      center: {
+        x: 504,
+        y: 350,
+      },
+      links: ["atrium", "corr_s"],
+      color: "#e89a6a",
+    },
+    {
+      id: "arcade",
+      label: "Arcade",
+      kind: "public",
+      bounds: {
+        x: 588,
+        y: 308,
+        width: 140,
+        height: 84,
+      },
+      center: {
+        x: 658,
+        y: 350,
+      },
+      links: ["atrium", "corr_s"],
+      color: "#e89a6a",
+    },
+    {
+      id: "kids",
+      label: "Kids Club",
+      kind: "public",
+      bounds: {
+        x: 728,
+        y: 308,
+        width: 140,
+        height: 84,
+      },
+      center: {
+        x: 798,
+        y: 350,
+      },
+      links: ["atrium", "corr_s", "engineering"],
+      color: "#e89a6a",
+    },
+    {
+      id: "corr_s",
+      label: "Starboard Corridor",
+      kind: "corridor",
+      bounds: {
+        x: 112,
+        y: 392,
+        width: 756,
+        height: 28,
+      },
+      center: {
+        x: 490,
+        y: 406,
+      },
+      links: [
+        "infirmary",
+        "isolation",
+        "gym",
+        "pool",
+        "arcade",
+        "kids",
+        "cab_s1",
+        "cab_s2",
+        "cab_s3",
+        "cab_s4",
+        "suite_s",
+      ],
+      color: "#ece1c2",
+    },
+    {
+      id: "cab_s1",
+      label: "Cabins 201-218 (S)",
+      kind: "cabins",
+      bounds: {
+        x: 112,
+        y: 420,
+        width: 168,
+        height: 84,
+      },
+      center: {
+        x: 196,
+        y: 462,
+      },
+      links: ["corr_s", "lifeboats_s", "obs_s"],
+      color: "#cfe2ec",
+    },
+    {
+      id: "cab_s2",
+      label: "Cabins 219-236 (S)",
+      kind: "cabins",
+      bounds: {
+        x: 280,
+        y: 420,
+        width: 168,
+        height: 84,
+      },
+      center: {
+        x: 364,
+        y: 462,
+      },
+      links: ["corr_s", "lifeboats_s"],
+      color: "#cfe2ec",
+    },
+    {
+      id: "cab_s3",
+      label: "Cabins 237-251 (S)",
+      kind: "cabins",
+      bounds: {
+        x: 448,
+        y: 420,
+        width: 140,
+        height: 84,
+      },
+      center: {
+        x: 518,
+        y: 462,
+      },
+      links: ["corr_s", "lifeboats_s"],
+      color: "#cfe2ec",
+    },
+    {
+      id: "cab_s4",
+      label: "Cabins 252-266 (S)",
+      kind: "cabins",
+      bounds: {
+        x: 588,
+        y: 420,
+        width: 140,
+        height: 84,
+      },
+      center: {
+        x: 658,
+        y: 462,
+      },
+      links: ["corr_s"],
+      color: "#cfe2ec",
+    },
+    {
+      id: "suite_s",
+      label: "Owner's Suites (S)",
+      kind: "cabins",
+      bounds: {
+        x: 728,
+        y: 420,
+        width: 140,
+        height: 84,
+      },
+      center: {
+        x: 798,
+        y: 462,
+      },
+      links: ["corr_s", "tender_bay"],
+      color: "#a8c8d9",
+    },
+    {
+      id: "lifeboats_s",
+      label: "Lifeboat Stations (S)",
+      kind: "public",
+      bounds: {
+        x: 112,
+        y: 504,
+        width: 756,
+        height: 56,
+      },
+      center: {
+        x: 490,
+        y: 532,
+      },
+      links: ["cab_s1", "cab_s2", "cab_s3"],
+      color: "#f0a23a",
+    },
+    {
+      id: "sun_deck",
+      label: "Sun Deck Aft",
+      kind: "public",
+      bounds: {
+        x: 868,
+        y: 0,
+        width: 140,
+        height: 56,
+      },
+      center: {
+        x: 938,
+        y: 28,
+      },
+      links: ["crew_q"],
+      color: "#e89a6a",
+    },
+    {
+      id: "crew_q",
+      label: "Crew Quarters",
+      kind: "crew",
+      bounds: {
+        x: 868,
+        y: 56,
+        width: 140,
+        height: 112,
+      },
+      center: {
+        x: 938,
+        y: 112,
+      },
+      links: ["suite_p", "sun_deck"],
+      color: "#b5b39a",
+    },
+    {
+      id: "crew_mess",
+      label: "Crew Mess",
+      kind: "crew",
+      bounds: {
+        x: 868,
+        y: 168,
+        width: 140,
+        height: 84,
+      },
+      center: {
+        x: 938,
+        y: 210,
+      },
+      links: ["theater"],
+      color: "#9aa085",
+    },
+    {
+      id: "comms",
+      label: "Comms Room",
+      kind: "operations",
+      bounds: {
+        x: 868,
+        y: 252,
+        width: 140,
+        height: 56,
+      },
+      center: {
+        x: 938,
+        y: 280,
+      },
+      links: ["atrium"],
+      color: "#1f3a4d",
+    },
+    {
+      id: "engineering",
+      label: "Engineering",
+      kind: "crew",
+      bounds: {
+        x: 868,
+        y: 308,
+        width: 140,
+        height: 112,
+      },
+      center: {
+        x: 938,
+        y: 364,
+      },
+      links: ["kids"],
+      color: "#9aa085",
+    },
+    {
+      id: "tender_bay",
+      label: "Tender Bay",
+      kind: "public",
+      bounds: {
+        x: 868,
+        y: 420,
+        width: 140,
+        height: 84,
+      },
+      center: {
+        x: 938,
+        y: 462,
+      },
+      links: ["suite_s", "helideck"],
+      color: "#7c8c99",
+    },
+    {
+      id: "helideck",
+      label: "Helideck",
+      kind: "public",
+      bounds: {
+        x: 868,
+        y: 504,
+        width: 140,
+        height: 56,
+      },
+      center: {
+        x: 938,
+        y: 532,
+      },
+      links: ["tender_bay"],
+      color: "#7c8c99",
+    },
+  ],
+  doors: [
+    {
+      id: "d000",
+      kind: "h",
+      tile: {
+        x: 4,
+        y: 2,
+      },
+      segment: [
+        { x: 112, y: 56 },
+        { x: 168, y: 56 },
+      ],
+      roomIds: ["obs_p", "cab_p1"],
+    },
+    {
+      id: "d001",
+      kind: "h",
+      tile: {
+        x: 7,
+        y: 2,
+      },
+      segment: [
+        { x: 196, y: 56 },
+        { x: 252, y: 56 },
+      ],
+      roomIds: ["lifeboats_p", "cab_p1"],
+    },
+    {
+      id: "d002",
+      kind: "h",
+      tile: {
+        x: 7,
+        y: 5,
+      },
+      segment: [
+        { x: 196, y: 140 },
+        { x: 252, y: 140 },
+      ],
+      roomIds: ["cab_p1", "corr_p"],
+    },
+    {
+      id: "d003",
+      kind: "h",
+      tile: {
+        x: 13,
+        y: 2,
+      },
+      segment: [
+        { x: 364, y: 56 },
+        { x: 420, y: 56 },
+      ],
+      roomIds: ["lifeboats_p", "cab_p2"],
+    },
+    {
+      id: "d004",
+      kind: "h",
+      tile: {
+        x: 13,
+        y: 5,
+      },
+      segment: [
+        { x: 364, y: 140 },
+        { x: 420, y: 140 },
+      ],
+      roomIds: ["cab_p2", "corr_p"],
+    },
+    {
+      id: "d005",
+      kind: "h",
+      tile: {
+        x: 18,
+        y: 2,
+      },
+      segment: [
+        { x: 518, y: 56 },
+        { x: 574, y: 56 },
+      ],
+      roomIds: ["lifeboats_p", "cab_p3"],
+    },
+    {
+      id: "d006",
+      kind: "h",
+      tile: {
+        x: 18,
+        y: 5,
+      },
+      segment: [
+        { x: 518, y: 140 },
+        { x: 574, y: 140 },
+      ],
+      roomIds: ["cab_p3", "corr_p"],
+    },
+    {
+      id: "d007",
+      kind: "h",
+      tile: {
+        x: 23,
+        y: 5,
+      },
+      segment: [
+        { x: 658, y: 140 },
+        { x: 714, y: 140 },
+      ],
+      roomIds: ["cab_p4", "corr_p"],
+    },
+    {
+      id: "d008",
+      kind: "h",
+      tile: {
+        x: 28,
+        y: 5,
+      },
+      segment: [
+        { x: 798, y: 140 },
+        { x: 854, y: 140 },
+      ],
+      roomIds: ["suite_p", "corr_p"],
+    },
+    {
+      id: "d009",
+      kind: "h",
+      tile: {
+        x: 6,
+        y: 6,
+      },
+      segment: [
+        { x: 168, y: 168 },
+        { x: 224, y: 168 },
+      ],
+      roomIds: ["corr_p", "spa"],
+    },
+    {
+      id: "d010",
+      kind: "h",
+      tile: {
+        x: 10,
+        y: 6,
+      },
+      segment: [
+        { x: 280, y: 168 },
+        { x: 336, y: 168 },
+      ],
+      roomIds: ["corr_p", "library"],
+    },
+    {
+      id: "d011",
+      kind: "h",
+      tile: {
+        x: 15,
+        y: 6,
+      },
+      segment: [
+        { x: 420, y: 168 },
+        { x: 476, y: 168 },
+      ],
+      roomIds: ["corr_p", "dining"],
+    },
+    {
+      id: "d012",
+      kind: "h",
+      tile: {
+        x: 19,
+        y: 6,
+      },
+      segment: [
+        { x: 532, y: 168 },
+        { x: 588, y: 168 },
+      ],
+      roomIds: ["corr_p", "galley"],
+    },
+    {
+      id: "d013",
+      kind: "h",
+      tile: {
+        x: 23,
+        y: 6,
+      },
+      segment: [
+        { x: 658, y: 168 },
+        { x: 714, y: 168 },
+      ],
+      roomIds: ["corr_p", "casino"],
+    },
+    {
+      id: "d014",
+      kind: "h",
+      tile: {
+        x: 28,
+        y: 6,
+      },
+      segment: [
+        { x: 798, y: 168 },
+        { x: 854, y: 168 },
+      ],
+      roomIds: ["corr_p", "theater"],
+    },
+    {
+      id: "d015",
+      kind: "h",
+      tile: {
+        x: 15,
+        y: 9,
+      },
+      segment: [
+        { x: 420, y: 252 },
+        { x: 476, y: 252 },
+      ],
+      roomIds: ["dining", "atrium"],
+    },
+    {
+      id: "d016",
+      kind: "h",
+      tile: {
+        x: 19,
+        y: 9,
+      },
+      segment: [
+        { x: 532, y: 252 },
+        { x: 588, y: 252 },
+      ],
+      roomIds: ["galley", "atrium"],
+    },
+    {
+      id: "d017",
+      kind: "h",
+      tile: {
+        x: 23,
+        y: 9,
+      },
+      segment: [
+        { x: 658, y: 252 },
+        { x: 714, y: 252 },
+      ],
+      roomIds: ["casino", "atrium"],
+    },
+    {
+      id: "d018",
+      kind: "h",
+      tile: {
+        x: 28,
+        y: 9,
+      },
+      segment: [
+        { x: 798, y: 252 },
+        { x: 854, y: 252 },
+      ],
+      roomIds: ["theater", "atrium"],
+    },
+    {
+      id: "d019",
+      kind: "v",
+      tile: {
+        x: 4,
+        y: 9,
+      },
+      segment: [
+        { x: 112, y: 252 },
+        { x: 112, y: 308 },
+      ],
+      roomIds: ["bridge", "atrium"],
+    },
+    {
+      id: "d020",
+      kind: "v",
+      tile: {
+        x: 4,
+        y: 11,
+      },
+      segment: [
+        { x: 112, y: 308 },
+        { x: 112, y: 364 },
+      ],
+      roomIds: ["bridge", "atrium"],
+    },
+    {
+      id: "d021",
+      kind: "h",
+      tile: {
+        x: 6,
+        y: 11,
+      },
+      segment: [
+        { x: 168, y: 308 },
+        { x: 224, y: 308 },
+      ],
+      roomIds: ["infirmary", "atrium"],
+    },
+    {
+      id: "d022",
+      kind: "h",
+      tile: {
+        x: 10,
+        y: 11,
+      },
+      segment: [
+        { x: 280, y: 308 },
+        { x: 336, y: 308 },
+      ],
+      roomIds: ["isolation", "atrium"],
+    },
+    {
+      id: "d023",
+      kind: "h",
+      tile: {
+        x: 13,
+        y: 11,
+      },
+      segment: [
+        { x: 364, y: 308 },
+        { x: 420, y: 308 },
+      ],
+      roomIds: ["gym", "atrium"],
+    },
+    {
+      id: "d024",
+      kind: "h",
+      tile: {
+        x: 17,
+        y: 11,
+      },
+      segment: [
+        { x: 476, y: 308 },
+        { x: 532, y: 308 },
+      ],
+      roomIds: ["pool", "atrium"],
+    },
+    {
+      id: "d025",
+      kind: "h",
+      tile: {
+        x: 23,
+        y: 11,
+      },
+      segment: [
+        { x: 658, y: 308 },
+        { x: 714, y: 308 },
+      ],
+      roomIds: ["arcade", "atrium"],
+    },
+    {
+      id: "d026",
+      kind: "h",
+      tile: {
+        x: 28,
+        y: 11,
+      },
+      segment: [
+        { x: 798, y: 308 },
+        { x: 854, y: 308 },
+      ],
+      roomIds: ["kids", "atrium"],
+    },
+    {
+      id: "d027",
+      kind: "v",
+      tile: {
+        x: 8,
+        y: 12,
+      },
+      segment: [
+        { x: 224, y: 308 },
+        { x: 224, y: 364 },
+      ],
+      roomIds: ["infirmary", "isolation"],
+    },
+    {
+      id: "d028",
+      kind: "h",
+      tile: {
+        x: 6,
+        y: 14,
+      },
+      segment: [
+        { x: 168, y: 392 },
+        { x: 224, y: 392 },
+      ],
+      roomIds: ["infirmary", "corr_s"],
+    },
+    {
+      id: "d029",
+      kind: "h",
+      tile: {
+        x: 9,
+        y: 14,
+      },
+      segment: [
+        { x: 252, y: 392 },
+        { x: 308, y: 392 },
+      ],
+      roomIds: ["isolation", "corr_s"],
+    },
+    {
+      id: "d030",
+      kind: "h",
+      tile: {
+        x: 12,
+        y: 14,
+      },
+      segment: [
+        { x: 336, y: 392 },
+        { x: 392, y: 392 },
+      ],
+      roomIds: ["gym", "corr_s"],
+    },
+    {
+      id: "d031",
+      kind: "h",
+      tile: {
+        x: 17,
+        y: 14,
+      },
+      segment: [
+        { x: 476, y: 392 },
+        { x: 532, y: 392 },
+      ],
+      roomIds: ["pool", "corr_s"],
+    },
+    {
+      id: "d032",
+      kind: "h",
+      tile: {
+        x: 23,
+        y: 14,
+      },
+      segment: [
+        { x: 658, y: 392 },
+        { x: 714, y: 392 },
+      ],
+      roomIds: ["arcade", "corr_s"],
+    },
+    {
+      id: "d033",
+      kind: "h",
+      tile: {
+        x: 28,
+        y: 14,
+      },
+      segment: [
+        { x: 798, y: 392 },
+        { x: 854, y: 392 },
+      ],
+      roomIds: ["kids", "corr_s"],
+    },
+    {
+      id: "d034",
+      kind: "h",
+      tile: {
+        x: 7,
+        y: 15,
+      },
+      segment: [
+        { x: 196, y: 420 },
+        { x: 252, y: 420 },
+      ],
+      roomIds: ["cab_s1", "corr_s"],
+    },
+    {
+      id: "d035",
+      kind: "h",
+      tile: {
+        x: 13,
+        y: 15,
+      },
+      segment: [
+        { x: 364, y: 420 },
+        { x: 420, y: 420 },
+      ],
+      roomIds: ["cab_s2", "corr_s"],
+    },
+    {
+      id: "d036",
+      kind: "h",
+      tile: {
+        x: 17,
+        y: 15,
+      },
+      segment: [
+        { x: 476, y: 420 },
+        { x: 532, y: 420 },
+      ],
+      roomIds: ["cab_s3", "corr_s"],
+    },
+    {
+      id: "d037",
+      kind: "h",
+      tile: {
+        x: 23,
+        y: 15,
+      },
+      segment: [
+        { x: 658, y: 420 },
+        { x: 714, y: 420 },
+      ],
+      roomIds: ["cab_s4", "corr_s"],
+    },
+    {
+      id: "d038",
+      kind: "h",
+      tile: {
+        x: 28,
+        y: 15,
+      },
+      segment: [
+        { x: 798, y: 420 },
+        { x: 854, y: 420 },
+      ],
+      roomIds: ["suite_s", "corr_s"],
+    },
+    {
+      id: "d039",
+      kind: "h",
+      tile: {
+        x: 7,
+        y: 18,
+      },
+      segment: [
+        { x: 196, y: 504 },
+        { x: 252, y: 504 },
+      ],
+      roomIds: ["lifeboats_s", "cab_s1"],
+    },
+    {
+      id: "d040",
+      kind: "h",
+      tile: {
+        x: 13,
+        y: 18,
+      },
+      segment: [
+        { x: 364, y: 504 },
+        { x: 420, y: 504 },
+      ],
+      roomIds: ["lifeboats_s", "cab_s2"],
+    },
+    {
+      id: "d041",
+      kind: "h",
+      tile: {
+        x: 18,
+        y: 18,
+      },
+      segment: [
+        { x: 504, y: 504 },
+        { x: 560, y: 504 },
+      ],
+      roomIds: ["lifeboats_s", "cab_s3"],
+    },
+    {
+      id: "d042",
+      kind: "v",
+      tile: {
+        x: 31,
+        y: 4,
+      },
+      segment: [
+        { x: 868, y: 84 },
+        { x: 868, y: 140 },
+      ],
+      roomIds: ["suite_p", "crew_q"],
+    },
+    {
+      id: "d043",
+      kind: "v",
+      tile: {
+        x: 31,
+        y: 7,
+      },
+      segment: [
+        { x: 868, y: 168 },
+        { x: 868, y: 224 },
+      ],
+      roomIds: ["theater", "crew_mess"],
+    },
+    {
+      id: "d044",
+      kind: "v",
+      tile: {
+        x: 31,
+        y: 10,
+      },
+      segment: [
+        { x: 868, y: 252 },
+        { x: 868, y: 308 },
+      ],
+      roomIds: ["atrium", "comms"],
+    },
+    {
+      id: "d045",
+      kind: "v",
+      tile: {
+        x: 31,
+        y: 13,
+      },
+      segment: [
+        { x: 868, y: 336 },
+        { x: 868, y: 392 },
+      ],
+      roomIds: ["kids", "engineering"],
+    },
+    {
+      id: "d046",
+      kind: "v",
+      tile: {
+        x: 31,
+        y: 16,
+      },
+      segment: [
+        { x: 868, y: 434 },
+        { x: 868, y: 490 },
+      ],
+      roomIds: ["suite_s", "tender_bay"],
+    },
+    {
+      id: "d047",
+      kind: "v",
+      tile: {
+        x: 4,
+        y: 16,
+      },
+      segment: [
+        { x: 112, y: 448 },
+        { x: 112, y: 504 },
+      ],
+      roomIds: ["obs_s", "cab_s1"],
+    },
+    {
+      id: "d048",
+      kind: "h",
+      tile: {
+        x: 31,
+        y: 2,
+      },
+      segment: [
+        { x: 868, y: 56 },
+        { x: 924, y: 56 },
+      ],
+      roomIds: ["sun_deck", "crew_q"],
+    },
+    {
+      id: "d049",
+      kind: "h",
+      tile: {
+        x: 31,
+        y: 18,
+      },
+      segment: [
+        { x: 868, y: 504 },
+        { x: 924, y: 504 },
+      ],
+      roomIds: ["tender_bay", "helideck"],
+    },
+    {
+      id: "d050",
+      kind: "h",
+      tile: {
+        x: 4,
+        y: 5,
+      },
+      segment: [
+        { x: 112, y: 140 },
+        { x: 168, y: 140 },
+      ],
+      roomIds: ["cab_p1", "corr_p"],
+    },
+    {
+      id: "d051",
+      kind: "h",
+      tile: {
+        x: 16,
+        y: 5,
+      },
+      segment: [
+        { x: 448, y: 140 },
+        { x: 504, y: 140 },
+      ],
+      roomIds: ["cab_p2", "corr_p"],
+    },
+    {
+      id: "d052",
+      kind: "h",
+      tile: {
+        x: 21,
+        y: 5,
+      },
+      segment: [
+        { x: 588, y: 140 },
+        { x: 644, y: 140 },
+      ],
+      roomIds: ["cab_p3", "corr_p"],
+    },
+    {
+      id: "d053",
+      kind: "h",
+      tile: {
+        x: 4,
+        y: 15,
+      },
+      segment: [
+        { x: 112, y: 420 },
+        { x: 168, y: 420 },
+      ],
+      roomIds: ["corr_s", "cab_s1"],
+    },
+    {
+      id: "d054",
+      kind: "h",
+      tile: {
+        x: 16,
+        y: 15,
+      },
+      segment: [
+        { x: 448, y: 420 },
+        { x: 504, y: 420 },
+      ],
+      roomIds: ["corr_s", "cab_s2"],
+    },
+    {
+      id: "d055",
+      kind: "h",
+      tile: {
+        x: 21,
+        y: 15,
+      },
+      segment: [
+        { x: 588, y: 420 },
+        { x: 644, y: 420 },
+      ],
+      roomIds: ["corr_s", "cab_s3"],
+    },
+  ],
 };

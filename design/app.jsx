@@ -49,7 +49,7 @@ function StatBar({ spec }) {
   }, [spec]);
   return (
     <>
-      <div className="stat"><span className="v">{spec.grid.cols}×{spec.grid.rows}</span><span className="l">Grid</span></div>
+      <div className="stat"><span className="v">{spec.grid.cols}x{spec.grid.rows}</span><span className="l">Grid</span></div>
       <div className="stat"><span className="v">{counts.rooms}</span><span className="l">Rooms</span></div>
       <div className="stat"><span className="v">{counts.doors}</span><span className="l">Doors</span></div>
       <div className="stat"><span className="v">{counts.passengers}</span><span className="l">Passengers</span></div>
@@ -70,7 +70,7 @@ function HoverReadout({ hoverTile, spec, selectedRoom, selectedAgent }) {
         <div className="k">Role</div><div className="v">{selectedAgent.role}</div>
         <div className="k">State</div><div className="v"><span className="swatch" style={{background: s.color}} />{s.label}</div>
         <div className="k">Tile</div><div className="v mono">{fmtCoord(selectedAgent.x, selectedAgent.y)} ({selectedAgent.x},{selectedAgent.y})</div>
-        <div className="k">Room</div><div className="v">{room ? room.name : "—"}</div>
+        <div className="k">Room</div><div className="v">{room ? room.name : "-"}</div>
       </div>
     );
   }
@@ -82,7 +82,7 @@ function HoverReadout({ hoverTile, spec, selectedRoom, selectedAgent }) {
         <div className="k">Room</div><div className="v">{r ? r.name : <span style={{color:"var(--panel-mute)"}}>Outside hull</span>}</div>
         {r && <><div className="k">Zone ID</div><div className="v mono">{r.id}</div></>}
         {r && <><div className="k">Type</div><div className="v"><span className="swatch" style={{background: spec.types[r.type].fill}} />{spec.types[r.type].label}</div></>}
-        {r && <><div className="k">Bounds</div><div className="v mono">{fmtCoord(r.x, r.y)} – {fmtCoord(r.x + r.w - 1, r.y + r.h - 1)} · {r.w}×{r.h}</div></>}
+        {r && <><div className="k">Bounds</div><div className="v mono">{fmtCoord(r.x, r.y)} - {fmtCoord(r.x + r.w - 1, r.y + r.h - 1)} * {r.w}x{r.h}</div></>}
       </div>
     );
   }
@@ -92,8 +92,8 @@ function HoverReadout({ hoverTile, spec, selectedRoom, selectedAgent }) {
         <div className="k">Room</div><div className="v">{selectedRoom.name}</div>
         <div className="k">Zone ID</div><div className="v mono">{selectedRoom.id}</div>
         <div className="k">Type</div><div className="v"><span className="swatch" style={{background: spec.types[selectedRoom.type].fill}} />{spec.types[selectedRoom.type].label}</div>
-        <div className="k">Bounds</div><div className="v mono">{fmtCoord(selectedRoom.x, selectedRoom.y)} – {fmtCoord(selectedRoom.x + selectedRoom.w - 1, selectedRoom.y + selectedRoom.h - 1)}</div>
-        <div className="k">Tiles</div><div className="v mono">{selectedRoom.w * selectedRoom.h} ({selectedRoom.w}×{selectedRoom.h})</div>
+        <div className="k">Bounds</div><div className="v mono">{fmtCoord(selectedRoom.x, selectedRoom.y)} - {fmtCoord(selectedRoom.x + selectedRoom.w - 1, selectedRoom.y + selectedRoom.h - 1)}</div>
+        <div className="k">Tiles</div><div className="v mono">{selectedRoom.w * selectedRoom.h} ({selectedRoom.w}x{selectedRoom.h})</div>
       </div>
     );
   }
@@ -159,8 +159,8 @@ function App() {
     <div className="app">
       <div className="topbar">
         <div className="brand">
-          <div className="ship"><span className="pre">M.S.</span>VERITY · SIMULATION BOARD</div>
-          <div className="sub">Tile grid · {effectiveSpec.grid.cols}×{effectiveSpec.grid.rows} · {effectiveSpec.grid.tile}px tiles · YAML-driven</div>
+          <div className="ship"><span className="pre">M.S.</span>VERITY * SIMULATION BOARD</div>
+          <div className="sub">Tile grid * {effectiveSpec.grid.cols}x{effectiveSpec.grid.rows} * {effectiveSpec.grid.tile}px tiles * YAML-driven</div>
         </div>
         <div className="spacer" />
         <StatBar spec={effectiveSpec} />
@@ -193,7 +193,7 @@ function App() {
           <h3>Inspector</h3>
           <HoverReadout hoverTile={hoverTile} spec={effectiveSpec} selectedRoom={selectedRoom} selectedAgent={selectedAgent} />
           <div className="hint">
-            Hover tiles to read coords. Click a room or agent to pin it. Coord format: <kbd>A01</kbd>–<kbd>{colLabel(effectiveSpec.grid.cols - 1)}{String(effectiveSpec.grid.rows).padStart(2,"0")}</kbd>.
+            Hover tiles to read coords. Click a room or agent to pin it. Coord format: <kbd>A01</kbd>-<kbd>{colLabel(effectiveSpec.grid.cols - 1)}{String(effectiveSpec.grid.rows).padStart(2,"0")}</kbd>.
           </div>
         </div>
 
@@ -223,9 +223,9 @@ function App() {
                       </div>
                       <div className="meta">
                         <div className="name">{a.name}</div>
-                        <div className="sub">{a.id} · {a.role} · {s.label}</div>
+                        <div className="sub">{a.id} * {a.role} * {s.label}</div>
                       </div>
-                      <div className="where">{fmtCoord(a.x, a.y)}<br/><span style={{color:"var(--panel-mute)"}}>{room ? room.id : "—"}</span></div>
+                      <div className="where">{fmtCoord(a.x, a.y)}<br/><span style={{color:"var(--panel-mute)"}}>{room ? room.id : "-"}</span></div>
                     </div>
                   );
                 })}
@@ -256,7 +256,7 @@ function App() {
                       onClick={() => setDimRoomTypes(prev => ({...prev, [k]: !on}))}
                     >
                       <span className="sw" style={{ background: tp.fill }} />
-                      <span>{tp.label} <span style={{color:"var(--panel-mute)", fontSize: 10}}>× {count}</span></span>
+                      <span>{tp.label} <span style={{color:"var(--panel-mute)", fontSize: 10}}>x {count}</span></span>
                     </div>
                   );
                 })}
@@ -276,9 +276,9 @@ function App() {
                       </div>
                       <div className="meta">
                         <div className="name">{r.name}</div>
-                        <div className="sub">{r.id} · {tp.label}</div>
+                        <div className="sub">{r.id} * {tp.label}</div>
                       </div>
-                      <div className="where">{fmtCoord(r.x, r.y)}<br/><span style={{color:"var(--panel-mute)"}}>{r.w}×{r.h}</span></div>
+                      <div className="where">{fmtCoord(r.x, r.y)}<br/><span style={{color:"var(--panel-mute)"}}>{r.w}x{r.h}</span></div>
                     </div>
                   );
                 })}
@@ -291,11 +291,11 @@ function App() {
               <div className="spec-head">
                 <h3 style={{margin: 0, flex: 1}}>YAML Spec</h3>
                 <button onClick={resetSpec}>Reset</button>
-                <button onClick={exportYAML}>↓ YAML</button>
-                <button className="primary" onClick={() => exportSVG(false)}>↓ SVG</button>
+                <button onClick={exportYAML}>&darr; YAML</button>
+                <button className="primary" onClick={() => exportSVG(false)}>&darr; SVG</button>
               </div>
               {parsed.error && (
-                <div className="spec-error">⚠ {parsed.error}</div>
+                <div className="spec-error">&#x26A0; {parsed.error}</div>
               )}
               <textarea
                 className="spec-editor"

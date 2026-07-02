@@ -9,48 +9,48 @@ import type { SpatialHash } from "./spatial_hash";
  * Computes the Euclidean distance between two points.
  */
 function distance(a: Point, b: Point): number {
-	const dx = a.x - b.x;
-	const dy = a.y - b.y;
-	return Math.sqrt(dx * dx + dy * dy);
+  const dx = a.x - b.x;
+  const dy = a.y - b.y;
+  return Math.sqrt(dx * dx + dy * dy);
 }
 
 /**
  * Computes the magnitude of a vector (point).
  */
 function magnitude(p: Point): number {
-	return Math.sqrt(p.x * p.x + p.y * p.y);
+  return Math.sqrt(p.x * p.x + p.y * p.y);
 }
 
 /**
  * Normalizes a vector to unit length. Returns (0,0) if magnitude is zero.
  */
 function normalize(p: Point): Point {
-	const mag = magnitude(p);
-	if (mag === 0) {
-		return { x: 0, y: 0 };
-	}
-	return { x: p.x / mag, y: p.y / mag };
+  const mag = magnitude(p);
+  if (mag === 0) {
+    return { x: 0, y: 0 };
+  }
+  return { x: p.x / mag, y: p.y / mag };
 }
 
 /**
  * Subtracts vector b from vector a componentwise.
  */
 function sub(a: Point, b: Point): Point {
-	return { x: a.x - b.x, y: a.y - b.y };
+  return { x: a.x - b.x, y: a.y - b.y };
 }
 
 /**
  * Scales a vector by a scalar.
  */
 function scale(p: Point, s: number): Point {
-	return { x: p.x * s, y: p.y * s };
+  return { x: p.x * s, y: p.y * s };
 }
 
 /**
  * Adds two vectors componentwise.
  */
 function add(a: Point, b: Point): Point {
-	return { x: a.x + b.x, y: a.y + b.y };
+  return { x: a.x + b.x, y: a.y + b.y };
 }
 
 /**
@@ -58,7 +58,7 @@ function add(a: Point, b: Point): Point {
  * Returns a scalar: a.x * b.y - a.y * b.x.
  */
 function cross2d(a: Point, b: Point): number {
-	return a.x * b.y - a.y * b.x;
+  return a.x * b.y - a.y * b.x;
 }
 
 // ==============================================
@@ -75,38 +75,38 @@ function cross2d(a: Point, b: Point): number {
  * Polygon vertices should be in counter-clockwise (CCW) order.
  */
 export function pointInPolygon(point: Point, polygon: readonly Point[]): boolean {
-	const { x, y } = point;
-	let inside = false;
+  const { x, y } = point;
+  let inside = false;
 
-	for (let i = 0; i < polygon.length; i++) {
-		const p0 = polygon[i];
-		const p1 = polygon[(i + 1) % polygon.length];
+  for (let i = 0; i < polygon.length; i++) {
+    const p0 = polygon[i];
+    const p1 = polygon[(i + 1) % polygon.length];
 
-		if (!p0 || !p1) {
-			continue;
-		}
+    if (!p0 || !p1) {
+      continue;
+    }
 
-		// Check if the edge from p0 to p1 intersects the ray from point going right (+x).
-		// The ray is at height y and goes from x to +infinity.
-		// The edge goes from (p0.x, p0.y) to (p1.x, p1.y).
+    // Check if the edge from p0 to p1 intersects the ray from point going right (+x).
+    // The ray is at height y and goes from x to +infinity.
+    // The edge goes from (p0.x, p0.y) to (p1.x, p1.y).
 
-		// Only count edges that straddle the ray's y-coordinate.
-		if (p0.y > y !== p1.y > y) {
-			// Compute x-coordinate where the edge crosses y = point.y.
-			// Edge parametric form: (1-t) * p0 + t * p1, t in [0, 1].
-			// Solve: (1-t) * p0.y + t * p1.y = y
-			// => t = (y - p0.y) / (p1.y - p0.y)
-			const t = (y - p0.y) / (p1.y - p0.y);
-			const xIntersect = p0.x + t * (p1.x - p0.x);
+    // Only count edges that straddle the ray's y-coordinate.
+    if (p0.y > y !== p1.y > y) {
+      // Compute x-coordinate where the edge crosses y = point.y.
+      // Edge parametric form: (1-t) * p0 + t * p1, t in [0, 1].
+      // Solve: (1-t) * p0.y + t * p1.y = y
+      // => t = (y - p0.y) / (p1.y - p0.y)
+      const t = (y - p0.y) / (p1.y - p0.y);
+      const xIntersect = p0.x + t * (p1.x - p0.x);
 
-			// If the intersection is to the right of the point, toggle inside.
-			if (x < xIntersect) {
-				inside = !inside;
-			}
-		}
-	}
+      // If the intersection is to the right of the point, toggle inside.
+      if (x < xIntersect) {
+        inside = !inside;
+      }
+    }
+  }
 
-	return inside;
+  return inside;
 }
 
 // ==============================================
@@ -126,35 +126,35 @@ export function pointInPolygon(point: Point, polygon: readonly Point[]): boolean
  * Returns the intersection point if the segments intersect, null otherwise.
  */
 export function segmentsCross(
-	seg1: readonly [Point, Point],
-	seg2: readonly [Point, Point],
+  seg1: readonly [Point, Point],
+  seg2: readonly [Point, Point],
 ): Point | null {
-	const p = seg1[0];
-	const p_end = seg1[1];
-	const q = seg2[0];
-	const q_end = seg2[1];
+  const p = seg1[0];
+  const p_end = seg1[1];
+  const q = seg2[0];
+  const q_end = seg2[1];
 
-	const d1 = sub(p_end, p);
-	const d2 = sub(q_end, q);
-	const pq = sub(q, p);
+  const d1 = sub(p_end, p);
+  const d2 = sub(q_end, q);
+  const pq = sub(q, p);
 
-	const denom = cross2d(d1, d2);
+  const denom = cross2d(d1, d2);
 
-	// If denom == 0, segments are parallel or collinear.
-	if (denom === 0) {
-		return null;
-	}
+  // If denom == 0, segments are parallel or collinear.
+  if (denom === 0) {
+    return null;
+  }
 
-	const t = cross2d(pq, d2) / denom;
-	const s = cross2d(pq, d1) / denom;
+  const t = cross2d(pq, d2) / denom;
+  const s = cross2d(pq, d1) / denom;
 
-	// Both t and s must be in [0, 1] for intersection within the segments.
-	if (t >= 0 && t <= 1 && s >= 0 && s <= 1) {
-		// Compute intersection point using t.
-		return add(p, scale(d1, t));
-	}
+  // Both t and s must be in [0, 1] for intersection within the segments.
+  if (t >= 0 && t <= 1 && s >= 0 && s <= 1) {
+    // Compute intersection point using t.
+    return add(p, scale(d1, t));
+  }
 
-	return null;
+  return null;
 }
 
 // ==============================================
@@ -179,66 +179,63 @@ export function segmentsCross(
  * epsilon: tolerance in pixels for the point-on-segment check (default 2px).
  */
 function segmentOverlapsDoor(
-	wallSeg: readonly [Point, Point],
-	doorSegs: readonly (readonly [Point, Point])[],
-	epsilon: number,
-	movementPath?: readonly [Point, Point],
+  wallSeg: readonly [Point, Point],
+  doorSegs: readonly (readonly [Point, Point])[],
+  epsilon: number,
+  movementPath?: readonly [Point, Point],
 ): boolean {
-	// Compute the crossing point of the movement path with the wall segment.
-	// If movementPath is not provided, fall back to using the wall segment midpoint.
-	let crossPoint: Point;
-	if (movementPath !== undefined) {
-		const intersection = segmentsCross(
-			[movementPath[0], movementPath[1]],
-			[wallSeg[0], wallSeg[1]],
-		);
-		if (intersection !== null) {
-			crossPoint = intersection;
-		} else {
-			// No intersection found; use wall midpoint as fallback.
-			crossPoint = {
-				x: (wallSeg[0].x + wallSeg[1].x) / 2,
-				y: (wallSeg[0].y + wallSeg[1].y) / 2,
-			};
-		}
-	} else {
-		crossPoint = {
-			x: (wallSeg[0].x + wallSeg[1].x) / 2,
-			y: (wallSeg[0].y + wallSeg[1].y) / 2,
-		};
-	}
+  // Compute the crossing point of the movement path with the wall segment.
+  // If movementPath is not provided, fall back to using the wall segment midpoint.
+  let crossPoint: Point;
+  if (movementPath !== undefined) {
+    const intersection = segmentsCross(
+      [movementPath[0], movementPath[1]],
+      [wallSeg[0], wallSeg[1]],
+    );
+    if (intersection !== null) {
+      crossPoint = intersection;
+    } else {
+      // No intersection found; use wall midpoint as fallback.
+      crossPoint = {
+        x: (wallSeg[0].x + wallSeg[1].x) / 2,
+        y: (wallSeg[0].y + wallSeg[1].y) / 2,
+      };
+    }
+  } else {
+    crossPoint = {
+      x: (wallSeg[0].x + wallSeg[1].x) / 2,
+      y: (wallSeg[0].y + wallSeg[1].y) / 2,
+    };
+  }
 
-	// Check if the crossing point lies on any door segment.
-	for (const doorSeg of doorSegs) {
-		// Compute the minimum distance from the crossing point to the door segment.
-		const projected = projectPointOntoSegmentInternal(crossPoint, doorSeg);
-		const dist = distance(crossPoint, projected);
-		if (dist <= epsilon) {
-			return true;
-		}
-	}
+  // Check if the crossing point lies on any door segment.
+  for (const doorSeg of doorSegs) {
+    // Compute the minimum distance from the crossing point to the door segment.
+    const projected = projectPointOntoSegmentInternal(crossPoint, doorSeg);
+    const dist = distance(crossPoint, projected);
+    if (dist <= epsilon) {
+      return true;
+    }
+  }
 
-	return false;
+  return false;
 }
 
 /**
  * Internal: projects a point onto a segment, returning the closest point on the segment.
  * Used by segmentOverlapsDoor without exporting.
  */
-function projectPointOntoSegmentInternal(
-	point: Point,
-	segment: readonly [Point, Point],
-): Point {
-	const p0 = segment[0];
-	const p1 = segment[1];
-	const dx = p1.x - p0.x;
-	const dy = p1.y - p0.y;
-	const lenSq = dx * dx + dy * dy;
-	if (lenSq === 0) {
-		return p0;
-	}
-	const t = Math.max(0, Math.min(1, ((point.x - p0.x) * dx + (point.y - p0.y) * dy) / lenSq));
-	return { x: p0.x + t * dx, y: p0.y + t * dy };
+function projectPointOntoSegmentInternal(point: Point, segment: readonly [Point, Point]): Point {
+  const p0 = segment[0];
+  const p1 = segment[1];
+  const dx = p1.x - p0.x;
+  const dy = p1.y - p0.y;
+  const lenSq = dx * dx + dy * dy;
+  if (lenSq === 0) {
+    return p0;
+  }
+  const t = Math.max(0, Math.min(1, ((point.x - p0.x) * dx + (point.y - p0.y) * dy) / lenSq));
+  return { x: p0.x + t * dx, y: p0.y + t * dy };
 }
 
 // ==============================================
@@ -261,72 +258,72 @@ function projectPointOntoSegmentInternal(
  * [Point, Point] tuples representing door openings in the wall.
  */
 export function stepWithCollision(
-	currentPos: Point,
-	candidatePos: Point,
-	currentZonePolygon: readonly Point[],
-	doorSegments: readonly (readonly [Point, Point])[],
+  currentPos: Point,
+  candidatePos: Point,
+  currentZonePolygon: readonly Point[],
+  doorSegments: readonly (readonly [Point, Point])[],
 ): Point {
-	// Check if candidate is already inside the polygon.
-	if (pointInPolygon(candidatePos, currentZonePolygon)) {
-		return candidatePos;
-	}
+  // Check if candidate is already inside the polygon.
+  if (pointInPolygon(candidatePos, currentZonePolygon)) {
+    return candidatePos;
+  }
 
-	// Candidate is outside. Find the edge that the movement path crosses.
-	const movementPath: [Point, Point] = [currentPos, candidatePos];
+  // Candidate is outside. Find the edge that the movement path crosses.
+  const movementPath: [Point, Point] = [currentPos, candidatePos];
 
-	for (let i = 0; i < currentZonePolygon.length; i++) {
-		const p0 = currentZonePolygon[i];
-		const p1 = currentZonePolygon[(i + 1) % currentZonePolygon.length];
+  for (let i = 0; i < currentZonePolygon.length; i++) {
+    const p0 = currentZonePolygon[i];
+    const p1 = currentZonePolygon[(i + 1) % currentZonePolygon.length];
 
-		if (!p0 || !p1) {
-			continue;
-		}
+    if (!p0 || !p1) {
+      continue;
+    }
 
-		const wallEdge: [Point, Point] = [p0, p1];
+    const wallEdge: [Point, Point] = [p0, p1];
 
-		// Check if the movement path crosses this wall edge.
-		const intersection = segmentsCross(movementPath, wallEdge);
-		if (intersection !== null) {
-			// Movement path crosses this wall edge.
-			// Check if the crossing point falls within a door segment (epsilon = 2 pixels).
-			// Pass the movement path so the function uses the exact crossing point rather
-			// than the wall midpoint (which may be far from the door if the wall is wide).
-			if (segmentOverlapsDoor(wallEdge, doorSegments, 2, movementPath)) {
-				// Door overlap: allow passage through the door.
-				return candidatePos;
-			}
+    // Check if the movement path crosses this wall edge.
+    const intersection = segmentsCross(movementPath, wallEdge);
+    if (intersection !== null) {
+      // Movement path crosses this wall edge.
+      // Check if the crossing point falls within a door segment (epsilon = 2 pixels).
+      // Pass the movement path so the function uses the exact crossing point rather
+      // than the wall midpoint (which may be far from the door if the wall is wide).
+      if (segmentOverlapsDoor(wallEdge, doorSegments, 2, movementPath)) {
+        // Door overlap: allow passage through the door.
+        return candidatePos;
+      }
 
-			// True wall: clamp candidatePos to the polygon.
-			// Project candidatePos onto the wall edge, then move 1 pixel inward.
-			const projected = projectPointOntoSegment(candidatePos, wallEdge);
+      // True wall: clamp candidatePos to the polygon.
+      // Project candidatePos onto the wall edge, then move 1 pixel inward.
+      const projected = projectPointOntoSegment(candidatePos, wallEdge);
 
-			// Compute the inward direction (from wall toward polygon interior).
-			// For a CCW polygon, the inward direction is 90 degrees counter-clockwise from
-			// the edge direction.
-			const edgeDir = normalize(sub(p1, p0));
-			const inwardDir: Point = { x: -edgeDir.y, y: edgeDir.x };
+      // Compute the inward direction (from wall toward polygon interior).
+      // For a CCW polygon, the inward direction is 90 degrees counter-clockwise from
+      // the edge direction.
+      const edgeDir = normalize(sub(p1, p0));
+      const inwardDir: Point = { x: -edgeDir.y, y: edgeDir.x };
 
-			// Move 1 pixel inward from the projected point, with fallback to 0.5 if precision issues.
-			const clamped = add(projected, scale(inwardDir, 1));
+      // Move 1 pixel inward from the projected point, with fallback to 0.5 if precision issues.
+      const clamped = add(projected, scale(inwardDir, 1));
 
-			// Verify clamped is inside the polygon; if not due to floating point error, use 0.5 pixels.
-			if (!pointInPolygon(clamped, currentZonePolygon)) {
-				return add(projected, scale(inwardDir, 0.5));
-			}
+      // Verify clamped is inside the polygon; if not due to floating point error, use 0.5 pixels.
+      if (!pointInPolygon(clamped, currentZonePolygon)) {
+        return add(projected, scale(inwardDir, 0.5));
+      }
 
-			return clamped;
-		}
-	}
+      return clamped;
+    }
+  }
 
-	// No wall edge was crossed (edge case: movement entirely outside polygon).
-	// Return current position to prevent exiting (conservative fallback).
-	// If somehow we got here with candidate outside, stay at current.
-	if (!pointInPolygon(currentPos, currentZonePolygon)) {
-		// Both current and candidate are outside; this shouldn't happen in normal movement.
-		// Clamp both to be safe.
-		return clampToPolygon(currentPos, currentZonePolygon);
-	}
-	return currentPos;
+  // No wall edge was crossed (edge case: movement entirely outside polygon).
+  // Return current position to prevent exiting (conservative fallback).
+  // If somehow we got here with candidate outside, stay at current.
+  if (!pointInPolygon(currentPos, currentZonePolygon)) {
+    // Both current and candidate are outside; this shouldn't happen in normal movement.
+    // Clamp both to be safe.
+    return clampToPolygon(currentPos, currentZonePolygon);
+  }
+  return currentPos;
 }
 
 // ==============================================
@@ -337,23 +334,23 @@ export function stepWithCollision(
  * Projects a point onto a line segment, returning the closest point on the segment.
  */
 function projectPointOntoSegment(point: Point, segment: readonly [Point, Point]): Point {
-	const p0 = segment[0];
-	const p1 = segment[1];
+  const p0 = segment[0];
+  const p1 = segment[1];
 
-	const dx = p1.x - p0.x;
-	const dy = p1.y - p0.y;
-	const lenSq = dx * dx + dy * dy;
+  const dx = p1.x - p0.x;
+  const dy = p1.y - p0.y;
+  const lenSq = dx * dx + dy * dy;
 
-	if (lenSq === 0) {
-		return p0;
-	}
+  if (lenSq === 0) {
+    return p0;
+  }
 
-	const t = Math.max(0, Math.min(1, ((point.x - p0.x) * dx + (point.y - p0.y) * dy) / lenSq));
+  const t = Math.max(0, Math.min(1, ((point.x - p0.x) * dx + (point.y - p0.y) * dy) / lenSq));
 
-	return {
-		x: p0.x + t * dx,
-		y: p0.y + t * dy,
-	};
+  return {
+    x: p0.x + t * dx,
+    y: p0.y + t * dy,
+  };
 }
 
 // ==============================================
@@ -365,54 +362,54 @@ function projectPointOntoSegment(point: Point, segment: readonly [Point, Point])
  * This is a fallback for edge cases where the movement path does not clearly cross a single edge.
  */
 function clampToPolygon(point: Point, polygon: readonly Point[]): Point {
-	const firstPoint = polygon[0];
-	if (!firstPoint) {
-		return point;
-	}
+  const firstPoint = polygon[0];
+  if (!firstPoint) {
+    return point;
+  }
 
-	let closestPoint = firstPoint;
-	let minDist = distance(point, closestPoint);
+  let closestPoint = firstPoint;
+  let minDist = distance(point, closestPoint);
 
-	// Check all polygon edges.
-	for (let i = 0; i < polygon.length; i++) {
-		const p0 = polygon[i];
-		const p1 = polygon[(i + 1) % polygon.length];
+  // Check all polygon edges.
+  for (let i = 0; i < polygon.length; i++) {
+    const p0 = polygon[i];
+    const p1 = polygon[(i + 1) % polygon.length];
 
-		if (!p0 || !p1) {
-			continue;
-		}
+    if (!p0 || !p1) {
+      continue;
+    }
 
-		const seg: [Point, Point] = [p0, p1];
-		const proj = projectPointOntoSegment(point, seg);
-		const dist = distance(point, proj);
+    const seg: [Point, Point] = [p0, p1];
+    const proj = projectPointOntoSegment(point, seg);
+    const dist = distance(point, proj);
 
-		if (dist < minDist) {
-			minDist = dist;
-			closestPoint = proj;
-		}
-	}
+    if (dist < minDist) {
+      minDist = dist;
+      closestPoint = proj;
+    }
+  }
 
-	// Move 1 pixel inward from the closest boundary point.
-	// Estimate inward direction as the direction from closestPoint toward polygon center.
-	let centerX = 0;
-	let centerY = 0;
-	for (const p of polygon) {
-		centerX += p.x;
-		centerY += p.y;
-	}
-	centerX /= polygon.length;
-	centerY /= polygon.length;
+  // Move 1 pixel inward from the closest boundary point.
+  // Estimate inward direction as the direction from closestPoint toward polygon center.
+  let centerX = 0;
+  let centerY = 0;
+  for (const p of polygon) {
+    centerX += p.x;
+    centerY += p.y;
+  }
+  centerX /= polygon.length;
+  centerY /= polygon.length;
 
-	const center: Point = { x: centerX, y: centerY };
-	const inwardDir = normalize(sub(center, closestPoint));
+  const center: Point = { x: centerX, y: centerY };
+  const inwardDir = normalize(sub(center, closestPoint));
 
-	// Try 1 pixel first, then 0.5 if precision issues.
-	const clamped1 = add(closestPoint, scale(inwardDir, 1));
-	if (pointInPolygon(clamped1, polygon)) {
-		return clamped1;
-	}
+  // Try 1 pixel first, then 0.5 if precision issues.
+  const clamped1 = add(closestPoint, scale(inwardDir, 1));
+  if (pointInPolygon(clamped1, polygon)) {
+    return clamped1;
+  }
 
-	return add(closestPoint, scale(inwardDir, 0.5));
+  return add(closestPoint, scale(inwardDir, 0.5));
 }
 
 // ==============================================
@@ -457,123 +454,120 @@ function clampToPolygon(point: Point, polygon: readonly Point[]): Point {
  *   are returned unchanged (same object reference).
  */
 export function resolveOverlaps(
-	passengers: readonly Passenger[],
-	spatialHash: SpatialHash<number>,
-	radius: number,
-	getPolygon: ((zoneId: string) => readonly Point[]) | null,
+  passengers: readonly Passenger[],
+  spatialHash: SpatialHash<number>,
+  radius: number,
+  getPolygon: ((zoneId: string) => readonly Point[]) | null,
 ): readonly Passenger[] {
-	// MAX_RELAXATION_PASSES bounds the cost per tick (plan: 2 iterations).
-	const MAX_RELAXATION_PASSES = 2;
-	// Minimum separation distance: 2 * radius, with a tiny epsilon to avoid
-	// floating-point equality at the boundary.
-	const minSep = 2.0 * radius;
+  // MAX_RELAXATION_PASSES bounds the cost per tick (plan: 2 iterations).
+  const MAX_RELAXATION_PASSES = 2;
+  // Minimum separation distance: 2 * radius, with a tiny epsilon to avoid
+  // floating-point equality at the boundary.
+  const minSep = 2.0 * radius;
 
-	// Mutable position map for in-pass updates, keyed by passenger id.
-	const positions = new Map<number, Point>();
-	for (const p of passengers) {
-		positions.set(p.id, p.position);
-	}
+  // Mutable position map for in-pass updates, keyed by passenger id.
+  const positions = new Map<number, Point>();
+  for (const p of passengers) {
+    positions.set(p.id, p.position);
+  }
 
-	// Build an id-ordered array for deterministic iteration.
-	const sortedIds = passengers.map((p) => p.id).sort((a, b) => a - b);
+  // Build an id-ordered array for deterministic iteration.
+  const sortedIds = passengers.map((p) => p.id).sort((a, b) => a - b);
 
-	for (let pass = 0; pass < MAX_RELAXATION_PASSES; pass++) {
-		for (const idA of sortedIds) {
-			const posA = positions.get(idA);
-			if (posA === undefined) {
-				continue;
-			}
+  for (let pass = 0; pass < MAX_RELAXATION_PASSES; pass++) {
+    for (const idA of sortedIds) {
+      const posA = positions.get(idA);
+      if (posA === undefined) {
+        continue;
+      }
 
-			// Query spatial hash for candidate neighbors within 2 * radius.
-			// The spatial hash holds original positions, so results are approximate.
-			// We do exact-distance filtering ourselves below.
-			const candidates = spatialHash.query(posA.x, posA.y, minSep);
+      // Query spatial hash for candidate neighbors within 2 * radius.
+      // The spatial hash holds original positions, so results are approximate.
+      // We do exact-distance filtering ourselves below.
+      const candidates = spatialHash.query(posA.x, posA.y, minSep);
 
-			for (const idB of candidates) {
-				if (idB <= idA) {
-					// Process each pair once per pass (lower id owns the push).
-					continue;
-				}
+      for (const idB of candidates) {
+        if (idB <= idA) {
+          // Process each pair once per pass (lower id owns the push).
+          continue;
+        }
 
-				const posB = positions.get(idB);
-				if (posB === undefined) {
-					continue;
-				}
+        const posB = positions.get(idB);
+        if (posB === undefined) {
+          continue;
+        }
 
-				const dx = posB.x - posA.x;
-				const dy = posB.y - posA.y;
-				const dist = Math.sqrt(dx * dx + dy * dy);
+        const dx = posB.x - posA.x;
+        const dy = posB.y - posA.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
 
-				if (dist >= minSep) {
-					// No overlap; skip.
-					continue;
-				}
+        if (dist >= minSep) {
+          // No overlap; skip.
+          continue;
+        }
 
-				// Overlap detected. Compute push direction and magnitude.
-				let normX: number;
-				let normY: number;
+        // Overlap detected. Compute push direction and magnitude.
+        let normX: number;
+        let normY: number;
 
-				if (dist < 0.001) {
-					// Coincident centers: push A leftward, B rightward (deterministic tiebreak).
-					normX = 1.0;
-					normY = 0.0;
-				} else {
-					normX = dx / dist;
-					normY = dy / dist;
-				}
+        if (dist < 0.001) {
+          // Coincident centers: push A leftward, B rightward (deterministic tiebreak).
+          normX = 1.0;
+          normY = 0.0;
+        } else {
+          normX = dx / dist;
+          normY = dy / dist;
+        }
 
-				// Each agent moves half the overlap distance.
-				const overlap = minSep - dist;
-				const pushHalf = overlap / 2.0;
+        // Each agent moves half the overlap distance.
+        const overlap = minSep - dist;
+        const pushHalf = overlap / 2.0;
 
-				let newPosA: Point = {
-					x: posA.x - normX * pushHalf,
-					y: posA.y - normY * pushHalf,
-				};
-				let newPosB: Point = {
-					x: posB.x + normX * pushHalf,
-					y: posB.y + normY * pushHalf,
-				};
+        let newPosA: Point = {
+          x: posA.x - normX * pushHalf,
+          y: posA.y - normY * pushHalf,
+        };
+        let newPosB: Point = {
+          x: posB.x + normX * pushHalf,
+          y: posB.y + normY * pushHalf,
+        };
 
-				// Re-clamp pushed positions inside their room polygons (wall penetration guard).
-				if (getPolygon !== null) {
-					const passengerA = passengers.find((p) => p.id === idA);
-					const passengerB = passengers.find((p) => p.id === idB);
-					if (passengerA !== undefined) {
-						const polyA = getPolygon(passengerA.zoneId);
-						if (!pointInPolygon(newPosA, polyA)) {
-							// Clamp A back to boundary.
-							newPosA = clampToPolygon(newPosA, polyA);
-						}
-					}
-					if (passengerB !== undefined) {
-						const polyB = getPolygon(passengerB.zoneId);
-						if (!pointInPolygon(newPosB, polyB)) {
-							newPosB = clampToPolygon(newPosB, polyB);
-						}
-					}
-				}
+        // Re-clamp pushed positions inside their room polygons (wall penetration guard).
+        if (getPolygon !== null) {
+          const passengerA = passengers.find((p) => p.id === idA);
+          const passengerB = passengers.find((p) => p.id === idB);
+          if (passengerA !== undefined) {
+            const polyA = getPolygon(passengerA.zoneId);
+            if (!pointInPolygon(newPosA, polyA)) {
+              // Clamp A back to boundary.
+              newPosA = clampToPolygon(newPosA, polyA);
+            }
+          }
+          if (passengerB !== undefined) {
+            const polyB = getPolygon(passengerB.zoneId);
+            if (!pointInPolygon(newPosB, polyB)) {
+              newPosB = clampToPolygon(newPosB, polyB);
+            }
+          }
+        }
 
-				positions.set(idA, newPosA);
-				positions.set(idB, newPosB);
-			}
-		}
-	}
+        positions.set(idA, newPosA);
+        positions.set(idB, newPosB);
+      }
+    }
+  }
 
-	// Assemble updated passenger array. Reuse original object if position unchanged.
-	const result: Passenger[] = [];
+  // Assemble updated passenger array. Reuse original object if position unchanged.
+  const result: Passenger[] = [];
 
-	for (const p of passengers) {
-		const newPos = positions.get(p.id);
-		if (
-			newPos !== undefined &&
-			(newPos.x !== p.position.x || newPos.y !== p.position.y)
-		) {
-			result.push({ ...p, position: newPos });
-		} else {
-			result.push(p);
-		}
-	}
+  for (const p of passengers) {
+    const newPos = positions.get(p.id);
+    if (newPos !== undefined && (newPos.x !== p.position.x || newPos.y !== p.position.y)) {
+      result.push({ ...p, position: newPos });
+    } else {
+      result.push(p);
+    }
+  }
 
-	return result;
+  return result;
 }

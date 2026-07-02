@@ -224,7 +224,7 @@ def write_beta_pair_scale(repo_root: Path, beta_pair_scale: float) -> None:
 	constants_file.write_text(new_content)
 
 
-def parse_args():
+def parse_args() -> argparse.Namespace:
 	"""
 	Parse command-line arguments.
 	"""
@@ -257,7 +257,7 @@ def parse_args():
 	return args
 
 
-def main():
+def main() -> None:
 	"""
 	Main calibration routine.
 	"""
