@@ -2,6 +2,8 @@
 
 Browser-based cruise ship outbreak simulator for classroom use. Renders a schematic ship with passenger health states; students compare scenario assumptions: incubation, contact, isolation, movement, cleaning. Andes virus theme. Educational only.
 
+Play it live: [vosslab.github.io/hantavirus-outbreak-game](https://vosslab.github.io/hantavirus-outbreak-game/)
+
 ## Documentation
 
 - [docs/CODE_ARCHITECTURE.md](docs/CODE_ARCHITECTURE.md): Tick pipeline, modules, determinism contract, and performance gates.

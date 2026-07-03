@@ -11,6 +11,7 @@
   distribution-clean checkout still drives a reproducible `npm ci`.
 - Repointed the `clean` npm alias in `package.json` from `./dist_clean.sh` to
   `./devel/clean_build.sh`.
+- Added a "Play it live" GitHub Pages link near the top of README.md pointing to https://vosslab.github.io/hantavirus-outbreak-game/, so readers can launch the live app in one click.
 
 ### Fixes and Maintenance
 
